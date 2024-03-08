@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "768284514583",
+    "firebase_url": "https://ntb-express.firebaseio.com",
+    "project_id": "ntb-express",
+    "storage_bucket": "ntb-express.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768284514583:android:601e266035db0647cfbf52",
+        "android_client_info": {
+          "package_name": "vn.com.a2m.ntbexpress"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768284514583-t9ggcro9450e6t90skrjgqotj7408vtd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFJYikiZ6Z-SVwjGAZ7-7yKK-DL2n8AvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768284514583-t9ggcro9450e6t90skrjgqotj7408vtd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

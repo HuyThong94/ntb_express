@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>768284514583-npd959p55rd1j2jll9pe5sua92pqvc52.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.768284514583-npd959p55rd1j2jll9pe5sua92pqvc52</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCZmCzkYUgI1AeCssA7B94fpATJl-psNCY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>768284514583</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>vn.com.a2m.ntbexpress</string>
+	<key>PROJECT_ID</key>
+	<string>ntb-express</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ntb-express.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:768284514583:ios:22099770fcc56125cfbf52</string>
+	<key>DATABASE_URL</key>
+	<string>https://ntb-express.firebaseio.com</string>
+</dict>
+</plist>
