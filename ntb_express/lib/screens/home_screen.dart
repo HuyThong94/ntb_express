@@ -1565,7 +1565,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context) => NotificationScreen()));
             },
             child: Badge(
-              position: BadgePosition.topRight(top: 6, right: 6),
+              position: BadgePosition.topEnd(top: 6, end: 6),
               animationDuration: Duration(milliseconds: 300),
               animationType: BadgeAnimationType.slide,
               showBadge: count > 0,

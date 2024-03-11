@@ -41,8 +41,8 @@ class PrefsKey {
 
 class ApiUrls {
   ApiUrls._() {
-    _baseUrl = 'http://117.4.244.25:8888';
-    //_baseUrl = 'http://vanchuyendailong.com:8888';
+    // _baseUrl = 'http://117.4.244.25:8888';
+    _baseUrl = 'http://vanchuyendailong.com:8888';
   }
 
   static ApiUrls _instance;
