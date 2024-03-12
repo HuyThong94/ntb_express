@@ -32,7 +32,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   bool _initialized = false;
   bool _statusTapped = false;
 
-  Order _order;
+  late Order _order;
 
   bool get isConfirmWoodenPacking =>
       _order.orderStatus == OrderStatus.pendingWoodenPacking;
@@ -52,7 +52,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   @override
   void initState() {
     super.initState();
-    _order = widget.order == null ? null : Order.clone(widget.order);
+    _order = (widget.order == null ? null : Order.clone(widget.order))!;
   }
 
   Future<void> _init() async {
@@ -186,17 +186,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${_order.addressDTO.fullName}',
+                            '${_order.addressDTO?.fullName}',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text('${_order.addressDTO.phoneNumber}'),
+                          Text('${_order.addressDTO?.phoneNumber}'),
                           Text('${[
-                            _order.addressDTO.address,
-                            _order.addressDTO.wards,
-                            _order.addressDTO.district,
-                            _order.addressDTO.province
+                            _order.addressDTO?.address,
+                            _order.addressDTO?.wards,
+                            _order.addressDTO?.district,
+                            _order.addressDTO?.province
                           ].join(', ')?.replaceAll(' ,', '')}'),
                         ],
                       ),
@@ -310,7 +310,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 ),
                 _divider(),
                 HideOnCondition(
-                  hideOn: Utils.isNullOrEmpty(_order.note),
+                  hideOn: Utils.isNullOrEmpty(_order.note!),
                   child: InfoItem(
                     firstText: '${Utils.getLocale(context).note}',
                     secondText: '${_order.note}',
@@ -461,13 +461,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                           : Stack(
                                               fit: StackFit.expand,
                                               children: [
-                                                fileHolder.isNetworkImage
+                                                fileHolder.isNetworkImage!
                                                     ? Image.network(
-                                                        fileHolder.fileUrl,
+                                                        fileHolder.fileUrl!,
                                                         fit: BoxFit.cover,
                                                       )
                                                     : Image.file(
-                                                        fileHolder.file,
+                                                        fileHolder.file!,
                                                         fit: BoxFit.cover,
                                                       ),
                                               ],

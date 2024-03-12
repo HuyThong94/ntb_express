@@ -4,7 +4,7 @@ import 'package:ntbexpress/util/utils.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class OrderTrackingTimeline extends StatelessWidget {
-  final List<OrderTrack> tracks;
+  final List<OrderTrack>? tracks;
   final double indicatorLineWidth;
   final double indicatorPadding;
   final double indicatorWidth;
@@ -17,14 +17,14 @@ class OrderTrackingTimeline extends StatelessWidget {
 
   List<Widget> _buildItems(BuildContext context) {
     List<Widget> list = [];
-    tracks.forEach((track) {
+    tracks!.forEach((track) {
       if (track != null) {
-        bool isFirst = track.trackId == tracks.first.trackId;
-        bool isLast = track.trackId == tracks.last.trackId;
+        bool isFirst = track.trackId == tracks?.first.trackId;
+        bool isLast = track.trackId == tracks?.last.trackId;
         list.add(TimelineTile(
           isFirst: isFirst,
           isLast: isLast,
-          topLineStyle: LineStyle(
+          afterLineStyle: LineStyle(
             width: indicatorLineWidth,
             color: Colors.black12,
           ),
@@ -34,7 +34,7 @@ class OrderTrackingTimeline extends StatelessWidget {
             color: isFirst ? Colors.green : Colors.black12,
             padding: EdgeInsets.only(left: indicatorPadding),
           ),
-          rightChild: Container(
+          startChild: Container(
             margin: EdgeInsets.only(left: indicatorPadding),
             width: double.infinity,
             decoration: BoxDecoration(
@@ -56,22 +56,22 @@ class OrderTrackingTimeline extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${Utils.getTrackingStatusString(context, track.actionType)}',
+                      '${Utils.getTrackingStatusString(context, track.actionType!)}',
                       style: TextStyle(
                         fontSize: 12.0,
                         color: isFirst ? Colors.green : Colors.black45,
                       ),
                     ),
                     Visibility(
-                      visible: !Utils.isNullOrEmpty(track.note),
+                      visible: !Utils.isNullOrEmpty(track.note!),
                       child: SizedBox(
                         height: 2.0,
                       ),
                     ),
                     Visibility(
-                      visible: !Utils.isNullOrEmpty(track.note),
+                      visible: !Utils.isNullOrEmpty(track.note!),
                       child: Text(
-                        '${Utils.getLocale(context).note}: ${track.note}',
+                        '${Utils.getLocale(context)?.note}: ${track.note}',
                         style: TextStyle(
                           fontSize: 10.0,
                           color: Theme.of(context).disabledColor,
@@ -104,7 +104,7 @@ class OrderTrackingTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return tracks == null || tracks.isEmpty
+    return tracks == null || tracks!.isEmpty
         ? SizedBox()
         : Container(
             child: Column(

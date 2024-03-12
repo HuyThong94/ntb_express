@@ -4,17 +4,17 @@ import 'package:ntbexpress/util/utils.dart';
 typedef bool ValidationCallback(String value);
 
 class EditScreen extends StatefulWidget {
-  final String currentValue;
+  final String? currentValue;
   final String title;
   final String hintText;
   final int length;
-  final ValidationCallback onValidate;
+  final ValidationCallback? onValidate;
 
   EditScreen(
       {this.currentValue,
-      @required this.title,
-      @required this.hintText,
-      @required this.length,
+      required this.title,
+      required this.hintText,
+      required this.length,
       this.onValidate});
 
   @override
@@ -69,7 +69,7 @@ class _EditScreenState extends State<EditScreen> {
                 message: Utils.getLocale(context).saveChangesMessage,
                 onAccept: () {
                   if (widget.onValidate != null) {
-                    if (widget.onValidate(_txtController.text)) {
+                    if (widget.onValidate!(_txtController.text)) {
                       Navigator.of(context).pop(_txtController.text);
                     }
                   } else {
@@ -87,7 +87,7 @@ class _EditScreenState extends State<EditScreen> {
             IconButton(
               onPressed: !_isDataChanged ? null : () {
                 if (widget.onValidate != null) {
-                  if (widget.onValidate(_txtController.text)) {
+                  if (widget.onValidate!(_txtController.text)) {
                     Navigator.of(context).pop(_txtController.text);
                   }
                 } else {

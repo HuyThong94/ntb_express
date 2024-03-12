@@ -4,16 +4,16 @@ import 'package:ntbexpress/util/session_util.dart';
 import 'package:ntbexpress/util/utils.dart';
 
 class CurrencySwapInput extends StatefulWidget {
-  final String title;
-  final TextEditingController controller;
-  final String firstLabelText;
-  final String secondLabelText;
-  final String firstHintText;
-  final String secondHintText;
-  final String firstSymbol;
-  final String secondSymbol;
-  final FormFieldValidator<String> firstValidator;
-  final FormFieldValidator<String> secondValidator;
+  final String? title;
+  final TextEditingController ?controller;
+  final String? firstLabelText;
+  final String? secondLabelText;
+  final String? firstHintText;
+  final String? secondHintText;
+  final String? firstSymbol;
+  final String? secondSymbol;
+  final FormFieldValidator<String>? firstValidator;
+  final FormFieldValidator<String>? secondValidator;
 
   CurrencySwapInput(
       {this.title,
@@ -40,9 +40,9 @@ class _CurrencySwapInputState extends State<CurrencySwapInput> {
 
   @override
   void initState() {
-    widget.controller.addListener(_firstListener);
+    widget.controller?.addListener(_firstListener);
     _secondController.addListener(_secondListener);
-    if (!Utils.isNullOrEmpty(widget.controller.text) &&
+    if (!Utils.isNullOrEmpty(widget.controller!.text) &&
         Utils.isNullOrEmpty(_secondController.text)) {
       _firstListener();
     }
@@ -52,7 +52,7 @@ class _CurrencySwapInputState extends State<CurrencySwapInput> {
 
   @override
   void dispose() {
-    widget.controller.removeListener(_firstListener);
+    widget.controller?.removeListener(_firstListener);
     _secondController.removeListener(_secondListener);
 
     _secondController.dispose();
@@ -65,12 +65,12 @@ class _CurrencySwapInputState extends State<CurrencySwapInput> {
   void _firstListener() {
     if (_firstFocusNode.hasFocus ||
         (!_firstFocusNode.hasFocus && !_secondFocusNode.hasFocus)) {
-      if (Utils.isNullOrEmpty(widget.controller.text)) {
+      if (Utils.isNullOrEmpty(widget.controller!.text)) {
         _secondController.text = '';
         return;
       }
 
-      double vnd = widget.controller.text?.trim()?.parseDouble() ?? 0;
+      double vnd = widget.controller!.text?.trim()?.parseDouble() ?? 0;
       if (vnd == 0) {
         _secondController.text = '0';
         return;
@@ -86,19 +86,19 @@ class _CurrencySwapInputState extends State<CurrencySwapInput> {
   void _secondListener() {
     if (_secondFocusNode.hasFocus) {
       if (Utils.isNullOrEmpty(_secondController.text)) {
-        widget.controller.text = '';
+        widget.controller!.text = '';
         return;
       }
 
       double cny = _secondController.text?.trim()?.parseDouble() ?? 0;
       if (cny == 0) {
-        widget.controller.text = '0';
+        widget.controller!.text = '0';
         return;
       }
 
       double vnd = cny * _exchangeRate;
       vnd = double.parse(vnd.toStringAsFixed(2));
-      widget.controller.text =
+      widget.controller!.text =
           '${vnd.isInt ? vnd.toString().substring(0, vnd.toString().indexOf('.')) : vnd.toString()}';
     }
   }
@@ -170,12 +170,12 @@ class _CurrencySwapInputState extends State<CurrencySwapInput> {
 }
 
 class ChineseCurrencyInput extends StatefulWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final String hintText;
-  final FormFieldValidator<String> validator;
-  final bool enabled;
-  final TextStyle style;
+  final TextEditingController? controller;
+  final String? labelText;
+  final String? hintText;
+  final FormFieldValidator<String>? validator;
+  final bool? enabled;
+  final TextStyle? style;
 
   ChineseCurrencyInput(
       {this.controller, this.labelText, this.hintText, this.validator, this.enabled = true, this.style});
@@ -193,7 +193,7 @@ class _ChineseCurrencyInputState extends State<ChineseCurrencyInput> {
   @override
   void initState() {
     _secondController.addListener(_secondListener);
-    if (!Utils.isNullOrEmpty(widget.controller.text) &&
+    if (!Utils.isNullOrEmpty(widget.controller!.text) &&
         Utils.isNullOrEmpty(_secondController.text)) {
       _firstListener();
     }
@@ -212,12 +212,12 @@ class _ChineseCurrencyInputState extends State<ChineseCurrencyInput> {
   }
 
   void _firstListener() {
-    if (Utils.isNullOrEmpty(widget.controller.text)) {
+    if (Utils.isNullOrEmpty(widget.controller!.text)) {
       _secondController.text = '';
       return;
     }
 
-    double vnd = widget.controller.text?.trim()?.parseDouble() ?? 0;
+    double vnd = widget.controller!.text?.trim()?.parseDouble() ?? 0;
     if (vnd == 0) {
       _secondController.text = '0';
       return;
@@ -232,19 +232,19 @@ class _ChineseCurrencyInputState extends State<ChineseCurrencyInput> {
   void _secondListener() {
     if (_secondFocusNode.hasFocus) {
       if (Utils.isNullOrEmpty(_secondController.text)) {
-        widget.controller.text = '';
+        widget.controller!.text = '';
         return;
       }
 
       double cny = _secondController.text?.trim()?.parseDouble() ?? 0;
       if (cny == 0) {
-        widget.controller.text = '0';
+        widget.controller!.text = '0';
         return;
       }
 
       double vnd = cny * _exchangeRate;
       vnd = double.parse(vnd.toStringAsFixed(2));
-      widget.controller.text =
+      widget.controller!.text =
           '${vnd.isInt ? vnd.toString().substring(0, vnd.toString().indexOf('.')) : vnd.toString()}';
     }
   }

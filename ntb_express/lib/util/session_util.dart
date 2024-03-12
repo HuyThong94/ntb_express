@@ -4,7 +4,7 @@ import 'package:ntbexpress/util/utils.dart';
 class SessionUtil {
   SessionUtil._();
 
-  static SessionUtil _instance;
+  static late SessionUtil _instance;
 
   static SessionUtil instance() {
     if (_instance != null) return _instance;

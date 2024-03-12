@@ -15,7 +15,7 @@ import 'package:ntbexpress/util/extensions.dart';
 class PriceCalculationScreen extends StatefulWidget {
   final User currentUser;
 
-  PriceCalculationScreen({this.currentUser});
+  PriceCalculationScreen({required this.currentUser});
 
   @override
   _PriceCalculationScreenState createState() => _PriceCalculationScreenState();
@@ -29,9 +29,9 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
   final _weightFocusNode = FocusNode();
   final _sizeFocusNode = FocusNode();
   int _goodsType = GoodsType.normal;
-  String _totalFee;
+  late String _totalFee;
 
-  Address _address;
+  late Address _address;
 
   @override
   void initState() {
@@ -150,7 +150,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                             validator: (value) {
                               String tmp = _sizeController.text;
 
-                              if ((Utils.isNullOrEmpty(value) ||
+                              if ((Utils.isNullOrEmpty(value!) ||
                                       value == '0' ||
                                       value == '0.0') &&
                                   (Utils.isNullOrEmpty(tmp) ||
@@ -187,7 +187,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                             validator: (value) {
                               String tmp = _weightController.text;
 
-                              if ((Utils.isNullOrEmpty(value) ||
+                              if ((Utils.isNullOrEmpty(value!) ||
                                       value == '0' ||
                                       value == '0.0') &&
                                   (Utils.isNullOrEmpty(tmp) ||
@@ -278,7 +278,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
 
   void _saveData() {
     setState(() {
-      _totalFee = null; // reset result
+      // _totalFee = null; // reset result
       FocusScope.of(context).requestFocus(FocusNode());
     });
 
@@ -291,7 +291,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
       return;
     }
 
-    if (!_formKey.currentState.validate()) {
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 

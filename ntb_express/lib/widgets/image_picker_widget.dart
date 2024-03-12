@@ -11,25 +11,25 @@ import 'package:ntbexpress/util/utils.dart';
 import 'package:ntbexpress/widgets/image_gallery.dart';
 
 class FileHolderParser {
-  final File file;
-  final ByteData fileByteData;
-  final String fileName;
+  final File? file;
+  final ByteData? fileByteData;
+  final String? fileName;
 
   FileHolderParser({this.file, this.fileByteData, this.fileName});
 }
 
 class ImagePickerWidget extends StatefulWidget {
-  final ImagePickerController controller;
-  final Widget child;
+  final ImagePickerController? controller;
+  final Widget? child;
   final bool allowToDelete;
   final bool confirmDelete;
-  final ValueChanged<FileHolder> onAdd;
-  final ValueChanged<FileHolder> onRemove;
+  final ValueChanged<FileHolder>? onAdd;
+  final ValueChanged<FileHolder>? onRemove;
   final bool readonly;
   final int maxImages;
 
   const ImagePickerWidget(
-      {Key key,
+      {Key? key,
       this.controller,
       this.child,
       this.allowToDelete = true,
@@ -57,12 +57,12 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 children: [
                   ListTile(
                     leading: Icon(Icons.image),
-                    title: Text('${Utils.getLocale(context).cameraRoll}'),
+                    title: Text('${Utils.getLocale(context)?.cameraRoll}'),
                     onTap: _cameraRoll,
                   ),
                   ListTile(
                     leading: Icon(Icons.camera),
-                    title: Text('${Utils.getLocale(context).takeAPhoto}'),
+                    title: Text('${Utils.getLocale(context)?.takeAPhoto}'),
                     onTap: _takePhoto,
                   ),
                 ],
@@ -80,7 +80,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           maxImages: widget.maxImages - _files.length, enableCamera: true);
     } catch (e) {
       Utils.alert(context,
-          title: Utils.getLocale(context).errorOccurred,
+          title: Utils.getLocale(context)?.errorOccurred,
           message: 'Error occurred when trying to pick multiple images!');
       print('Error occurred when trying to pick multiple images!');
       return;
@@ -108,7 +108,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
       _files.replaceRange(index, index + 1, [fileHolder]);
       if (widget.onAdd != null) {
-        widget.onAdd(fileHolder);
+        widget.onAdd!(fileHolder);
       }
 
       setState(() {});
@@ -118,9 +118,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   Future<void> _takePhoto() async {
     Navigator.of(context).pop(); // hide bottom sheet
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
     if (mounted) {
-      var file = File(pickedFile.path);
+      var file = File(pickedFile!.path);
       if (file == null) return;
 
       setState(() => _files.add(null));
@@ -143,7 +143,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
       _files.replaceRange(index, index + 1, [fileHolder]);
       if (widget.onAdd != null) {
-        widget.onAdd(fileHolder);
+        widget.onAdd!(fileHolder);
       }
 
       setState(() {});
@@ -151,26 +151,26 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     }
   }
 
-  static Future<File> _computeFile(FileHolderParser parser) async {
+  static Future<File?> _computeFile(FileHolderParser parser) async {
     if (parser == null ||
         (parser.fileByteData == null && parser.file == null) ||
         Utils.isNullOrEmpty(parser.fileName)) return null;
 
     return await Utils.resizeImage(MemoryFileSystem().file(parser.fileName)
       ..writeAsBytesSync(parser.file == null
-          ? parser.fileByteData.buffer.asUint8List()
-          : parser.file.readAsBytesSync()));
+          ? parser.fileByteData!.buffer.asUint8List()
+          : parser.file!.readAsBytesSync()));
   }
 
   @override
   void initState() {
     super.initState();
-    if (widget.controller.files != null) {
-      widget.controller.addListener(() {
+    if (widget.controller?.files != null) {
+      widget.controller?.addListener(() {
         setState(() {
           _files
             ..clear()
-            ..addAll(widget.controller.files);
+            ..addAll(widget.controller?.files as Iterable<FileHolder>);
         });
       });
     }
@@ -222,7 +222,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 return Card(
                   child: Center(
                     child: Text(
-                      '${Utils.getLocale(context).processing}...',
+                      '${Utils.getLocale(context)?.processing}...',
                       style: TextStyle(
                         color: Theme.of(context).disabledColor,
                         fontSize: 10.0,
@@ -251,17 +251,17 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                   },
                   child: GridTile(
                     child: fileHolder == null
-                        ? Text('${Utils.getLocale(context).empty}')
+                        ? Text('${Utils.getLocale(context)!.empty}')
                         : Stack(
                             fit: StackFit.expand,
                             children: [
-                              fileHolder.isNetworkImage
+                              fileHolder.isNetworkImage!
                                   ? Image.network(
-                                      fileHolder.fileUrl,
+                                      fileHolder.fileUrl!,
                                       fit: BoxFit.cover,
                                     )
                                   : Image.file(
-                                      fileHolder.file,
+                                      fileHolder.file!,
                                       fit: BoxFit.cover,
                                     ),
                               !widget.allowToDelete
@@ -273,25 +273,25 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                                         onTap: () {
                                           if (!widget.confirmDelete) {
                                             if (widget.onRemove != null) {
-                                              widget.onRemove(fileHolder);
+                                              widget.onRemove!(fileHolder);
                                             }
                                             widget.controller
-                                                .remove(fileHolder);
+                                                ?.remove(fileHolder);
                                             return;
                                           }
 
                                           Utils.confirm(
                                             context,
                                             title:
-                                                '${Utils.getLocale(context).confirmation}',
+                                                '${Utils.getLocale(context)?.confirmation}',
                                             message:
-                                                '${Utils.getLocale(context).confirmDeleteFileMessage}',
+                                                '${Utils.getLocale(context)?.confirmDeleteFileMessage}',
                                             onAccept: () {
                                               if (widget.onRemove != null) {
-                                                widget.onRemove(fileHolder);
+                                                widget.onRemove!(fileHolder);
                                               }
                                               widget.controller
-                                                  .remove(fileHolder);
+                                                  ?.remove(fileHolder);
                                             },
                                           );
                                         },
@@ -318,7 +318,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 }
 
 class ImagePickerController extends ValueNotifier<List<FileHolder>> {
-  ImagePickerController({List<FileHolder> files}) : super(files ?? []);
+  ImagePickerController({List<FileHolder>? files}) : super(files ?? []);
 
   List<FileHolder> get files => value;
 

@@ -16,9 +16,9 @@ import 'package:ntbexpress/util/utils.dart';
 
 class HttpUtil {
   static Future<void> get(String url,
-      {Map<String, String> headers,
-      ValueChanged<http.Response> onResponse,
-      VoidCallback onTimeout}) async {
+      {Map<String, String>? headers,
+      ValueChanged<http.Response>? onResponse,
+      VoidCallback? onTimeout}) async {
     if (Utils.isNullOrEmpty(url) ||
         SessionUtil.instance() == null ||
         Utils.isNullOrEmpty(SessionUtil.instance().authToken)) return;
@@ -33,7 +33,7 @@ class HttpUtil {
     http.Response resp;
     try {
       resp = await http
-          .get(url, headers: _headers)
+          .get(url as Uri, headers: _headers)
           .timeout(const Duration(seconds: timeout), onTimeout: () {
         onTimeout?.call();
         return null;
@@ -47,9 +47,9 @@ class HttpUtil {
   }
 
   static Future<void> getNotAuth(String url,
-      {Map<String, String> headers,
-        ValueChanged<http.Response> onResponse,
-        VoidCallback onTimeout}) async {
+      {Map<String, String>? headers,
+        ValueChanged<http.Response>? onResponse,
+        VoidCallback? onTimeout}) async {
     if (Utils.isNullOrEmpty(url)) return;
     Map<String, String> _headers = {};
 
@@ -60,7 +60,7 @@ class HttpUtil {
     http.Response resp;
     try {
       resp = await http
-          .get(url, headers: _headers)
+          .get(url as Uri, headers: _headers)
           .timeout(const Duration(seconds: timeout), onTimeout: () {
         onTimeout?.call();
         return null;
@@ -74,9 +74,9 @@ class HttpUtil {
   }
 
   static Future<void> head(String url,
-      {Map<String, String> headers,
-      ValueChanged<http.Response> onResponse,
-      VoidCallback onTimeout}) async {
+      {Map<String, String>? headers,
+      ValueChanged<http.Response>? onResponse,
+      VoidCallback? onTimeout}) async {
     if (Utils.isNullOrEmpty(url) ||
         SessionUtil.instance() == null ||
         Utils.isNullOrEmpty(SessionUtil.instance().authToken)) return;
@@ -91,7 +91,7 @@ class HttpUtil {
     http.Response resp;
     try {
       resp = await http
-          .head(url, headers: _headers)
+          .head(url as Uri, headers: _headers)
           .timeout(const Duration(seconds: timeout), onTimeout: () {
         onTimeout?.call();
         return null;
@@ -104,12 +104,12 @@ class HttpUtil {
     }
   }
 
-  static Future<void> put(String url,
-      {Map<String, String> headers,
-      Map<String, dynamic> body,
-      ValueChanged<http.Response> onResponse,
-      VoidCallback onTimeout}) async {
-    if (Utils.isNullOrEmpty(url) ||
+  static Future<void> put(String? url,
+      {Map<String, String>? headers,
+      Map<String, dynamic>? body,
+      ValueChanged<http.Response>? onResponse,
+      VoidCallback? onTimeout}) async {
+    if (Utils.isNullOrEmpty(url!) ||
         SessionUtil.instance() == null ||
         Utils.isNullOrEmpty(SessionUtil.instance().authToken)) return;
     Map<String, String> _headers = {
@@ -123,7 +123,7 @@ class HttpUtil {
     http.Response resp;
     try {
       resp = await http
-          .put(url, headers: _headers, body: jsonEncode(body))
+          .put(url as Uri, headers: _headers, body: jsonEncode(body))
           .timeout(const Duration(seconds: timeout), onTimeout: () {
         onTimeout?.call();
         return null;
@@ -136,10 +136,10 @@ class HttpUtil {
     }
   }
 
-  static Future<void> delete(String url,
-      {Map<String, String> headers,
-        ValueChanged<http.Response> onResponse,
-        VoidCallback onTimeout}) async {
+  static Future<void> delete(String? url,
+      {Map<String, String>? headers,
+        ValueChanged<http.Response>? onResponse,
+        VoidCallback? onTimeout}) async {
     if (Utils.isNullOrEmpty(url) ||
         SessionUtil.instance() == null ||
         Utils.isNullOrEmpty(SessionUtil.instance().authToken)) return;
@@ -154,7 +154,7 @@ class HttpUtil {
     http.Response resp;
     try {
       resp = await http
-          .delete(url, headers: _headers)
+          .delete(url as Uri, headers: _headers)
           .timeout(const Duration(seconds: timeout), onTimeout: () {
         onTimeout?.call();
         return null;
@@ -167,12 +167,12 @@ class HttpUtil {
     }
   }
 
-  static Future<void> post(String url,
-      {Map<String, String> headers,
-      Map<String, dynamic> body,
-      ValueChanged<http.Response> onResponse,
-      VoidCallback onTimeout,
-      ValueChanged<dynamic> onError}) async {
+  static Future<void> post(String? url,
+      {Map<String, String>? headers,
+      Map<String, dynamic>? body,
+      ValueChanged<http.Response>? onResponse,
+      VoidCallback? onTimeout,
+      ValueChanged<dynamic>? onError}) async {
     if (Utils.isNullOrEmpty(url) ||
         SessionUtil.instance() == null ||
         Utils.isNullOrEmpty(SessionUtil.instance().authToken)) return;
@@ -188,7 +188,7 @@ class HttpUtil {
 
     try {
       resp = await http
-          .post(url, headers: _headers, body: jsonEncode(body))
+          .post(url as Uri, headers: _headers, body: jsonEncode(body))
           .timeout(const Duration(seconds: timeout), onTimeout: () {
         onTimeout?.call();
         return null;
@@ -206,25 +206,25 @@ class HttpUtil {
   }
 
   static Future<void> postOrder(String url,
-      {Order order,
-      List<FileHolder> files,
-      ValueChanged<http.Response> onDone,
-      VoidCallback onTimeout}) async {
+      {Order? order,
+      List<FileHolder>? files,
+      ValueChanged<http.Response>? onDone,
+      VoidCallback? onTimeout}) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(http.MultipartFile.fromString(
       'orderDTO',
-      jsonEncode(order.toJson()),
+      jsonEncode(order?.toJson()),
       filename: 'orderDTO',
       contentType: hparser.MediaType.parse('application/json; charset=utf-8'),
     ));
     if (files != null && files.isNotEmpty) {
       files.forEach((f) {
         if (f != null && f.file != null) {
-          final fileName = _getFileName(f.file);
+          final fileName = _getFileName(f.file!);
           final extension = _getExtension(fileName);
 
           request.files.add(http.MultipartFile.fromBytes(
-              'orderImages', f.file.readAsBytesSync(),
+              'orderImages', f.file!.readAsBytesSync(),
               filename: fileName,
               contentType: hparser.MediaType('image', extension)));
         }
@@ -247,25 +247,25 @@ class HttpUtil {
     }
   }
 
-  static Future<void> postUser(String url,
-      {User user,
-      FileHolder avatar,
+  static Future<void> postUser(String? url,
+      {User? user,
+      FileHolder? avatar,
       bool update = false,
-      ValueChanged<http.Response> onDone,
-      VoidCallback onTimeout}) async {
+      ValueChanged<http.Response>? onDone,
+      VoidCallback? onTimeout}) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(http.MultipartFile.fromString(
       'userDTO',
-      jsonEncode(user.toJson()),
+      jsonEncode(user!.toJson()),
       filename: 'userDTO',
       contentType: hparser.MediaType.parse('application/json; charset=utf-8'),
     ));
     if (avatar != null) {
-      final fileName = _getFileName(avatar.file);
+      final fileName = _getFileName(avatar.file!);
       final extension = _getExtension(fileName);
 
       request.files.add(http.MultipartFile.fromBytes(
-          'avatarImg', avatar.file.readAsBytesSync(),
+          'avatarImg', avatar.file!.readAsBytesSync(),
           filename: fileName,
           contentType: hparser.MediaType('image', extension)));
     }
@@ -287,13 +287,13 @@ class HttpUtil {
   }
 
   static Future<void> postRegister(String url,
-      {User user,
-        ValueChanged<http.Response> onDone,
-        VoidCallback onTimeout}) async {
+      {User? user,
+        ValueChanged<http.Response>? onDone,
+        VoidCallback? onTimeout}) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(http.MultipartFile.fromString(
       'userDTO',
-      jsonEncode(user.toJson()),
+      jsonEncode(user!.toJson()),
       filename: 'userDTO',
       contentType: hparser.MediaType.parse('application/json; charset=utf-8'),
     ));
@@ -319,7 +319,7 @@ class HttpUtil {
   }
 
   static Future<bool> updateOrderTrackingStatus(String orderId, int status,
-      {ConfirmationStatus confirmStatus, ValueChanged<dynamic> error}) async {
+      {ConfirmationStatus? confirmStatus, ValueChanged<dynamic>? error}) async {
     final c = Completer<bool>();
 
     var data = {'orderId': orderId, 'actionType': status};

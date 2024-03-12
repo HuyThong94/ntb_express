@@ -19,18 +19,18 @@ import 'package:ntbexpress/widgets/info_item.dart';
 class ProfileScreen extends StatefulWidget {
   final User currentUser;
 
-  ProfileScreen({this.currentUser});
+  ProfileScreen({required this.currentUser});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  File _image;
+  late File _image;
   final picker = ImagePicker();
   final _dividerHeight = 0.5;
-  User _user;
-  User _immutableUser;
+  late User _user;
+  late User _immutableUser;
   bool _hasChanges = false;
 
   @override
@@ -67,7 +67,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _cameraRoll() async {
     Navigator.of(context).pop(); // hide bottom sheet
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    // final pickedFile = await picker.getImage(source: ImageSource.gallery);
     if (pickedFile != null && mounted) {
       _hasChanges = true;
       final file = await compute(_computeFile, File(pickedFile.path));
@@ -77,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _takePhoto() async {
     Navigator.of(context).pop(); // hide bottom sheet
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null && mounted) {
       _hasChanges = true;
       final file = await compute(_computeFile, File(pickedFile.path));
@@ -173,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 firstText: '${Utils.getLocale(context).dateOfBirth} ',
                 secondText: _user.dob == null
                     ? ''
-                    : Utils.getDateString(_user.dob, 'dd/MM/yyy') ?? '',
+                    : Utils.getDateString(_user.dob!, 'dd/MM/yyy') ?? '',
                 onTap: _updateDob,
               ),
               Divider(height: _dividerHeight),
@@ -326,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String errorOccurred = Utils.getLocale(context).errorOccurred;
 
     String updatedText = await Utils.editScreen(context,
-        currentValue: Utils.getDateString(_user.dob, 'dd/MM/yyyy'),
+        currentValue: Utils.getDateString(_user.dob!, 'dd/MM/yyyy'),
         title: '${Utils.getLocale(context).edit} $dob',
         hintText: '${Utils.getLocale(context).enter} $dob...',
         length: 10, onValidate: (value) {
@@ -415,7 +416,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
           dynamic json = jsonDecode(utf8.decode(resp.bodyBytes));
-          User updatedUser = json == null ? null : User.fromJson(json);
+          User? updatedUser = json == null ? null : User.fromJson(json);
           if (updatedUser != null) {
             SessionUtil.instance().user = updatedUser;
             HttpUtil.get(
@@ -424,10 +425,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onResponse: (resp) {
                 if (resp != null && resp.statusCode == 200) {
                   dynamic json = jsonDecode(utf8.decode(resp.bodyBytes));
-                  User user = json == null ? null : User.fromJson(json);
+                  User? user = json == null ? null : User.fromJson(json);
                   if (user == null) return;
-                  if (user.avatarImgDTO != null && !Utils.isNullOrEmpty(user.avatarImgDTO.flePath)) {
-                    user.avatarImgDTO.flePath += '?t=${DateTime.now().millisecondsSinceEpoch}';
+                  if (user.avatarImgDTO != null && !Utils.isNullOrEmpty(user.avatarImgDTO!.flePath!)) {
+                    user.avatarImgDTO?.flePath += '?t=${DateTime.now().millisecondsSinceEpoch}';
                   }
                   SessionUtil.instance().user = user;
                   AppProvider.of(context)

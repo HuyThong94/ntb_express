@@ -45,7 +45,7 @@ class ApiUrls {
     _baseUrl = 'http://vanchuyendailong.com:8888';
   }
 
-  static ApiUrls _instance;
+  static late ApiUrls _instance;
 
   static ApiUrls instance() {
     if (_instance != null) return _instance;
@@ -54,7 +54,7 @@ class ApiUrls {
     return _instance;
   }
 
-  String _baseUrl;
+  late final String _baseUrl;
 
   String get baseUrl => _baseUrl;
 
@@ -62,94 +62,94 @@ class ApiUrls {
     _baseUrl = url;
   }
 
-  String getLoginUrl() {
+  String? getLoginUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/login';
   }
 
-  String getUserInfoUrl() {
+  String? getUserInfoUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/users/current-login';
   }
 
-  String getOrdersUrl() {
+  String? getOrdersUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/orders';
   }
 
-  String getOrderUrl(String orderId) {
+  String? getOrderUrl(String orderId) {
     if (Utils.isNullOrEmpty(_baseUrl) || Utils.isNullOrEmpty(orderId))
       return null;
     return '$_baseUrl/orders/$orderId';
   }
 
-  String getAddressListByUserUrl(String username) {
+  String? getAddressListByUserUrl(String username) {
     if (Utils.isNullOrEmpty(_baseUrl) || Utils.isNullOrEmpty(username))
       return null;
     return '$_baseUrl/addresses/username/$username';
   }
 
-  String getPromotionListByOrderUrl(Order order) {
+  String? getPromotionListByOrderUrl(Order order) {
     if (Utils.isNullOrEmpty(_baseUrl) || order == null) return null;
     return '$_baseUrl/promotions?${order.toPromotionQueryString()}';
   }
 
-  String getFeeTableUrl() {
+  String? getFeeTableUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/fee-tables';
   }
 
-  String getDeviceRegisterUrl() {
+  String? getDeviceRegisterUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/app/deviceRegister';
   }
 
-  String getUpdateTrackStatusUrl() {
+  String ?getUpdateTrackStatusUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/orders/action-type';
   }
 
-  String getUsersUrl() {
+  String? getUsersUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/users';
   }
 
-  String getSaveAddressUrl() {
+  String? getSaveAddressUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/addresses';
   }
 
-  String getForgotPasswordUrl(String username) {
+  String? getForgotPasswordUrl(String username) {
     if (Utils.isNullOrEmpty(_baseUrl) || Utils.isNullOrEmpty(username))
       return null;
     return '$_baseUrl/users/verify-code/$username';
   }
 
-  String getChangePasswordUrl() {
+  String? getChangePasswordUrl() {
     if (Utils.isNullOrEmpty(_baseUrl))
       return null;
     return '$_baseUrl/users/password/change';
   }
 
-  String getOrderAppendFilesUrl() {
+  String? getOrderAppendFilesUrl() {
     if (Utils.isNullOrEmpty(_baseUrl))
       return null;
     return '$_baseUrl/orders/uploadFiles';
   }
 
-  String getUpdateDeviceLocaleUrl() {
+  String? getUpdateDeviceLocaleUrl() {
     if (Utils.isNullOrEmpty(_baseUrl))
       return null;
     return '$_baseUrl/app/updateLocale';
   }
 
-  String getDeleteUserUrl(String username) {
+  String? getDeleteUserUrl(String username) {
     if (Utils.isNullOrEmpty(_baseUrl) || Utils.isNullOrEmpty(username))
       return null;
     return '$_baseUrl/users/customer/delete/$username';
   }
 
-  String getRegisterUrl() {
+  String? getRegisterUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/users/register';
   }

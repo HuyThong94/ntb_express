@@ -91,7 +91,7 @@ class _SelectOrderStatusScreenState extends State<SelectOrderStatusScreen> {
                         Checkbox(
                           onChanged: (checked) {
                             setState(() {
-                              if (checked) {
+                              if (checked!) {
                                 if (!_statusList.contains(e))
                                   _statusList.add(e);
                               } else {

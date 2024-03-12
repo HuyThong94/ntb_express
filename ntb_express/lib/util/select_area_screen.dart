@@ -9,17 +9,17 @@ enum AreaTarget { province, district, wards }
 
 class SelectAreaScreen extends StatefulWidget {
   final AreaTarget target;
-  final String currentProvince;
-  final String currentDistrict;
-  final String currentWards;
+  final String? currentProvince;
+  final String? currentDistrict;
+  final String? currentWards;
   final String title;
 
   SelectAreaScreen(
-      {@required this.target,
+      {required this.target,
       this.currentProvince,
       this.currentDistrict,
       this.currentWards,
-      @required this.title})
+      required this.title})
       : assert(target != null),
         assert(title != null);
 
@@ -28,20 +28,20 @@ class SelectAreaScreen extends StatefulWidget {
 }
 
 class _SelectAreaScreenState extends State<SelectAreaScreen> {
-  String _currentValue;
+  late String _currentValue;
 
   @override
   void initState() {
     super.initState();
     switch (widget.target) {
       case AreaTarget.province:
-        _currentValue = widget.currentProvince;
+        _currentValue = widget.currentProvince!;
         break;
       case AreaTarget.district:
-        _currentValue = widget.currentDistrict;
+        _currentValue = widget.currentDistrict!;
         break;
       case AreaTarget.wards:
-        _currentValue = widget.currentWards;
+        _currentValue = widget.currentWards!;
         break;
     }
   }
@@ -83,13 +83,13 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
     return _location(Utils.getProvinceList());
   }
 
-  Future<List<District>> _getDistrictList() async {
+  Future<Future<List<District>>?> _getDistrictList() async {
     List<Province> provinceList = await Utils.getProvinceList();
     if (provinceList != null && provinceList.isNotEmpty) {
       int provinceId = provinceList
               .firstWhere((province) =>
-                  province.name.toLowerCase() ==
-                  widget.currentProvince.toLowerCase())
+                  province.name!.toLowerCase() ==
+                  widget.currentProvince!.toLowerCase())
               ?.id ??
           0;
 
@@ -102,16 +102,16 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
   }
 
   Widget _district() {
-    return _location(_getDistrictList());
+    return _location(_getDistrictList() as Future<List<Location>>);
   }
 
-  Future<List<Wards>> _getWardsList() async {
-    List<District> districtList = await _getDistrictList();
+  Future<Future<List<Wards>>?> _getWardsList() async {
+    List<District> districtList = (await _getDistrictList()) as List<District>;
     if (districtList != null && districtList.isNotEmpty) {
       int districtId = districtList
               .firstWhere((district) =>
-                  district.name.toLowerCase() ==
-                  widget.currentDistrict.toLowerCase())
+                  district.name!.toLowerCase() ==
+                  widget.currentDistrict!.toLowerCase())
               ?.id ??
           0;
 
@@ -124,7 +124,7 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
   }
 
   Widget _wardsList() {
-    return _location(_getWardsList());
+    return _location(_getWardsList() as Future<List<Location>>);
   }
 
   Widget _location(Future<List<Location>> targetMethod) {
@@ -144,7 +144,7 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
         }
 
         if (snapshot.hasData) {
-          if (snapshot.data == null || snapshot.data.isEmpty) {
+          if (snapshot.data == null || snapshot.data!.isEmpty) {
             return Center(
                 child: Text(
               '${Utils.getLocale(context).empty}',
@@ -157,12 +157,12 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
                     onTap: () {
                       if (mounted) {
                         setState(
-                            () => _currentValue = snapshot.data[index].name);
+                            () => _currentValue = snapshot.data![index].name!);
                         Navigator.of(context).pop(_currentValue);
                       }
                     },
-                    leading: Text(snapshot.data[index].name),
-                    trailing: snapshot.data[index].name.toLowerCase() ==
+                    leading: Text(snapshot.data![index].name!),
+                    trailing: snapshot.data![index].name!.toLowerCase() ==
                             _currentValue?.toLowerCase()
                         ? Icon(
                             Icons.done,
@@ -171,7 +171,7 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
                         : SizedBox(),
                   ),
               separatorBuilder: (context, index) => Divider(height: 0.5),
-              itemCount: snapshot.data.length);
+              itemCount: snapshot.data!.length);
         }
 
         return SizedBox();

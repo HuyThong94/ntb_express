@@ -11,8 +11,8 @@ import 'package:ntbexpress/util/utils.dart';
 import 'package:ntbexpress/util/extensions.dart';
 
 class SelectPromotionScreen extends StatefulWidget {
-  final Order order;
-  final Promotion current;
+  final Order? order;
+  final Promotion? current;
 
   SelectPromotionScreen({this.order, this.current});
 
@@ -21,14 +21,14 @@ class SelectPromotionScreen extends StatefulWidget {
 }
 
 class _SelectPromotionScreenState extends State<SelectPromotionScreen> {
-  Promotion _current;
+  late Promotion _current;
   final List<Promotion> _promotionList = [];
   bool _loaded = false;
 
   @override
   void initState() {
     super.initState();
-    _current = widget.current;
+    _current = widget.current!;
   }
 
   @override
@@ -58,9 +58,9 @@ class _SelectPromotionScreenState extends State<SelectPromotionScreen> {
                       final promotion = _promotionList[index];
                       return Container(
                         color:
-                            promotion.valid ? Colors.white : Utils.unreadColor,
+                            promotion.valid! ? Colors.white : Utils.unreadColor,
                         child: ListTile(
-                          onTap: !promotion.valid
+                          onTap: !promotion.valid!
                               ? null
                               : () {
                                   if (mounted) {
@@ -85,16 +85,16 @@ class _SelectPromotionScreenState extends State<SelectPromotionScreen> {
                                   children: [
                                     TextSpan(
                                       text: Utils.getGoodsTypeString(
-                                          context, promotion.goodsType),
+                                          context, promotion.goodsType!),
                                       style: TextStyle(color: Colors.orange),
                                     ),
                                   ],
                                 ),
                               ),
-                              Text(promotion.description),
+                              Text(promotion.description!),
                               //Text(promotion.description ?? ''),
                               Text(
-                                  '${Utils.getLocale(context).expiryDate}: ${Utils.getDateString(promotion.startDate, 'dd.MM.yyyy')} - ${Utils.getDateString(promotion.endDate, 'dd.MM.yyyy')}'),
+                                  '${Utils.getLocale(context).expiryDate}: ${Utils.getDateString(promotion.startDate!, 'dd.MM.yyyy')} - ${Utils.getDateString(promotion.endDate!, 'dd.MM.yyyy')}'),
                             ],
                           ),
                           trailing: _current != null &&
@@ -178,10 +178,10 @@ class _SelectPromotionScreenState extends State<SelectPromotionScreen> {
       return c.future;
     }
 
-    final url = ApiUrls.instance().getPromotionListByOrderUrl(widget.order);
+    final url = ApiUrls.instance().getPromotionListByOrderUrl(widget.order!);
 
     HttpUtil.get(
-      url,
+      url!,
       headers: {'Content-Type': 'application/json; charset=utf-8'},
       onResponse: (resp) {
         if (resp == null || resp.statusCode != 200) {

@@ -35,7 +35,7 @@ class Utils {
   static final Color accentColor = Color(Utils.hexColor('#F94D30'));
   static final Color unreadColor = Color(Utils.hexColor('#F5F5F5'));
   static final Color grey = Color(Utils.hexColor('#E0E0E0'));
-  static final Color backgroundColor = Colors.grey[50];
+  static final Color? backgroundColor = Colors.grey[50];
 
   /// Check the input text is null or empty
   static bool isNullOrEmpty(String str) {
@@ -43,7 +43,7 @@ class Utils {
   }
 
   /// Get current locale message (can get language correctly by locale)
-  static Message getLocale(BuildContext context) {
+  static Message? getLocale(BuildContext context) {
     return NTBExpressLocalizations.of(context).currentLocalized;
   }
 
@@ -90,7 +90,7 @@ class Utils {
   }
 
   static void alert(BuildContext context,
-      {String title, String message, VoidCallback onAccept}) {
+      {String? title, String? message, VoidCallback? onAccept}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -101,7 +101,7 @@ class Utils {
             },
             child: AlertDialog(
               title: Text(title ?? ''),
-              content: Text(message),
+              content: Text(message!),
               actions: [
                 FlatButton(
                   onPressed: () {
@@ -117,10 +117,10 @@ class Utils {
   }
 
   static void confirm(BuildContext context,
-      {String title,
-      String message,
-      VoidCallback onAccept,
-      VoidCallback onDecline}) {
+      {String? title,
+      String? message,
+      VoidCallback? onAccept,
+      VoidCallback? onDecline}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -131,7 +131,7 @@ class Utils {
             },
             child: AlertDialog(
               title: Text(title ?? ''),
-              content: Text(message),
+              content: Text(message!),
               actions: [
                 FlatButton(
                   onPressed: () {
@@ -197,7 +197,7 @@ class Utils {
         });
   }
 
-  static Future<File> resizeAvatar(File originImage) async {
+  static Future<File?> resizeAvatar(File originImage) async {
     if (originImage == null) return null;
     final originBytes = originImage.readAsBytesSync();
     final threshold = 1024 * 1024 / 3; // 0.3MB
@@ -205,14 +205,14 @@ class Utils {
       return originImage;
     }
 
-    img.Image image = img.decodeImage(originBytes);
-    img.Image resized = img.copyResize(image, width: 120);
+    img.Image? image = img.decodeImage(originBytes);
+    img.Image resized = img.copyResize(image!, width: 120);
     return MemoryFileSystem()
         .file('${DateTime.now().millisecondsSinceEpoch}.jpg')
           ..writeAsBytesSync(img.encodeJpg(resized));
   }
 
-  static Future<File> resizeImage(File originImage) async {
+  static Future<File?> resizeImage(File originImage) async {
     if (originImage == null) return null;
     final originBytes = originImage.readAsBytesSync();
     final threshold = 1024 * 1024 / 2; // 0.5MB
@@ -220,8 +220,8 @@ class Utils {
       return originImage;
     }
 
-    img.Image image = img.decodeImage(originBytes);
-    img.Image resized = img.copyResize(image, height: 500);
+    img.Image? image = img.decodeImage(originBytes);
+    img.Image resized = img.copyResize(image!, height: 500);
     final encoded = img.encodeJpg(resized);
     return MemoryFileSystem()
         .file('${DateTime.now().millisecondsSinceEpoch}.jpg')
@@ -242,11 +242,11 @@ class Utils {
   }
 
   static Future<String> editScreen(BuildContext context,
-      {String currentValue,
-      @required String title,
-      @required String hintText,
-      @required int length,
-      ValidationCallback onValidate}) async {
+      {String? currentValue,
+      required String title,
+      required String hintText,
+      required int length,
+      ValidationCallback? onValidate}) async {
     return await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => EditScreen(
             currentValue: currentValue,
@@ -257,23 +257,23 @@ class Utils {
   }
 
   static Future<String> selectArea(BuildContext context,
-      {@required AreaTarget target,
-      String currentProvince,
-      String currentDistrict,
-      String currentWards,
-      String title}) async {
+      {required AreaTarget target,
+      String? currentProvince,
+      String? currentDistrict,
+      String? currentWards,
+      String? title}) async {
     return await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => SelectAreaScreen(
             target: target,
-            title: title,
+            title: title!,
             currentProvince: currentProvince,
             currentDistrict: currentDistrict,
             currentWards: currentWards)));
   }
 
   /// Get list of province Vietnam
-  static Future<List<Province>> getProvinceList() async {
-    var response = await http.get(VietnamAreas.province);
+  static Future<List<Province>?> getProvinceList() async {
+    var response = await http.get(VietnamAreas.province as Uri);
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.map((json) => Province.fromJson(json)).toList();
@@ -283,8 +283,8 @@ class Utils {
   }
 
   /// Get list of district
-  static Future<List<District>> getDistrictList({int provinceId}) async {
-    var response = await http.get(VietnamAreas.district);
+  static Future<List<District>?> getDistrictList({int? provinceId}) async {
+    var response = await http.get(VietnamAreas.district as Uri);
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);
       var result = jsonResponse.map((json) => District.fromJson(json)).toList();
@@ -299,8 +299,8 @@ class Utils {
   }
 
   /// Get list of wards
-  static Future<List<Wards>> getWardsList({int districtId}) async {
-    var response = await http.get(VietnamAreas.wards);
+  static Future<List<Wards>?> getWardsList({int? districtId}) async {
+    var response = await http.get(VietnamAreas.wards as Uri);
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);
       var result = jsonResponse.map((json) => Wards.fromJson(json)).toList();
@@ -318,25 +318,25 @@ class Utils {
     String result = '';
     switch (userType) {
       case UserType.admin:
-        result = Utils.getLocale(context).userTypeAdmin;
+        result = Utils.getLocale(context)!.userTypeAdmin;
         break;
       case UserType.saleStaff:
-        result = Utils.getLocale(context).userTypeSaleStaff;
+        result = Utils.getLocale(context)!.userTypeSaleStaff;
         break;
       case UserType.chineseWarehouseStaff:
-        result = Utils.getLocale(context).userTypeChineseSaleStaff;
+        result = Utils.getLocale(context)!.userTypeChineseSaleStaff;
         break;
       case UserType.uongbiWarehouseStaff:
-        result = Utils.getLocale(context).userTypeUongBiSaleStaff;
+        result = Utils.getLocale(context)!.userTypeUongBiSaleStaff;
         break;
       case UserType.hanoiWarehouseStaff:
-        result = Utils.getLocale(context).userTypeHanoiSaleStaff;
+        result = Utils.getLocale(context)!.userTypeHanoiSaleStaff;
         break;
       case UserType.saigonWarehouseStaff:
-        result = Utils.getLocale(context).userTypeSaigonSaleStaff;
+        result = Utils.getLocale(context)!.userTypeSaigonSaleStaff;
         break;
       case UserType.customer:
-        result = Utils.getLocale(context).userTypeCustomer;
+        result = Utils.getLocale(context)!.userTypeCustomer;
         break;
     }
 
@@ -347,46 +347,46 @@ class Utils {
     String result = '';
     switch (orderStatus) {
       case OrderStatus.newlyCreated:
-        result = Utils.getLocale(context).orderStatusNew;
+        result = Utils.getLocale(context)!.orderStatusNew;
         break;
       case OrderStatus.aborted:
-        result = Utils.getLocale(context).orderStatusAbort;
+        result = Utils.getLocale(context)!.orderStatusAbort;
         break;
       case OrderStatus.chineseWarehoused:
-        result = Utils.getLocale(context).orderStatusChineseWarehoused;
+        result = Utils.getLocale(context)!.orderStatusChineseWarehoused;
         break;
       case OrderStatus.pendingWoodenPacking:
-        result = Utils.getLocale(context).orderStatusPendingBoxedWood;
+        result = Utils.getLocale(context)!.orderStatusPendingBoxedWood;
         break;
       case OrderStatus.chineseShippedOut:
-        result = Utils.getLocale(context).orderStatusChineseShippedOut;
+        result = Utils.getLocale(context)!.orderStatusChineseShippedOut;
         break;
       case OrderStatus.uongbiWarehoused:
-        result = Utils.getLocale(context).orderStatusUongBiWarehoused;
+        result = Utils.getLocale(context)!.orderStatusUongBiWarehoused;
         break;
       case OrderStatus.hanoiWarehoused:
-        result = Utils.getLocale(context).orderStatusHanoiWarehoused;
+        result = Utils.getLocale(context)!.orderStatusHanoiWarehoused;
         break;
       case OrderStatus.saigonWarehoused:
-        result = Utils.getLocale(context).orderStatusSaigonWarehoused;
+        result = Utils.getLocale(context)!.orderStatusSaigonWarehoused;
         break;
       case OrderStatus.outputUongBi:
-        result = Utils.getLocale(context).orderStatusOutputUongBi;
+        result = Utils.getLocale(context)!.orderStatusOutputUongBi;
         break;
       case OrderStatus.outputHaNoi:
-        result = Utils.getLocale(context).orderStatusOutputHaNoi;
+        result = Utils.getLocale(context)!.orderStatusOutputHaNoi;
         break;
       case OrderStatus.outputSaiGon:
-        result = Utils.getLocale(context).orderStatusOutputSaiGon;
+        result = Utils.getLocale(context)!.orderStatusOutputSaiGon;
         break;
       case OrderStatus.delivery:
-        result = Utils.getLocale(context).orderStatusDelivery;
+        result = Utils.getLocale(context)!.orderStatusDelivery;
         break;
       case OrderStatus.delivered:
-        result = Utils.getLocale(context).orderStatusDelivered;
+        result = Utils.getLocale(context)!.orderStatusDelivered;
         break;
       case OrderStatus.completed:
-        result = Utils.getLocale(context).orderStatusCompleted;
+        result = Utils.getLocale(context)!.orderStatusCompleted;
         break;
     }
 
@@ -398,49 +398,49 @@ class Utils {
     String result = '';
     switch (trackingStatus) {
       case ActionType.createNewOrder:
-        result = Utils.getLocale(context).trackingStatusNew;
+        result = Utils.getLocale(context)!.trackingStatusNew;
         break;
       case ActionType.cancelOrder:
-        result = Utils.getLocale(context).trackingStatusCancel;
+        result = Utils.getLocale(context)!.trackingStatusCancel;
         break;
       case ActionType.chineseWarehouse:
-        result = Utils.getLocale(context).trackingStatusChineseWarehoused;
+        result = Utils.getLocale(context)!.trackingStatusChineseWarehoused;
         break;
       case ActionType.chineseStockOut:
-        result = Utils.getLocale(context).trackingStatusChineseShippedOut;
+        result = Utils.getLocale(context)!.trackingStatusChineseShippedOut;
         break;
       case ActionType.sendConfirmationWoodenPacking:
-        result = Utils.getLocale(context).trackingStatusSendBoxedRequest;
+        result = Utils.getLocale(context)!.trackingStatusSendBoxedRequest;
         break;
       case ActionType.confirmWoodenPacking:
-        result = Utils.getLocale(context).trackingStatusConfirmedBoxedRequest;
+        result = Utils.getLocale(context)!.trackingStatusConfirmedBoxedRequest;
         break;
       case ActionType.uongbiWarehouse:
-        result = Utils.getLocale(context).trackingStatusUongBiWarehoused;
+        result = Utils.getLocale(context)!.trackingStatusUongBiWarehoused;
         break;
       case ActionType.hanoiWarehouse:
-        result = Utils.getLocale(context).trackingStatusHaNoiWarehoused;
+        result = Utils.getLocale(context)!.trackingStatusHaNoiWarehoused;
         break;
       case ActionType.saigonWarehouse:
-        result = Utils.getLocale(context).trackingStatusSaiGonWarehoused;
+        result = Utils.getLocale(context)!.trackingStatusSaiGonWarehoused;
         break;
       case ActionType.outputUongBi:
-        result = Utils.getLocale(context).trackingStatusOutputUongBi;
+        result = Utils.getLocale(context)!.trackingStatusOutputUongBi;
         break;
       case ActionType.outputHaNoi:
-        result = Utils.getLocale(context).trackingStatusOutputHaNoi;
+        result = Utils.getLocale(context)!.trackingStatusOutputHaNoi;
         break;
       case ActionType.outputSaiGon:
-        result = Utils.getLocale(context).trackingStatusOutputSaiGon;
+        result = Utils.getLocale(context)!.trackingStatusOutputSaiGon;
         break;
       case ActionType.delivery:
-        result = Utils.getLocale(context).trackingStatusDelivery;
+        result = Utils.getLocale(context)!.trackingStatusDelivery;
         break;
       case ActionType.delivered:
-        result = Utils.getLocale(context).trackingStatusDelivered;
+        result = Utils.getLocale(context)!.trackingStatusDelivered;
         break;
       case ActionType.completed:
-        result = Utils.getLocale(context).trackingStatusCompleted;
+        result = Utils.getLocale(context)!.trackingStatusCompleted;
         break;
     }
 
@@ -451,40 +451,40 @@ class Utils {
     String result = '';
     switch (goodsType) {
       case GoodsType.fake:
-        result = Utils.getLocale(context).goodsTypeFake;
+        result = Utils.getLocale(context)!.goodsTypeFake;
         break;
       case GoodsType.cosmetic:
-        result = Utils.getLocale(context).goodsTypeCosmetic;
+        result = Utils.getLocale(context)!.goodsTypeCosmetic;
         break;
       case GoodsType.food:
-        result = Utils.getLocale(context).goodsTypeFood;
+        result = Utils.getLocale(context)!.goodsTypeFood;
         break;
       case GoodsType.medicine:
-        result = Utils.getLocale(context).goodsTypeMedicine;
+        result = Utils.getLocale(context)!.goodsTypeMedicine;
         break;
       case GoodsType.liquid:
-        result = Utils.getLocale(context).goodsTypeLiquid;
+        result = Utils.getLocale(context)!.goodsTypeLiquid;
         break;
       case GoodsType.fragile:
-        result = Utils.getLocale(context).goodsTypeFragile;
+        result = Utils.getLocale(context)!.goodsTypeFragile;
         break;
       case GoodsType.clothes:
-        result = Utils.getLocale(context).goodsTypeClothes;
+        result = Utils.getLocale(context)!.goodsTypeClothes;
         break;
       case GoodsType.electronic:
-        result = Utils.getLocale(context).goodsTypeElectronic;
+        result = Utils.getLocale(context)!.goodsTypeElectronic;
         break;
       case GoodsType.prepackagedGroceries:
-        result = Utils.getLocale(context).goodsTypePrepackedGroceries;
+        result = Utils.getLocale(context)!.goodsTypePrepackedGroceries;
         break;
       case GoodsType.normal:
-        result = Utils.getLocale(context).goodsTypeNormal;
+        result = Utils.getLocale(context)!.goodsTypeNormal;
         break;
       case GoodsType.superHeavy:
-        result = Utils.getLocale(context).goodsTypeSuperHeavy;
+        result = Utils.getLocale(context)!.goodsTypeSuperHeavy;
         break;
       case GoodsType.special:
-        result = Utils.getLocale(context).goodsTypeSpecial;
+        result = Utils.getLocale(context)!.goodsTypeSpecial;
         break;
     }
 
@@ -707,9 +707,9 @@ class Utils {
         .popUntil((route) => count++ == SessionUtil.instance().canPop);
   }
 
-  static Future<ConfirmationStatus> showConfirmStatusDialog(
+  static Future<ConfirmationStatus?> showConfirmStatusDialog(
       BuildContext context,
-      {@required Order forOrder,
+      {required Order forOrder,
       bool cancelOrder = false,
       bool output = false,
       bool hidePackCount = false}) async {
@@ -809,10 +809,10 @@ class Utils {
   }
 
   static Future<String> getCurrentLocale() async {
-    String currentLocale;
+    String? currentLocale;
     try {
       currentLocale = await Devicelocale.currentLocale;
-      if (currentLocale.contains('-'))
+      if (currentLocale!.contains('-'))
         currentLocale = currentLocale.split('-')[0];
       else if (currentLocale.contains('_'))
         currentLocale = currentLocale.split('_')[0];
@@ -839,10 +839,10 @@ class Utils {
 }
 
 class ConfirmationStatus {
-  int packCount;
-  String note;
-  String nextWarehouse;
-  List<File> files;
+  int? packCount;
+  String? note;
+  String? nextWarehouse;
+  List<File>? files;
 
   ConfirmationStatus(
       {this.packCount, this.note, this.nextWarehouse, this.files});

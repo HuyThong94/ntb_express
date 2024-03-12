@@ -12,16 +12,16 @@ import 'package:ntbexpress/util/extensions.dart';
 
 class OrderColor {
   static final Color newlyCreated = Colors.white;
-  static final Color waitWoodenConfirm = Colors.brown[50];
-  static final Color cancelled = Colors.grey[50];
-  static final Color myUser = Colors.green[100];
+  static final Color? waitWoodenConfirm = Colors.brown[50];
+  static final Color? cancelled = Colors.grey[50];
+  static final Color? myUser = Colors.green[100];
 }
 
 class OrderFilterWidget extends StatefulWidget {
   final OrderFilter filter;
   final ValueChanged<String> onCustomerCodeChange;
 
-  OrderFilterWidget(this.filter, {this.onCustomerCodeChange});
+  OrderFilterWidget(this.filter, {required this.onCustomerCodeChange});
 
   @override
   _OrderFilterWidgetState createState() => _OrderFilterWidgetState();
@@ -487,20 +487,20 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
             AppProvider.of(context).state.orderBloc.updateFilter(
               OrderFilter(
                 statusList: _statusList,
-                customerId: _customerIdController.text?.trim(),
+                customerId: _customerIdController.text!.trim(),
                 externalTrackNo: SessionUtil.instance().user.userType !=
                         UserType.chineseWarehouseStaff
-                    ? _internalTrackNoController.text?.trim()
+                    ? _internalTrackNoController.text!.trim()
                     : '',
                 internalTrackNo: SessionUtil.instance().user.userType ==
                         UserType.chineseWarehouseStaff
-                    ? _internalTrackNoController.text?.trim()
+                    ? _internalTrackNoController.text!.trim()
                     : '',
-                fromDate: _fromDateController.text?.trim(),
-                toDate: _toDateController.text?.trim(),
-                packCount: _packCountController.text?.trim()?.parseInt(),
-                goodsDescr: _goodsDescrController.text?.trim() ?? '',
-                licensePlates: _licensePlatesController.text?.trim() ?? ''
+                fromDate: _fromDateController.text!.trim(),
+                toDate: _toDateController.text!.trim(),
+                packCount: _packCountController.text!.trim().parseInt(),
+                goodsDescr: _goodsDescrController.text!.trim() ?? '',
+                licensePlates: _licensePlatesController.text!.trim() ?? ''
               ),
               done: () {
                 _popLoading();
@@ -519,7 +519,7 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
 
   void _getStatistics() {
     if (this.widget.onCustomerCodeChange == null) return;
-    final String text = _customerIdController.text?.trim();
+    final String text = _customerIdController.text!.trim();
     this.widget.onCustomerCodeChange(text);
   }
 
@@ -535,7 +535,7 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
     _packCountController.clear();
     _goodsDescrController.clear();
     _licensePlatesController.clear();
-    _searchButton.onTap();
+    _searchButton.onTap!();
   }
 
   void _showWaiting() {
@@ -551,7 +551,7 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
     DateTime fromDate;
     DateTime toDate;
 
-    if (!Utils.isNullOrEmpty(_fromDateController.text?.trim())) {
+    if (!Utils.isNullOrEmpty(_fromDateController.text!.trim())) {
       try {
         fromDate = DateTime.parse(_fromDateController.text.trim());
       } catch (e) {
@@ -559,7 +559,7 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
       }
     }
 
-    if (!Utils.isNullOrEmpty(_toDateController.text?.trim())) {
+    if (!Utils.isNullOrEmpty(_toDateController.text!.trim())) {
       try {
         toDate = DateTime.parse(_toDateController.text.trim());
       } catch (e) {
@@ -598,7 +598,7 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
     return statusStrings.join(', ');
   }*/
 
-  InputDecoration _decoration({String hintText}) {
+  InputDecoration _decoration({String? hintText}) {
     return InputDecoration(
       border: OutlineInputBorder(
         borderSide: BorderSide(width: 0.5, color: Colors.white),

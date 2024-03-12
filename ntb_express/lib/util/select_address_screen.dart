@@ -10,8 +10,8 @@ import 'package:ntbexpress/util/http_util.dart';
 import 'package:ntbexpress/util/utils.dart';
 
 class SelectAddressScreen extends StatefulWidget {
-  final User customer;
-  final Address current;
+  final User? customer;
+  final Address? current;
 
   SelectAddressScreen({this.customer, this.current});
 
@@ -20,12 +20,12 @@ class SelectAddressScreen extends StatefulWidget {
 }
 
 class _SelectAddressScreenState extends State<SelectAddressScreen> {
-  Address _current;
+  late Address _current;
 
   @override
   void initState() {
     super.initState();
-    _current = widget.current;
+    _current = widget.current!;
   }
 
   @override
@@ -53,7 +53,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
               );
             }
 
-            if (!snapshot.hasData || snapshot.data.isEmpty) {
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
                 child: Text('${Utils.getLocale(context).empty}'),
               );
@@ -64,25 +64,25 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
             return Scrollbar(
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  final address = addressList[index];
+                  final address = addressList?[index];
                   return ListTile(
                     onTap: () {
                       if (mounted) {
-                        setState(() => _current = address);
+                        setState(() => _current = address!);
                       }
                       Navigator.of(context).pop(_current);
                     },
-                    title: Text('${address.fullName}'),
+                    title: Text('${address!.fullName}'),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(address.phoneNumber ?? ''),
+                        Text(address!.phoneNumber ?? ''),
                         Text([
                           address.address,
                           address.wards,
                           address.district,
                           address.province
-                        ].join(', ')?.replaceAll(' ,', '')),
+                        ].join(', ')!.replaceAll(' ,', '')),
                       ],
                     ),
                     trailing: _current != null &&
@@ -95,7 +95,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                   );
                 },
                 separatorBuilder: (context, index) => Divider(),
-                itemCount: addressList.length,
+                itemCount: addressList!.length,
               ),
             );
           },
@@ -115,10 +115,10 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
   Future<List<Address>> _getAddressList() async {
     final Completer<List<Address>> c = Completer();
     final url =
-        ApiUrls.instance().getAddressListByUserUrl(widget.customer.username);
+        ApiUrls.instance().getAddressListByUserUrl(widget.customer!.username);
 
     HttpUtil.get(
-      url,
+      url!,
       headers: {'Content-Type': 'application/json; charset=utf-8'},
       onResponse: (resp) {
         if (resp == null || resp.statusCode != 200) {

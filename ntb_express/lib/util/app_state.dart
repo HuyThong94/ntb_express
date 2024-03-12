@@ -11,10 +11,10 @@ class AppState {
   NotificationBloc notificationBloc;
 
   AppState(
-      {@required this.localeBloc,
-      @required this.userBloc,
-      @required this.orderBloc,
-      @required this.notificationBloc});
+      {required this.localeBloc,
+      required this.userBloc,
+      required this.orderBloc,
+      required this.notificationBloc});
 
   void reset() {
     userBloc = UserBloc();

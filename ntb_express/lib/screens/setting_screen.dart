@@ -33,11 +33,11 @@ class _SettingScreenState extends State<SettingScreen> {
         child: SettingsList(
           sections: [
             SettingsSection(
-              title: '${Utils.getLocale(context).common}',
+              title: Text('${Utils.getLocale(context).common}'),
               tiles: [
                 SettingsTile(
                   onTap: _changeLanguage,
-                  title: '${Utils.getLocale(context).language}',
+                  title: Text('${Utils.getLocale(context).language}'),
                   subtitle: _locale == 'vi'
                       ? Utils.getLocale(context).vietnamese
                       : _locale == 'en'
@@ -49,7 +49,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   onTap: () async {
                     AppSettings.openAppSettings();
                   },
-                  title: '${Utils.getLocale(context).notification}',
+                  title: Text('${Utils.getLocale(context).notification}'),
                   leading: Icon(Icons.notifications),
                 ),
               ],

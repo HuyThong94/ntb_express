@@ -13,7 +13,7 @@ import 'package:random_string/random_string.dart';
 class RegisterScreen extends StatefulWidget {
   final User currentUser;
 
-  RegisterScreen({this.currentUser});
+  RegisterScreen({required this.currentUser});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -30,8 +30,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _phoneNumberFocusNode = FocusNode();
   final _emailFocusNode = FocusNode();
   bool _hasChanged = false;
-  User _user;
-  User _immutableUser;
+  late User _user;
+  late User _immutableUser;
 
   User get currentUser => SessionUtil.instance().user;
 
@@ -130,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             .requestFocus(_phoneNumberFocusNode);
                       },
                       validator: (value) {
-                        if (Utils.isNullOrEmpty(value))
+                        if (Utils.isNullOrEmpty(value!))
                           return Utils.getLocale(context).required;
 
                         return null;
@@ -154,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             .requestFocus(_emailFocusNode);
                       },
                       validator: (value) {
-                        if (Utils.isNullOrEmpty(value))
+                        if (Utils.isNullOrEmpty(value!))
                           return Utils.getLocale(context).required;
                         if (!Utils.isPhoneNumberValid(value))
                           return '${Utils.getLocale(context).phoneNumber} ${Utils.getLocale(context).wrongFormat}';
@@ -175,7 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         maxLength: 50,
                         validator: (value) {
-                          if (Utils.isNullOrEmpty(value))
+                          if (Utils.isNullOrEmpty(value!))
                             return '${Utils.getLocale(context).required}';
                           if (RegExp(r'[^a-zA-Z_0-9]+').hasMatch(value))
                             return '${Utils.getLocale(context).customerCode} ${Utils.getLocale(context).wrongFormat}';
@@ -200,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _emailFocusNode.unfocus();
                       },
                       validator: (value) {
-                        if (Utils.isNullOrEmpty(value))
+                        if (Utils.isNullOrEmpty(value!))
                           return '${Utils.getLocale(context).required}';
                         if (!Utils.isEmailValid(value))
                           return '${Utils.getLocale(context).email} ${Utils.getLocale(context).wrongFormat}';
@@ -219,8 +219,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void _saveData({ValueChanged<User> done}) {
-    if (!_formKey.currentState.validate()) {
+  void _saveData({ValueChanged<User>? done}) {
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
@@ -231,7 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _user.userType = UserType.customer;
     _user.isCreate = 1; // 1: create new, other: update
     if (Utils.isNullOrEmpty(_user.email)) {
-      _user.email = null; // avoid exception from DB for Unique constraint
+      // _user.email = null; // avoid exception from DB for Unique constraint
     }
 
     // Save user
@@ -261,7 +261,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           }
 
           dynamic json = jsonDecode(utf8.decode(resp.bodyBytes));
-          User savedUser = json == null ? null : User.fromJson(json);
+          User? savedUser = json == null ? null : User.fromJson(json);
           if (savedUser != null) {
             _popLoading();
             Utils.alert(
@@ -282,7 +282,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               message: '${Utils.getLocale(context).createUserSuccessMessage}',
               onAccept: () {
                 if (done != null) {
-                  done(savedUser);
+                  done(savedUser!);
                 }
               },
             );
@@ -347,31 +347,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _user.phoneNumber.length > 4 ? _user.phoneNumber.length - 4 : 0);
     _customerCodeController.text =
         Utils.changeAlias('${name.toLowerCase()}$phone');
-    _user.customerId = _customerCodeController.text?.trim();
+    _user.customerId = _customerCodeController.text!.trim();
   }
 
   // Listeners
   void _fullNameListener() {
-    _user.fullName = _fullNameController.text?.trim();
+    _user.fullName = _fullNameController.text!.trim();
     _makeCustomerId();
 
     _updateUI();
   }
 
   void _phoneNumberListener() {
-    _user.phoneNumber = _phoneNumberController.text?.trim();
+    _user.phoneNumber = _phoneNumberController.text!.trim();
     _makeCustomerId();
 
     _updateUI();
   }
 
   void _emailListener() {
-    _user.email = _emailController.text?.trim();
+    _user.email = _emailController.text!.trim();
     _updateUI();
   }
 
   void _customerIdListener() {
-    _user.customerId = _customerCodeController.text?.trim();
+    _user.customerId = _customerCodeController.text!.trim();
     _updateUI();
   }
 

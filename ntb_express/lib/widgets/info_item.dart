@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:ntbexpress/util/utils.dart';
 
 class InfoItem extends StatelessWidget {
-  final String firstText;
-  final String secondText;
-  final bool alignTop;
-  final bool breakLine;
-  final VoidCallback onTap;
-  final bool useWidget;
-  final Widget firstChild;
-  final Widget secondChild;
-  final Widget bottomChild;
+  final String? firstText;
+  final String? secondText;
+  final bool? alignTop;
+  final bool? breakLine;
+  final VoidCallback? onTap;
+  final bool? useWidget;
+  final Widget? firstChild;
+  final Widget? secondChild;
+  final Widget? bottomChild;
 
   InfoItem(
       {this.firstText,
@@ -69,7 +69,7 @@ class InfoItem extends StatelessWidget {
                 ],
               ),
             ),
-            breakLine && !Utils.isNullOrEmpty(secondText)
+            breakLine! && !Utils.isNullOrEmpty(secondText!)
                 ? Padding(
                     padding: const EdgeInsets.only(
                         left: 5.0, right: 5.0, bottom: 5.0),

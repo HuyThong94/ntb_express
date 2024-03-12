@@ -56,7 +56,7 @@ Future<void> main() async {
 class NTBExpress extends StatelessWidget {
   final AppState state;
 
-  NTBExpress({@required this.state});
+  NTBExpress({required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class NTBExpress extends StatelessWidget {
                   color: Utils.primaryColor,
                 ),
                 primarySwatch: Colors.blue,
-                accentColor: Utils.primaryColor,
+                hintColor: Utils.primaryColor,
                 visualDensity: VisualDensity.adaptivePlatformDensity,
                 pageTransitionsTheme: PageTransitionsTheme(builders: {
                   TargetPlatform.android: CupertinoPageTransitionsBuilder(),
@@ -104,7 +104,7 @@ class NTBExpress extends StatelessWidget {
 class HandleWrapper extends StatefulWidget {
   final Widget child;
 
-  HandleWrapper({this.child});
+  HandleWrapper({required this.child});
 
   @override
   _HandleWrapperState createState() => _HandleWrapperState();
@@ -115,8 +115,8 @@ class _HandleWrapperState extends State<HandleWrapper> {
       FlutterLocalNotificationsPlugin();
   final _firebaseMessaging = FirebaseMessaging();
   static final _notificationProvider = NotificationProvider();
-  static NotificationBloc _notificationBloc;
-  static OrderBloc _orderBloc;
+  static late NotificationBloc _notificationBloc;
+  static late OrderBloc _orderBloc;
   bool _initialized = false;
 
   static bool _isDoubleMessage =
@@ -295,9 +295,9 @@ class _HandleWrapperState extends State<HandleWrapper> {
         playSound: true,
         enableVibration: true,
         enableLights: true,
-        importance: Importance.Max,
-        priority: Priority.High,
-        visibility: NotificationVisibility.Public);
+        importance: Importance.max,
+        priority: Priority.high,
+        visibility: NotificationVisibility.public);
     // @formatter:on
     var platformChannelSpecificsIos =
         IOSNotificationDetails(presentSound: true);
@@ -343,8 +343,8 @@ class _HandleWrapperState extends State<HandleWrapper> {
 
       final result = await _notificationProvider.insert(dataToInsert);
       if (_notificationBloc != null) {
-        User currentUser = SessionUtil.instance()?.user;
-        Order order = await HttpUtil.getOrder(result.orderId);
+        User? currentUser = SessionUtil.instance()?.user;
+        Order order = await HttpUtil.getOrder(result!.orderId);
         if ((order != null && currentUser != null) &&
             ([UserType.customer, UserType.saleStaff]
                     .contains(currentUser.userType) ||
@@ -358,7 +358,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
           // update unread count
           _notificationProvider
               .getUnreadCount()
-              .then((count) => _notificationBloc.setUnreadCount(count));
+              .then((count) => _notificationBloc.setUnreadCount(count!));
         }
 
         if (order != null && order.createdId == currentUser?.username) {
@@ -399,8 +399,8 @@ class _HandleWrapperState extends State<HandleWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    _notificationBloc = AppProvider.of(context).state.notificationBloc;
-    _orderBloc = AppProvider.of(context).state.orderBloc;
+    _notificationBloc = AppProvider.of(context)!.state.notificationBloc;
+    _orderBloc = AppProvider.of(context)!.state.orderBloc;
     _notificationBloc.setNotifications([]);
     if (!_initialized) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -444,11 +444,11 @@ class _HandleWrapperState extends State<HandleWrapper> {
             AppProvider.of(context)?.state?.orderBloc?.fetch(reset: true);
 
             // reset unread count
-            int unreadCount = await _notificationProvider.getUnreadCount();
+            int? unreadCount = await _notificationProvider.getUnreadCount();
             AppProvider.of(context)
                 ?.state
                 ?.notificationBloc
-                ?.setUnreadCount(unreadCount);
+                ?.setUnreadCount(unreadCount!);
 
             // navigate to order detail screen
             if (SessionUtil.instance().canPop == 0) {
@@ -462,7 +462,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
     }
   }
 
-  static Future<Map<String, String>> _parsePushMessage(
+  static Future<Map<String, String>?> _parsePushMessage(
       String orderId, String status, String locale) async {
     if (Utils.isNullOrEmpty(status)) return null;
     locale = locale.split('_')[0].toLowerCase();

@@ -46,7 +46,7 @@ class DatabaseHelper {
 
   static final DatabaseHelper instance = DatabaseHelper._();
 
-  static Database _database;
+  static late Database _database;
 
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -83,7 +83,7 @@ class DatabaseHelper {
 
   // All of the methods (insert, query, update, delete) can also be done using
   // raw SQL commands. This method uses a raw query to give the row count.
-  Future<int> queryRowCount(String table) async {
+  Future<int?> queryRowCount(String table) async {
     Database db = await instance.database;
     return Sqflite.firstIntValue(
         await db.rawQuery('SELECT COUNT(*) FROM $table'));

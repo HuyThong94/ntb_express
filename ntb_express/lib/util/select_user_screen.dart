@@ -18,7 +18,7 @@ class SelectUserScreen extends StatefulWidget {
 }
 
 class _SelectUserScreenState extends State<SelectUserScreen> {
-  User _current;
+  late User _current;
   final List<User> _userList = [];
   final List<User> _immutableUserList = [];
 

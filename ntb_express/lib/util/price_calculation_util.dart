@@ -18,8 +18,8 @@ class PriceCalculationUtil {
 
   /// Calculate international shipping fee
   static double calculateExtFee(
-      {Address address,
-      int goodsType,
+      {Address? address,
+      int? goodsType,
       double weight = 0,
       double size = 0,
       double feeByWeight = 0,
@@ -37,10 +37,10 @@ class PriceCalculationUtil {
     if (locationGroup == 0) return 0;
 
     if (goodsType != GoodsType.normal) {
-      FeeItem fee = _getFeeItem(goodsType, locationGroup);
+      FeeItem fee = _getFeeItem(goodsType!, locationGroup);
       if (fee == null) return 0;
 
-      double price = weight * fee.feeByWeight + size * fee.feeBySize;
+      double price = weight * fee.feeByWeight! + size * fee.feeBySize!;
 
       return price;
     }
@@ -50,14 +50,14 @@ class PriceCalculationUtil {
     if (fees != null) {
       fees.forEach((e) {
         if (weight > 0 &&
-            (weight >= e.minWeight &&
-                (weight < e.maxWeight || e.maxWeight == -1))) {
-          price += weight * e.feeByWeight;
+            (weight >= e.minWeight! &&
+                (weight < e.maxWeight! || e.maxWeight == -1))) {
+          price += weight * e.feeByWeight!;
         }
 
         if (size > 0 &&
-            (size >= e.minSize && (size < e.maxSize || e.maxSize == -1))) {
-          price += size * e.feeBySize;
+            (size >= e.minSize! && (size < e.maxSize! || e.maxSize == -1))) {
+          price += size * e.feeBySize!;
         }
       });
     }
@@ -66,8 +66,8 @@ class PriceCalculationUtil {
   }
 
   static Map<String, double> getAgentFee(
-      {Address address,
-        int goodsType,
+      {Address? address,
+        int? goodsType,
         double weight = 0,
         double size = 0,
         double feeByWeight = 0,
@@ -91,10 +91,10 @@ class PriceCalculationUtil {
     if (locationGroup == 0) return result;
 
     if (goodsType != GoodsType.normal) {
-      FeeItem fee = _getFeeItem(goodsType, locationGroup);
+      FeeItem fee = _getFeeItem(goodsType!, locationGroup);
       if (fee == null) return result;
-      result["weight"] = fee.feeByWeight;
-      result["size"] = fee.feeBySize;
+      result["weight"] = fee.feeByWeight!;
+      result["size"] = fee.feeBySize!;
       return result;
     }
 
@@ -102,14 +102,14 @@ class PriceCalculationUtil {
     if (fees != null) {
       fees.forEach((e) {
         if (weight > 0 &&
-            (weight >= e.minWeight &&
-                (weight < e.maxWeight || e.maxWeight == -1))) {
-          result["weight"] = e.feeByWeight;
+            (weight >= e.minWeight! &&
+                (weight < e.maxWeight! || e.maxWeight == -1))) {
+          result["weight"] = e.feeByWeight!;
         }
 
         if (size > 0 &&
-            (size >= e.minSize && (size < e.maxSize || e.maxSize == -1))) {
-          result["size"] = e.feeBySize;
+            (size >= e.minSize! && (size < e.maxSize! || e.maxSize == -1))) {
+          result["size"] = e.feeBySize!;
         }
       });
     }
@@ -119,17 +119,17 @@ class PriceCalculationUtil {
 
   static double _getDiscountPrice(double price, Promotion promotion) {
     if (promotion != null &&
-        promotion.valid &&
-        (promotion.countOrder == -1 || promotion.countOrder > 0)) {
+        promotion.valid! &&
+        (promotion.countOrder == -1 || promotion.countOrder! > 0)) {
       double discountPrice = 0;
       if (promotion.promotionType == PromotionType.percent) {
-        discountPrice = (price * promotion.discountValue) / 100; // 100%
-        if (discountPrice > promotion.maxDiscountValue) {
-          discountPrice = promotion.maxDiscountValue;
+        discountPrice = (price * promotion.discountValue!) / 100; // 100%
+        if (discountPrice > promotion.maxDiscountValue!) {
+          discountPrice = promotion.maxDiscountValue!;
         }
       } else if (promotion.promotionType == PromotionType.specificValue ||
           promotion.promotionType == PromotionType.samePrice) {
-        discountPrice = promotion.discountValue;
+        discountPrice = promotion.discountValue!;
       }
 
       price = price - discountPrice;

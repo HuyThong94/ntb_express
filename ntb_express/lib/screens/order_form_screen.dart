@@ -69,10 +69,10 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
   final List<FileHolder> _removeImages = [];
   double _totalFee = 0;
   double _totalFeeOrigin = 0;
-  Order _order;
-  User _customer;
-  Address _address;
-  Promotion _promotion;
+  late Order _order;
+  late User _customer;
+  late Address _address;
+  late Promotion _promotion;
   int _goodsType = GoodsType.normal;
   int _status = OrderStatus.newlyCreated;
   bool _boxedWood = false;
@@ -137,23 +137,23 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
       _order = Order.clone(widget.order);
       _status = _order.orderStatus;
       _goodsType = _order.goodsType;
-      _customer = _order.customerDTO;
-      _address = _order.addressDTO;
+      _customer = _order.customerDTO!;
+      _address = _order.addressDTO!;
       _goodsTypeDescrController.text = _order.goodsDescr;
       _intTrackNoController.text = _order.intTrackNo;
-      _packCountController.text = _order.packCount?.toString();
-      _weightController.text = _order.weight?.toString();
-      _sizeController.text = _order.size?.toString();
+      _packCountController.text = _order.packCount!.toString();
+      _weightController.text = _order.weight!.toString();
+      _sizeController.text = _order.size!.toString();
       _boxedWood = _order.needRepack == 1;
-      _payOnBehalfController.text = _order.payOnBehalf?.toString();
-      _repackFeeController.text = _order.repackFee?.toString();
-      _intFeeController.text = _order.intFee?.toString();
-      _extFeeController.text = _order.extFee?.toString();
-      _noteController.text = _order.note;
+      _payOnBehalfController.text = _order.payOnBehalf!.toString();
+      _repackFeeController.text = _order.repackFee!.toString();
+      _intFeeController.text = _order.intFee!.toString();
+      _extFeeController.text = _order.extFee!.toString();
+      _noteController.text = _order.note!;
       _parseImages();
-      _promotion = _order.promotionDTO == null
+      _promotion = (_order.promotionDTO == null
           ? null
-          : Promotion.fromJson(_order.promotionDTO.toJson());
+          : Promotion.fromJson(_order.promotionDTO!.toJson()))!;
       _totalFee = _order.totalFeeDaiLong ?? 0;
       _feeBySizeController.text =
           _order.feeBySize == null ? '0' : _order.feeBySize.toString();
@@ -165,15 +165,15 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
       }
 
       Map<String, double> fees = PriceCalculationUtil.getAgentFee(
-          address: _order.addressDTO,
+          address: _order.addressDTO!,
           goodsType: _order.goodsType,
           weight: _order.weight,
           size: _order.size,
           feeBySize: _order.feeBySize,
           feeByWeight: _order.feeByWeight);
 
-      _minAgentWeightFee = fees["weight"];
-      _minAgentSizeFee = fees["size"];
+      _minAgentWeightFee = fees["weight"]!;
+      _minAgentSizeFee = fees["size"]!;
 
       _feeByWeightDealerController.text = _order.feeByWeightDealer == null
           ? '0'
@@ -286,7 +286,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
   }
 
   void _updateAgentFee() {
-    _formKey.currentState.validate();
+    _formKey.currentState!.validate();
     _getFormData();
     _updateAgentTotalFee();
     setState(() {});
@@ -296,25 +296,25 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
     //_promotion = null; // reset promotion when the price has changed, user need reselect promotion!!!
     _getFormData();
     double price = PriceCalculationUtil.calculateExtFee(
-        address: _order.addressDTO,
+        address: _order.addressDTO!,
         goodsType: _order.goodsType,
         size: _order.size,
         weight: _order.weight,
         feeBySize: _order.feeBySize,
         feeByWeight: _order.feeByWeight);
 
-    _extFeeController.text = price?.toString() ?? 0;
+    _extFeeController.text = price.toString() ?? 0;
 
     Map<String, double> fees = PriceCalculationUtil.getAgentFee(
-        address: _order.addressDTO,
+        address: _order.addressDTO!,
         goodsType: _order.goodsType,
         weight: _order.weight,
         size: _order.size,
         feeBySize: _order.feeBySize,
         feeByWeight: _order.feeByWeight);
 
-    _minAgentWeightFee = fees["weight"];
-    _minAgentSizeFee = fees["size"];
+    _minAgentWeightFee = fees["weight"]!;
+    _minAgentSizeFee = fees["size"]!;
     _feeByWeightDealerController.text = _minAgentWeightFee.toString();
     _feeBySizeDealerController.text = _minAgentSizeFee.toString();
 
@@ -344,8 +344,8 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
       _order = Order();
     }
     _order.addressDTO = _address;
-    _order.addressId = _address?.addressId;
-    _order.customerId = _customer?.username;
+    _order.addressId = _address.addressId!;
+    _order.customerId = _customer.username!;
     _order.customerDTO = _customer;
     _order.goodsType = _goodsType;
     _order.orderStatus = _status;
@@ -439,13 +439,13 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                                               currentUser,
                                                               _customer)));
 
-                                          _address = null;
+                                          // _address = null;
                                           _totalFee = 0;
                                           _totalFeeOrigin = 0;
 
                                           // clear promotion
                                           if (_promotion != null) {
-                                            _promotion = null;
+                                            // _promotion = null;
                                             _priceType = PriceType.normal;
                                             _feeByWeightController.clear();
                                             _feeBySizeController.clear();
@@ -523,7 +523,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                                 _address.province
                                               ]
                                                   .join(', ')
-                                                  ?.replaceAll(' ,', '')),
+                                                  !.replaceAll(' ,', '')),
                                             ],
                                           ),
                                         )
@@ -588,7 +588,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                                         PriceType.fixed)
                                                       return null;
                                                     if (Utils.isNullOrEmpty(
-                                                        value))
+                                                        value!))
                                                       return Utils.getLocale(
                                                               context)
                                                           .required;
@@ -620,7 +620,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                                         PriceType.fixed)
                                                       return null;
                                                     if (Utils.isNullOrEmpty(
-                                                        value))
+                                                        value!))
                                                       return Utils.getLocale(
                                                               context)
                                                           .required;
@@ -701,7 +701,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                 validator: (value) {
                                   if (isChineseWarehouseStaff) return null;
 
-                                  if (Utils.isNullOrEmpty(value))
+                                  if (Utils.isNullOrEmpty(value!))
                                     return Utils.getLocale(context).required;
 
                                   return null;
@@ -784,7 +784,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                     counterText: ''),
                                 maxLines: 1,
                                 validator: (value) {
-                                  if (Utils.isNullOrEmpty(value))
+                                  if (Utils.isNullOrEmpty(value!))
                                     return Utils.getLocale(context).required;
 
                                   return null;
@@ -821,7 +821,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
 
                                         String tmp = _sizeController.text;
 
-                                        if ((Utils.isNullOrEmpty(value) ||
+                                        if ((Utils.isNullOrEmpty(value!) ||
                                                 value == '0' ||
                                                 value == '0.0') &&
                                             (Utils.isNullOrEmpty(tmp) ||
@@ -864,7 +864,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
 
                                         String tmp = _weightController.text;
 
-                                        if ((Utils.isNullOrEmpty(value) ||
+                                        if ((Utils.isNullOrEmpty(value!) ||
                                                 value == '0' ||
                                                 value == '0.0') &&
                                             (Utils.isNullOrEmpty(tmp) ||
@@ -907,7 +907,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                         maxLines: 1,
                                         validator: (value) {
                                           if (!isAllowEditAgentFee) return null;
-                                          if (Utils.isNullOrEmpty(value)) {
+                                          if (Utils.isNullOrEmpty(value!)) {
                                             return Utils.getLocale(context)
                                                 .required;
                                           } else if (double.parse(value) <
@@ -946,7 +946,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                         maxLines: 1,
                                         validator: (value) {
                                           if (!isAllowEditAgentFee) return null;
-                                          if (Utils.isNullOrEmpty(value)) {
+                                          if (Utils.isNullOrEmpty(value!)) {
                                             return Utils.getLocale(context)
                                                 .required;
                                           } else if (double.parse(value) <
@@ -978,7 +978,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                                     _order.orderStatus
                                             ? null
                                             : (value) => setState(() {
-                                                  _boxedWood = value;
+                                                  _boxedWood = value!;
                                                   if (!_boxedWood) {
                                                     _repackFeeController
                                                         .clear();
@@ -1266,7 +1266,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
                                     color: Theme.of(context)
                                         .textTheme
                                         .bodyText1
-                                        .color,
+                                        ?.color,
                                     fontSize: 16.0,
                                   ),
                                   children: [
@@ -1491,7 +1491,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
       return;
     }
 
-    if (!_formKey.currentState.validate()) {
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
@@ -1590,7 +1590,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
 
   // use only for create mode
   void _reset() {
-    _address = null;
+    // _address = null;
     _goodsType = GoodsType.normal;
     _goodsTypeDescrController.clear();
     _intTrackNoController.clear();
@@ -1606,7 +1606,7 @@ class _OrderFormScreenState extends State<OrderFormScreen> {
     _uploadImages.clear();
     _removeImages.clear();
     _noteController.clear();
-    _promotion = null;
+    // _promotion = null;
     _totalFee = 0;
     setState(() {});
   }

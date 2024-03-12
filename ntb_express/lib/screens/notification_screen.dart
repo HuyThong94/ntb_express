@@ -93,7 +93,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               }
 
               if (snapshot.hasData) {
-                if (snapshot.data == null || snapshot.data.isEmpty) {
+                if (snapshot.data == null || snapshot.data!.isEmpty) {
                   if (!_loaded) {
                     Future.delayed(const Duration(milliseconds: 500), () async {
                       _notificationProvider
@@ -117,7 +117,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   );
                 }
 
-                return _content(snapshot.data, _notificationBloc);
+                return _content(snapshot.data!, _notificationBloc);
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -267,7 +267,7 @@ class NotificationItem extends StatefulWidget {
   final NotificationBloc bloc;
 
   NotificationItem(this.notification,
-      {@required this.provider, @required this.bloc});
+      {required this.provider, required this.bloc});
 
   @override
   _NotificationItemState createState() => _NotificationItemState();
