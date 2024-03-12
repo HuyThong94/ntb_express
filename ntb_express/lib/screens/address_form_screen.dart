@@ -11,8 +11,8 @@ import 'package:ntbexpress/widgets/info_item.dart';
 
 class AddressFormScreen extends StatefulWidget {
   final bool isUpdate;
-  final Address address;
-  final User forUser;
+  final Address? address;
+  final User? forUser;
   final bool doNotSave;
 
   AddressFormScreen(
@@ -28,8 +28,8 @@ class AddressFormScreen extends StatefulWidget {
 class _AddressFormScreenState extends State<AddressFormScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _dividerHeight = 0.5;
-  Address _address;
-  Address _immutableAddress;
+  late Address _address;
+  late Address _immutableAddress;
   bool _hasChanged = false;
 
   @override
@@ -37,9 +37,9 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
     super.initState();
     _address = widget.address == null
         ? Address()
-        : Address.clone(widget.address) ?? Address();
+        : Address.clone(widget.address!) ?? Address();
     if (!widget.isUpdate) {
-      User user = widget.forUser;
+      User user = widget.forUser!;
       if (user == null) {
         user = User.clone(SessionUtil.instance().user);
       }
@@ -50,9 +50,9 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
     }
 
     if (widget.forUser != null) {
-      _address.fullName = widget.forUser.fullName;
-      _address.phoneNumber = widget.forUser.phoneNumber;
-      _address.email = widget.forUser.email;
+      _address.fullName = widget.forUser!.fullName;
+      _address.phoneNumber = widget.forUser!.phoneNumber;
+      _address.email = widget.forUser!.email;
     }
     _immutableAddress = Address.clone(_address);
   }
@@ -345,7 +345,7 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
     }
   }
 
-  void _saveChanges(BuildContext context, {VoidCallback done}) {
+  void _saveChanges(BuildContext context, {VoidCallback? done}) {
     if (widget.doNotSave) {
       done?.call();
       return;

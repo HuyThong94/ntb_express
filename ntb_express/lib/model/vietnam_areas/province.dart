@@ -5,10 +5,10 @@ part 'province.g.dart';
 
 @JsonSerializable()
 class Province implements Location {
-  int id;
-  String name;
-  String location;
-  String type;
+  int? id;
+  String? name;
+  String? location;
+  String? type;
 
   Province({this.id, this.name, this.location, this.type});
 

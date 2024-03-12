@@ -24,14 +24,14 @@ User _$UserFromJson(Map<String, dynamic> json) {
     phoneNumber: json['phoneNumber'] as String,
     customerId: json['customerId'] as String,
     managerId: json['managerId'] as String,
-    commission: (json['commission'] as num)?.toDouble(),
+    commission: (json['commission'] as num)!.toDouble(),
     dob: json['dob'] as num,
     avatarImgDTO: json['avatarImgDTO'] == null
         ? null
         : TCCOFile.fromJson(json['avatarImgDTO'] as Map<String, dynamic>),
     refId: json['refId'] as String,
     resetToken: json['resetToken'] as String,
-    isCreate: json['isCreate'] as num,
+    isCreate: (json['isCreate'] as num)!.toInt(),
   );
 }
 

@@ -14,8 +14,8 @@ class UserBloc {
   int _currentPage = 0;
   final int _pageSize = 20;
 
-  BehaviorSubject<User> _currentUserSubject;
-  BehaviorSubject<List<User>> _customersSubject;
+  late BehaviorSubject<User> _currentUserSubject;
+  late BehaviorSubject<List<User>> _customersSubject;
 
   UserBloc() {
     _currentUserSubject = BehaviorSubject<User>.seeded(_currentUser);
@@ -37,7 +37,7 @@ class UserBloc {
     _customersSubject.sink.add(_customers);
   }
 
-  void fetch({int page = 0, bool reset = false, VoidCallback done}) {
+  void fetch({int page = 0, bool reset = false, VoidCallback? done}) {
     if (reset) page = 0;
     _currentPage = page;
 
@@ -83,7 +83,7 @@ class UserBloc {
       );
     } else {
       print('User does not logged in!');
-      done.call();
+      done?.call();
     }
   }
 
@@ -93,16 +93,16 @@ class UserBloc {
         : (_customers.length / _pageSize).ceil() - 1; // start page = 0
   }
 
-  void loadMore({VoidCallback done}) {
+  void loadMore({VoidCallback? done}) {
     fetch(page: _currentPage + 1, done: done);
   }
 
   void _sort() {
     _customers.sort((a, b) => a == null || b == null
         ? 0
-        : b.createdDate == null || a.createdDate == null
+        : b.createdDate.toInt() == null || a.createdDate.toInt() == null
             ? 0
-            : b.createdDate - a.createdDate);
+            : b.createdDate.toInt() - a.createdDate.toInt());
   }
 
   void _addAll(List<User> customerList) {

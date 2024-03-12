@@ -4,16 +4,16 @@ part 'fee_item.g.dart';
 
 @JsonSerializable()
 class FeeItem {
-  int feeId;
-  int feeGroup;
-  int goodsType;
-  int locationGroup;
-  double feeByWeight;
-  double minWeight;
-  double maxWeight;
-  double feeBySize;
-  double minSize;
-  double maxSize;
+  int? feeId;
+  int? feeGroup;
+  int? goodsType;
+  int? locationGroup;
+  double? feeByWeight;
+  double? minWeight;
+  double? maxWeight;
+  double? feeBySize;
+  double? minSize;
+  double? maxSize;
 
   FeeItem(
       {this.feeId,

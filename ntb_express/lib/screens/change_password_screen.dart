@@ -86,7 +86,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                     ),
                     validator: (value) {
-                      if (Utils.isNullOrEmpty(value))
+                      if (Utils.isNullOrEmpty(value!))
                         return Utils.getLocale(context).required;
                       if (value.length < 8)
                         return '${Utils.getLocale(context).passwordLengthRequired}';
@@ -116,7 +116,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                     ),
                     validator: (value) {
-                      if (Utils.isNullOrEmpty(value))
+                      if (Utils.isNullOrEmpty(value!))
                         return Utils.getLocale(context).required;
                       if (value.length < 8)
                         return '${Utils.getLocale(context).passwordLengthRequired}';
@@ -150,7 +150,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       ),
                     ),
                     validator: (value) {
-                      if (Utils.isNullOrEmpty(value))
+                      if (Utils.isNullOrEmpty(value!))
                         return Utils.getLocale(context).required;
                       if (value.length < 8)
                         return '${Utils.getLocale(context).passwordLengthRequired}';

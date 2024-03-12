@@ -16,7 +16,7 @@ class NTBExpressLocalizations {
     'zh': MessageZh(),
   };
 
-  Message get currentLocalized => _localizedValues[locale.languageCode];
+  Message? get currentLocalized => _localizedValues[locale.languageCode];
 
   static NTBExpressLocalizations of(BuildContext context) {
     return Localizations.of(context, NTBExpressLocalizations);

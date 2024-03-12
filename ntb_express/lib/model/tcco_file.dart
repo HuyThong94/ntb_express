@@ -4,17 +4,17 @@ part 'tcco_file.g.dart';
 
 @JsonSerializable()
 class TCCOFile {
-  String atchFleSeq;
-  String fleTP;
-  String flePath;
-  String fleNm;
-  String newFleNm;
-  String fleSz;
-  String descrpt;
-  String insId;
-  num insDt;
-  num uptDt;
-  String fleUri;
+  String? atchFleSeq;
+  String? fleTP;
+  String? flePath;
+  String? fleNm;
+  String? newFleNm;
+  String? fleSz;
+  String? descrpt;
+  String? insId;
+  num? insDt;
+  num? uptDt;
+  String? fleUri;
 
   TCCOFile(
       {this.atchFleSeq,

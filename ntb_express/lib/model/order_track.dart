@@ -4,12 +4,12 @@ part 'order_track.g.dart';
 
 @JsonSerializable()
 class OrderTrack {
-  int trackId;
-  int actionDate;
-  String actionId;
-  int actionType;
-  String orderId;
-  String note;
+  int? trackId;
+  int? actionDate;
+  String? actionId;
+  int? actionType;
+  String? orderId;
+  String? note;
 
   OrderTrack(
       {this.trackId,

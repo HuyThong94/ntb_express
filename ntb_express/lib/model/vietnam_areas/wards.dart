@@ -5,12 +5,12 @@ part 'wards.g.dart';
 
 @JsonSerializable()
 class Wards implements Location {
-  int id;
-  String name;
-  String location;
-  String type;
+  int? id;
+  String? name;
+  String? location;
+  String? type;
   @JsonKey(name: 'huyen_id')
-  int districtId;
+  int? districtId;
 
   Wards({this.id, this.name, this.location, this.type, this.districtId});
 

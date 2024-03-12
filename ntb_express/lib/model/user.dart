@@ -17,19 +17,19 @@ class User {
   int status;
   String langKey;
   String createdId;
-  num createdDate;
+  num? createdDate;
   String updatedId;
-  num updatedDate;
+  num? updatedDate;
   String address;
   String phoneNumber;
   String customerId;
   String managerId;
   double commission;
-  num dob;
-  TCCOFile avatarImgDTO;
+  num? dob;
+  TCCOFile? avatarImgDTO;
   String refId;
   String resetToken;
-  int isCreate;
+  int? isCreate;
 
   User(
       {this.username = '',

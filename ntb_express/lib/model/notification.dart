@@ -6,22 +6,22 @@ part 'notification.g.dart';
 
 @JsonSerializable()
 class Notification {
-  int id;
+  int? id;
   @JsonKey(name: 'notification_group')
-  String notificationGroup;
+  String? notificationGroup;
   @JsonKey(name: 'order_id')
   String orderId;
   @JsonKey(name: 'customer_id')
-  String customerId;
-  String title;
-  String body;
-  int read;
+  String? customerId;
+  String? title;
+  String?body;
+  int? read;
   @JsonKey(name: 'insert_time')
   String insertTime;
 
 
-  Notification({this.id, this.notificationGroup, this.orderId, this.customerId, this.title,
-      this.body, this.read = 0, this.insertTime});
+  Notification({this.id, this.notificationGroup,  required this.orderId, this.customerId, this.title,
+      this.body, this.read = 0, required this.insertTime});
 
   factory Notification.fromJson(Map<String, dynamic> json) =>
       _$NotificationFromJson(json);

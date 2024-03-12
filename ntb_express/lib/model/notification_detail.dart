@@ -6,13 +6,13 @@ part 'notification_detail.g.dart';
 
 @JsonSerializable()
 class NotificationDetail {
-  int id;
+  int? id;
   @JsonKey(name: 'order_id')
-  String orderId;
-  String title;
-  String body;
+  String? orderId;
+  String? title;
+  String? body;
   @JsonKey(name: 'insert_time')
-  String insertTime;
+  String? insertTime;
 
 
   NotificationDetail({this.id, this.orderId, this.title,

@@ -83,7 +83,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
               }
 
               if (snapshot.hasData) {
-                if (snapshot.data == null || snapshot.data.isEmpty) {
+                if (snapshot.data == null || snapshot.data!.isEmpty) {
                   if (!_loaded) {
                     Future.delayed(const Duration(milliseconds: 500), () async {
                       userBloc.fetch(
@@ -165,9 +165,8 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
 
                       if (updatedUser != null) {
                         if (updatedUser.avatarImgDTO != null) {
-                          updatedUser.avatarImgDTO.flePath =
-                              updatedUser.avatarImgDTO.flePath +
-                                  '?t=${DateTime.now().millisecondsSinceEpoch}';
+                          updatedUser.avatarImgDTO?.flePath =
+                              (updatedUser.avatarImgDTO!.flePath! + '?t=${DateTime.now().millisecondsSinceEpoch}')!;
                         }
                         AppProvider.of(context)
                             .state

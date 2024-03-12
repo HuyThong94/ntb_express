@@ -6,32 +6,32 @@ part 'promotion.g.dart';
 
 @JsonSerializable()
 class Promotion {
-  int promotionId;
-  String promotionName;
-  num startDate;
-  num endDate;
-  int goodsType;
-  int promotionType;
-  double discountValue;
-  double maxDiscountValue;
-  int countOrder;
-  double minSize;
-  double maxSize;
-  double minWeight;
-  double maxWeight;
-  double minFee;
-  double maxFee;
-  String compareValue;
-  int compareType;
-  int maxUse;
-  double feeBySizeZ1;
-  double feeByWeightZ1;
-  double feeBySizeZ2;
-  double feeByWeightZ2;
-  double feeBySizeZ3;
-  double feeByWeightZ3;
-  String description;
-  bool valid;
+  int? promotionId;
+  String? promotionName;
+  num? startDate;
+  num? endDate;
+  int? goodsType;
+  int? promotionType;
+  double? discountValue;
+  double? maxDiscountValue;
+  int? countOrder;
+  double? minSize;
+  double? maxSize;
+  double? minWeight;
+  double? maxWeight;
+  double? minFee;
+  double? maxFee;
+  String? compareValue;
+  int? compareType;
+  int? maxUse;
+  double? feeBySizeZ1;
+  double? feeByWeightZ1;
+  double? feeBySizeZ2;
+  double? feeByWeightZ2;
+  double? feeBySizeZ3;
+  double? feeByWeightZ3;
+  String? description;
+  bool? valid;
 
   Promotion(
       {this.promotionId,

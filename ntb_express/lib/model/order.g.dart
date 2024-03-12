@@ -10,34 +10,34 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
   return Order(
     orderId: json['orderId'] as String,
     addressId: json['addressId'] as int,
-    commission: (json['commission'] as num)?.toDouble(),
+    commission: (json['commission'] as num)!.toDouble(),
     createdDate: json['createdDate'] as num,
     createdId: json['createdId'] as String,
     customerId: json['customerId'] as String,
-    extFee: (json['extFee'] as num)?.toDouble(),
     extTrackNo: json['extTrackNo'] as String,
     goodsDescr: json['goodsDescr'] as String,
     goodsType: json['goodsType'] as int,
-    intFee: (json['intFee'] as num)?.toDouble(),
+    extFee: (json['extFee'] as num)!.toDouble(),
+    intFee: (json['intFee'] as num)!.toDouble(),
     intTrackNo: json['intTrackNo'] as String,
-    payOnBehalf: (json['payOnBehalf'] as num)?.toDouble(),
+    payOnBehalf: (json['payOnBehalf'] as num)!.toDouble(),
     needRepack: json['needRepack'] as int,
-    repackFee: (json['repackFee'] as num)?.toDouble(),
+    repackFee: (json['repackFee'] as num)!.toDouble(),
     orderStatus: json['orderStatus'] as int,
     packCount: json['packCount'] as int,
     saleId: json['saleId'] as String,
-    size: (json['size'] as num)?.toDouble(),
-    feeBySize: (json['feeBySize'] as num)?.toDouble(),
-    feeByWeight: (json['feeByWeight'] as num)?.toDouble(),
-    totalFee: (json['totalFee'] as num)?.toDouble(),
-    weight: (json['weight'] as num)?.toDouble(),
+    size: (json['size'] as num)!.toDouble(),
+    feeBySize: (json['feeBySize'] as num)!.toDouble(),
+    feeByWeight: (json['feeByWeight'] as num)!.toDouble(),
+    totalFee: (json['totalFee'] as num)!.toDouble(),
+    weight: (json['weight'] as num)!.toDouble(),
     note: json['note'] as String,
     nextWarehouse: json['nextWarehouse'] as String,
     promotionId: json['promotionId'] as int,
     tccoFileDTOS: (json['tccoFileDTOS'] as List)
         ?.map((e) =>
             e == null ? null : TCCOFile.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        !.toList(),
     addressDTO: json['addressDTO'] == null
         ? null
         : Address.fromJson(json['addressDTO'] as Map<String, dynamic>),
@@ -47,7 +47,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
     orderTrackDTOS: (json['orderTrackDTOS'] as List)
         ?.map((e) =>
             e == null ? null : OrderTrack.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        !.toList(),
     promotionDTO: json['promotionDTO'] == null
         ? null
         : Promotion.fromJson(json['promotionDTO'] as Map<String, dynamic>),

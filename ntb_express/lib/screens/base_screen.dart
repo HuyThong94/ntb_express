@@ -18,7 +18,7 @@ class _BaseScreenState extends State<BaseScreen> {
     'https://bestwallpapers.net/wp-content/uploads/2020/02/Top-Nature-Wallpapers-For-Phone-Free-Download.jpg'
   ];
   String _backgroundUrl = '';
-  Timer _timer;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _BaseScreenState extends State<BaseScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRouter.login);
                 },
@@ -66,11 +66,16 @@ class _BaseScreenState extends State<BaseScreen> {
                   ),
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => RegisterScreen()));
                 },
+                style: ElevatedButton.styleFrom(
+                  disabledBackgroundColor: Colors.black12,
+                  textStyle: TextStyle(color: Colors.white70),
+                ),
+
                 disabledColor: Colors.black12,
                 disabledTextColor: Colors.white70,
                 color: Utils.accentColor,

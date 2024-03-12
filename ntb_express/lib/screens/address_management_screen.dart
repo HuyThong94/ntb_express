@@ -13,7 +13,7 @@ import 'package:ntbexpress/util/utils.dart';
 class AddressManagementScreen extends StatefulWidget {
   final User forUser;
 
-  AddressManagementScreen({this.forUser});
+  AddressManagementScreen({required this.forUser});
 
   @override
   _AddressManagementScreenState createState() =>
@@ -21,7 +21,7 @@ class AddressManagementScreen extends StatefulWidget {
 }
 
 class _AddressManagementScreenState extends State<AddressManagementScreen> {
-  User currentUser;
+  late User currentUser;
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
                   );
                 }
 
-                if (!snapshot.hasData || snapshot.data.isEmpty) {
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Column(
                     children: [
                       Container(
@@ -104,7 +104,7 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
                       child: Scrollbar(
                         child: ListView.separated(
                           itemBuilder: (context, index) {
-                            final address = addressList[index];
+                            final address = addressList![index];
                             var addrs = [
                               address.address,
                               address.wards,
@@ -127,13 +127,13 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
                                 },
                                 name: address.fullName,
                                 phoneNumber: address.phoneNumber,
-                                address: addrs.join(', ')?.replaceAll(' ,', ''));
+                                address: addrs.join(', ')!.replaceAll(' ,', ''));
                           },
                           separatorBuilder: (context, index) => Divider(
                             height: 0.5,
                             thickness: 0.5,
                           ),
-                          itemCount: addressList.length,
+                          itemCount: addressList!.length,
                         ),
                       ),
                     ),
@@ -147,7 +147,7 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var address = await Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddressFormScreen(forUser: currentUser)));
+              builder: (context) => AddressFormScreen(forUser: currentUser,)));
           if (address != null) {
             setState(() {}); // rebuild to load new address
           }
@@ -215,15 +215,15 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
 class AddressItem extends StatelessWidget {
   final String name;
   final String phoneNumber;
-  final String email;
+  final String? email;
   final String address;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   AddressItem(
-      {@required this.name,
-      @required this.phoneNumber,
+      {required this.name,
+      required this.phoneNumber,
       this.email,
-      @required this.address,
+      required this.address,
       this.onTap});
 
   @override
@@ -240,7 +240,7 @@ class AddressItem extends StatelessWidget {
               name ?? '',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            Utils.isNullOrEmpty(email) ? const SizedBox() : Text(email ?? ''),
+            Utils.isNullOrEmpty(email!) ? const SizedBox() : Text(email ?? ''),
             Text(phoneNumber ?? ''),
             Text(address ?? ''),
           ],

@@ -35,14 +35,14 @@ class Order {
   double feeByWeight;
   double totalFee;
   double weight;
-  String note;
-  String nextWarehouse;
-  int promotionId;
+  String? note;
+  String? nextWarehouse;
+  int? promotionId;
   List<TCCOFile> tccoFileDTOS;
-  Address addressDTO;
-  User customerDTO;
-  List<OrderTrack> orderTrackDTOS;
-  Promotion promotionDTO;
+  Address? addressDTO;
+  User? customerDTO;
+  List<OrderTrack>? orderTrackDTOS;
+  Promotion? promotionDTO;
   double totalFeeOriginal;
   double feeBySizeDealer;
   double feeByWeightDealer;
@@ -53,7 +53,7 @@ class Order {
       {this.orderId = '',
       this.addressId = 0,
       this.commission = 0.0,
-      this.createdDate,
+      required this.createdDate,
       this.createdId = '',
       this.customerId = '',
       this.extFee = 0.0,
@@ -76,7 +76,7 @@ class Order {
       this.note,
       this.nextWarehouse,
       this.promotionId,
-      this.tccoFileDTOS,
+      required this.tccoFileDTOS,
       this.addressDTO,
       this.customerDTO,
       this.orderTrackDTOS,

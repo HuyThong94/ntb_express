@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool get isSaleStaff =>
       SessionUtil.instance()?.user?.userType == UserType.saleStaff;
 
-  User get _user => SessionUtil.instance()?.user;
+  User? get _user => SessionUtil.instance()?.user;
 
   bool get isWarehouseStaff => [
         UserType.chineseWarehouseStaff,
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final hasRequested = !prefs.containsKey(PrefsKey.requestPushPermissions)
         ? false
         : prefs.getBool(PrefsKey.requestPushPermissions);
-    if (hasRequested) return;
+    if (hasRequested!) return;
     Utils.alert(
       context,
       title: Utils.getLocale(context).required,
@@ -119,9 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _getStatisticList({String url}) async {
+  Future<void> _getStatisticList({String? url}) async {
     HttpUtil.get(
-      Utils.isNullOrEmpty(url) ? _statisticUrl : url,
+      Utils.isNullOrEmpty(url!) ? _statisticUrl : url,
       headers: {'Content-Type': 'application/json; charset=utf-8'},
       onResponse: (resp) {
         if (resp == null ||
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(snapshot.error.toString()),
                   );
                 } else if (snapshot.hasData) {
-                  if (snapshot.data == null || snapshot.data.isEmpty) {
+                  if (snapshot.data == null || snapshot.data!.isEmpty) {
                     if (!_loaded) {
                       Future.delayed(const Duration(milliseconds: 500),
                           () async {
@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
                   } else {
-                    result = _content(snapshot.data);
+                    result = _content(snapshot.data!);
                   }
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
@@ -322,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }),
           floatingActionButton: Visibility(
-            visible: _user.userType != UserType.customer && !isWarehouseStaff,
+            visible: _user!.userType != UserType.customer && !isWarehouseStaff,
             child: FloatingActionButton(
               onPressed: () {
                 Utils.updatePop(1);
@@ -356,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getTotalFeeText(double totalFee) =>
       NumberFormat.currency(locale: 'vi_VN', symbol: 'đ').format(totalFee);
 
-  User get currentUser => SessionUtil.instance()?.user;
+  User get currentUser => SessionUtil.instance()!.user;
 
   TextStyle _statisticStyle(int orderStatus) {
     return TextStyle(
@@ -671,7 +671,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         HideOnCondition(
                                           hideOn: (ord.customerDTO == null ||
                                                   Utils.isNullOrEmpty(ord
-                                                      .customerDTO
+                                                      .customerDTO!
                                                       .customerId)) ||
                                               isCustomer,
                                           child: Row(
@@ -1007,13 +1007,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _makeCopyContext(Order ord) {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject();
+    final RenderObject? overlay = Overlay.of(context).context.findRenderObject();
     showMenu(
         context: context,
         position: RelativeRect.fromRect(
             _tapPosition & Size(40, 40),
             // smaller rect, the touch area
-            Offset.zero & overlay.size // Bigger rect, the entire screen
+            Offset.zero & overlay?.size // Bigger rect, the entire screen
             ),
         items: <PopupMenuEntry>[
           PopupMenuItem(
@@ -1337,7 +1337,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ActionType.outputHaNoi
     ].contains(actionType)) output = true;
 
-    ConfirmationStatus status;
+    late ConfirmationStatus status;
     bool isOutput = false;
     if ([
       ActionType.chineseWarehouse,
@@ -1592,7 +1592,7 @@ class SearchBoxFlexible extends StatelessWidget {
   final double appBarHeight = 66.0;
   final ValueChanged<String> onCustomerCodeChange;
 
-  const SearchBoxFlexible(this.orderBloc, {this.onCustomerCodeChange});
+  const SearchBoxFlexible(this.orderBloc, {required this.onCustomerCodeChange});
 
   @override
   Widget build(BuildContext context) {
@@ -1612,7 +1612,7 @@ class SearchBoxFlexible extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 OrderFilterWidget(
-                  snapshot.data,
+                  snapshot.data!,
                   onCustomerCodeChange: this.onCustomerCodeChange,
                 ),
                 Padding(
@@ -1622,13 +1622,13 @@ class SearchBoxFlexible extends StatelessWidget {
                       List<int> result = await Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (_) => SelectOrderStatusScreen(
-                                  snapshot.data.statusList)));
+                                  snapshot.data!.statusList)));
 
                       if (result == null || result.isEmpty) {
                         result = []..addAll(OrderStatus.values);
                       }
 
-                      OrderFilter filter = snapshot.data;
+                      OrderFilter filter = snapshot.data!;
                       filter.statusList = result;
                       orderBloc.updateFilter(filter);
                     },
@@ -1651,7 +1651,7 @@ class SearchBoxFlexible extends StatelessWidget {
                                     alignment: Alignment.centerRight,
                                     child: Text(
                                       _getStatusText(
-                                          context, snapshot.data.statusList),
+                                          context, snapshot.data!.statusList),
                                       style: TextStyle(color: Colors.white),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,

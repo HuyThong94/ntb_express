@@ -9,8 +9,8 @@ class NotificationBloc {
   final List<notification.Notification> _notifications =
       <notification.Notification>[];
 
-  BehaviorSubject<List<notification.Notification>> _notificationsSubject;
-  BehaviorSubject<int> _unreadCountSubject;
+  late BehaviorSubject<List<notification.Notification>> _notificationsSubject;
+  late BehaviorSubject<int> _unreadCountSubject;
 
   int get start => _notifications.length;
   List<notification.Notification> get current => _notifications;
@@ -35,7 +35,7 @@ class NotificationBloc {
     _handleNotifications(list);
   }
 
-  void markedAs({bool read}) {
+  void markedAs({required bool read}) {
     final status = read ? 1 : 0;
     _notifications.forEach((o) {
       o.read = status;
@@ -44,7 +44,7 @@ class NotificationBloc {
     _notificationsSubject.sink.add(_notifications);
   }
 
-  void markedAsBy({@required String orderId, @required bool read}) {
+  void markedAsBy({required String orderId, required bool read}) {
     final status = read ? 1 : 0;
     _notifications.firstWhere((o) => o.orderId == orderId)?.read = status;
     _notificationsSubject.sink.add(_notifications);

@@ -6,7 +6,7 @@ part 'address.g.dart';
 
 @JsonSerializable()
 class Address {
-  int addressId;
+  int? addressId;
   @JsonKey(name: 'username')
   String userName;
   @JsonKey(name: 'fullname')

@@ -11,11 +11,11 @@ import 'package:rxdart/rxdart.dart';
 class OrderBloc {
   final int _pageSize = 10;
   final List<Order> _orders = <Order>[];
-  OrderFilter _filter = OrderFilter();
+  OrderFilter _filter = OrderFilter(statusList: [], customerId: '', internalTrackNo: '', externalTrackNo: '', fromDate: '', toDate: '', packCount: 0, goodsDescr: '', licensePlates: '');
   int _currentPage = 0;
 
-  BehaviorSubject<List<Order>> _ordersSubject;
-  BehaviorSubject<OrderFilter> _filterSubject;
+  late BehaviorSubject<List<Order>> _ordersSubject;
+  late BehaviorSubject<OrderFilter> _filterSubject;
 
   OrderBloc() {
     _ordersSubject = BehaviorSubject<List<Order>>.seeded(_orders);
@@ -59,7 +59,7 @@ class OrderBloc {
   }
 
   // Update filter
-  void updateFilter(OrderFilter filter, {VoidCallback done}) {
+  void updateFilter(OrderFilter filter, {VoidCallback? done}) {
     if (filter == null) return;
     _filter.statusList = filter.statusList;
     _filter.customerId = filter.customerId;
@@ -74,7 +74,7 @@ class OrderBloc {
     fetch(reset: true, done: done);
   }
 
-  void fetch({int page = 0, bool reset = false, VoidCallback done}) {
+  void fetch({int page = 0, bool reset = false, VoidCallback? done}) {
     if (reset) page = 0;
     _currentPage = page;
 
@@ -120,12 +120,12 @@ class OrderBloc {
       );
     } else {
       print('User does not logged in!');
-      done.call();
+      done?.call();
     }
   }
 
   void _sort() {
-    _orders.sort((a, b) => b.createdDate - a.createdDate);
+    _orders.sort((a, b) => b.createdDate.toInt() - a.createdDate.toInt());
   }
 
   void _addAll(List<Order> orderList) {
@@ -147,7 +147,7 @@ class OrderBloc {
         : (_orders.length / _pageSize).ceil() - 1; // start page = 0
   }
 
-  void loadMore({VoidCallback done}) {
+  void loadMore({required VoidCallback done}) {
     fetch(page: _currentPage + 1, done: done);
   }
 
@@ -157,7 +157,7 @@ class OrderBloc {
 
   void reset() {
     _currentPage = 0;
-    _filter = OrderFilter();
+    _filter = OrderFilter(statusList: [], customerId: '', internalTrackNo: '', externalTrackNo: '', fromDate: '', toDate: '', packCount: 0, goodsDescr: '', licensePlates: '');
     _orders.clear();
     _ordersSubject.sink.add(_orders);
     _filterSubject.sink.add(_filter);
@@ -181,15 +181,15 @@ class OrderFilter {
   String licensePlates;
 
   OrderFilter(
-      {this.statusList,
-      this.customerId,
-      this.internalTrackNo,
-      this.externalTrackNo,
-      this.fromDate,
-      this.toDate,
-      this.packCount,
-      this.goodsDescr,
-      this.licensePlates}) {
+      {required this.statusList,
+      required this.customerId,
+      required this.internalTrackNo,
+      required this.externalTrackNo,
+      required this.fromDate,
+      required this.toDate,
+      required this.packCount,
+      required this.goodsDescr,
+      required this.licensePlates}) {
     if (statusList == null) {
       statusList = []..addAll(OrderStatus.values);
     }
