@@ -34,9 +34,10 @@ class HttpUtil {
     try {
       resp = await http
           .get(url as Uri, headers: _headers)
-          .timeout(const Duration(seconds: timeout), onTimeout: () {
+          .timeout(const Duration(seconds: timeout), onTimeout: () async{
         onTimeout?.call();
-        return null;
+        // return null;
+        throw Exception('Request timed out');
       });
     } catch (e) {
       // ignored
@@ -61,9 +62,10 @@ class HttpUtil {
     try {
       resp = await http
           .get(url as Uri, headers: _headers)
-          .timeout(const Duration(seconds: timeout), onTimeout: () {
+          .timeout(const Duration(seconds: timeout), onTimeout: () async{
         onTimeout?.call();
-        return null;
+        throw Exception('Request timed out');
+        // return null;
       });
     } catch (e) {
       // ignored
@@ -92,9 +94,10 @@ class HttpUtil {
     try {
       resp = await http
           .head(url as Uri, headers: _headers)
-          .timeout(const Duration(seconds: timeout), onTimeout: () {
+          .timeout(const Duration(seconds: timeout), onTimeout: () async{
         onTimeout?.call();
-        return null;
+        throw Exception('Request timed out');
+        // return null;
       });
     } catch (e) {
       // ignored
@@ -124,9 +127,10 @@ class HttpUtil {
     try {
       resp = await http
           .put(url as Uri, headers: _headers, body: jsonEncode(body))
-          .timeout(const Duration(seconds: timeout), onTimeout: () {
+          .timeout(const Duration(seconds: timeout), onTimeout: () async{
         onTimeout?.call();
-        return null;
+        throw Exception('Request timed out');
+        // return null;
       });
     } catch (e) {
       // ignored
@@ -155,9 +159,10 @@ class HttpUtil {
     try {
       resp = await http
           .delete(url as Uri, headers: _headers)
-          .timeout(const Duration(seconds: timeout), onTimeout: () {
+          .timeout(const Duration(seconds: timeout), onTimeout: () async{
         onTimeout?.call();
-        return null;
+        throw Exception('Request timed out');
+        // return null;
       });
     } catch (e) {
       // ignored
@@ -189,9 +194,10 @@ class HttpUtil {
     try {
       resp = await http
           .post(url as Uri, headers: _headers, body: jsonEncode(body))
-          .timeout(const Duration(seconds: timeout), onTimeout: () {
+          .timeout(const Duration(seconds: timeout), onTimeout: () async{
         onTimeout?.call();
-        return null;
+        throw Exception('Request timed out');
+        // return null;
       });
     } catch (e) {
       // ignored
@@ -236,9 +242,10 @@ class HttpUtil {
 
     var response = await request
         .send()
-        .timeout(const Duration(seconds: timeout), onTimeout: () {
+        .timeout(const Duration(seconds: timeout), onTimeout: () async{
       onTimeout?.call();
-      return null;
+      throw Exception('Request timed out');
+      // return null;
     });
 
     if (onDone != null) {
@@ -275,9 +282,10 @@ class HttpUtil {
 
     var response = await request
         .send()
-        .timeout(const Duration(seconds: timeout), onTimeout: () {
+        .timeout(const Duration(seconds: timeout), onTimeout: () async{
       onTimeout?.call();
-      return null;
+      throw Exception('Request timed out');
+      // return null;
     });
 
     if (onDone != null) {
@@ -299,9 +307,10 @@ class HttpUtil {
     ));
     var response = await request
         .send()
-        .timeout(const Duration(seconds: timeout), onTimeout: () {
+        .timeout(const Duration(seconds: timeout), onTimeout: () async{
       onTimeout?.call();
-      return null;
+      throw Exception('Request timed out');
+      // return null;
     });
 
     if (onDone != null) {
@@ -384,9 +393,10 @@ class HttpUtil {
     });
 
     await request.send().timeout(const Duration(seconds: timeout),
-        onTimeout: () {
+        onTimeout: () async{
       print('#appendFiles(...) - REQUEST TIMED OUT!');
-      return null;
+      throw Exception('Request timed out');
+      // return null;
     });
   }
 
@@ -425,7 +435,7 @@ class HttpUtil {
   static Future<File> download(String url) async {
     final c = Completer<File>();
     HttpClient client = new HttpClient();
-    var _downloadData = List<int>();
+    var _downloadData = <int>[];
     final extension = url.substring(url.lastIndexOf('.'));
 
     client.getUrl(Uri.parse(url)).then((HttpClientRequest request) {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:file/memory.dart';
 import 'package:flutter/foundation.dart';
@@ -88,32 +89,31 @@ class Utils {
 
     return '';
   }
-
-  static void alert(BuildContext context,
-      {String? title, String? message, VoidCallback? onAccept}) {
+  static void alert(BuildContext context, {String? title, String? message, VoidCallback? onAccept}) {
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return WillPopScope(
-            onWillPop: () {
-              return Future.value(false);
-            },
-            child: AlertDialog(
-              title: Text(title ?? ''),
-              content: Text(message!),
-              actions: [
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    onAccept?.call();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            ),
-          );
-        });
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return PopScope(
+          onPop: () {
+            return Future.value(false);
+          },
+          child: AlertDialog(
+            title: Text(title ?? ''),
+            content: Text(message!),
+            actions: [
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  onAccept?.call();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    );
   }
 
   static void confirm(BuildContext context,
@@ -749,7 +749,7 @@ class Utils {
     bool needRemove = await compute(
         _computeOrderRemove, <String, dynamic>{'user': user, 'order': order});
     if (!needRemove) return;
-    AppProvider.of(context).state.orderBloc.removeOrder(order);
+    AppProvider.of(context)?.state.orderBloc.removeOrder(order);
   }
 
   static bool _computeOrderRemove(Map<String, dynamic> p) {
@@ -842,7 +842,7 @@ class ConfirmationStatus {
   int? packCount;
   String? note;
   String? nextWarehouse;
-  List<File?>? files;
+  List<File>? files;
 
   ConfirmationStatus(
       {this.packCount, this.note, this.nextWarehouse, this.files});

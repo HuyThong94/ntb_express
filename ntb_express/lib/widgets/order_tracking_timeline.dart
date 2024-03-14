@@ -4,7 +4,7 @@ import 'package:ntbexpress/util/utils.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class OrderTrackingTimeline extends StatelessWidget {
-  final List<OrderTrack>? tracks;
+  final List<OrderTrack?>? tracks;
   final double indicatorLineWidth;
   final double indicatorPadding;
   final double indicatorWidth;
@@ -19,8 +19,8 @@ class OrderTrackingTimeline extends StatelessWidget {
     List<Widget> list = [];
     tracks!.forEach((track) {
       if (track != null) {
-        bool isFirst = track.trackId == tracks?.first.trackId;
-        bool isLast = track.trackId == tracks?.last.trackId;
+        bool isFirst = track.trackId == tracks?.first?.trackId;
+        bool isLast = track.trackId == tracks?.last?.trackId;
         list.add(TimelineTile(
           isFirst: isFirst,
           isLast: isLast,

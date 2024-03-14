@@ -13,10 +13,10 @@ class SessionUtil {
     return _instance;
   }
 
-  User user;
-  String fcmToken;
-  String authToken;
-  String deviceId;
+  late User user;
+  late String fcmToken;
+  late String authToken;
+  late String deviceId;
   double exchangeRate = 3400;
   int canPop = 0;
 

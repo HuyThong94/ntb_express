@@ -46,7 +46,7 @@ class ImagePickerWidget extends StatefulWidget {
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
-  final List<FileHolder> _files = [];
+  final List<FileHolder?> _files = [];
   final ImagePicker picker = ImagePicker();
 
   Future<void> _getImage() async {
@@ -74,7 +74,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   Future<void> _cameraRoll() async {
     Navigator.of(context).pop(); // hide bottom sheet
-    List<Asset> files;
+    late List<Asset> files;
     try {
       files = await MultiImagePicker.pickImages(
           maxImages: widget.maxImages - _files.length, enableCamera: true);
@@ -88,7 +88,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
     if (files == null) return;
     files.removeWhere((a) => a == null); // cleanup
-    _files.addAll(files.map((e) => null).toList());
+    // _files.addAll(files.map((e) => null).toList());
+    _files.addAll(files.map((e) => FileHolder(file: e)).toList());
     setState(() {});
 
     for (Asset a in files) {
@@ -322,10 +323,10 @@ class ImagePickerController extends ValueNotifier<List<FileHolder>> {
 
   List<FileHolder> get files => value;
 
-  set files(List<FileHolder> files) {
+  set files(List<FileHolder?> files) {
     value = value
       ..clear()
-      ..addAll(files);
+      ..addAll(files as Iterable<FileHolder>);
     notifyListeners();
   }
 

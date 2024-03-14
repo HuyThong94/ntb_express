@@ -35,7 +35,8 @@ class _SelectOrderStatusScreenState extends State<SelectOrderStatusScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            if (_statusList!.length != widget.statusList!.length ?? 0) {
+            // if (_statusList!.length != widget.statusList!.length ?? 0) {
+            if (_statusList!.length != (widget.statusList != null ? widget.statusList!.length : 0))  {
               Utils.confirm(context,
                   title: Utils.getLocale(context)?.confirmation,
                   message:

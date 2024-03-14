@@ -18,16 +18,16 @@ import 'package:ntbexpress/widgets/app_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ReceivedNotification {
-  final int id;
-  final String title;
-  final String body;
-  final String payload;
+  final int? id;
+  final String? title;
+  final String? body;
+  final String? payload;
 
   ReceivedNotification({
-    required this.id,
-    required this.title,
-    required this.body,
-    required this.payload,
+    this.id,
+    this.title,
+    this.body,
+    this.payload,
   });
 }
 
@@ -546,8 +546,8 @@ class _LoginScreenState extends State<LoginScreen> {
               if (SessionUtil.instance().user?.avatarImgDTO != null &&
                   !Utils.isNullOrEmpty(
                       SessionUtil.instance().user.avatarImgDTO!.flePath)) {
-                SessionUtil.instance().user.avatarImgDTO!.flePath +=
-                    '?t=${DateTime.now().millisecondsSinceEpoch}';
+                SessionUtil.instance().user.avatarImgDTO?.flePath +=
+                '?t=${DateTime.now().millisecondsSinceEpoch}';
               }
               AppProvider.of(context)!
                   .state

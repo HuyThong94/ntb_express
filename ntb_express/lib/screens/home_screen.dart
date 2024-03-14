@@ -331,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Utils.updatePop(1);
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => OrderFormScreen(
-                          order: null,
+                          order: Order(tccoFileDTOS: []),
                         )));
               },
               child: Icon(Icons.add, size: 35.0),
@@ -1132,12 +1132,12 @@ class _HomeScreenState extends State<HomeScreen> {
           // ignored
           break;
         case AllowAction.edit:
-          list.add(IconSlideAction(
-            caption: '${Utils.getLocale(context)?.edit}',
+          list.add(SlidableAction(
+            label: '${Utils.getLocale(context)?.edit}',
             foregroundColor: Colors.white,
-            color: Colors.orangeAccent,
+            backgroundColor: Colors.orangeAccent,
             icon: Icons.edit,
-            onTap: () {
+            onPressed: (BuildContext context) {
               Utils.updatePop(1);
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => OrderFormScreen(order: order, update: true)));
@@ -1145,11 +1145,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ));
           break;
         case AllowAction.cancel:
-          list.add(IconSlideAction(
-            caption: '${Utils.getLocale(context)?.cancelOrder}',
-            color: Colors.black12,
+          list.add(SlidableAction(
+            label: '${Utils.getLocale(context)?.cancelOrder}',
+            backgroundColor: Colors.black12,
             icon: Icons.close,
-            onTap: () async {
+            onPressed: (BuildContext context) async {
               Utils.confirm(
                 context,
                 title: '${Utils.getLocale(context)?.confirmation}',
@@ -1205,12 +1205,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ));
           break;
         case AllowAction.confirmWoodenPacking:
-          list.add(IconSlideAction(
+          list.add(SlidableAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context)?.agreeToBoxWooden}',
-            color: Colors.green,
+            label: '${Utils.getLocale(context)?.agreeToBoxWooden}',
+            backgroundColor: Colors.green,
             icon: Icons.done,
-            onTap: () async {
+            onPressed: (BuildContext context) async {
               _showWaiting();
               _delay(() async {
                 bool success = await HttpUtil.updateOrderTrackingStatus(
@@ -1257,21 +1257,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ));
           break;
         case AllowAction.importChineseWarehouse:
-          list.add(IconSlideAction(
+          list.add(SlidableAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context)?.input}',
-            color: Colors.green,
+            label: '${Utils.getLocale(context)?.input}',
+            backgroundColor: Colors.green,
             icon: Icons.system_update_alt,
-            onTap: () => _updateOrderStatus(order, ActionType.chineseWarehouse),
+            onPressed: (BuildContext context) => _updateOrderStatus(order, ActionType.chineseWarehouse),
           ));
           break;
         case AllowAction.exportChineseWarehouse:
-          list.add(IconSlideAction(
+          list.add(SlidableAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context)?.output}',
-            color: Colors.green,
+            label: '${Utils.getLocale(context)?.output}',
+            backgroundColor: Colors.green,
             icon: Icons.exit_to_app,
-            onTap: () => _updateOrderStatus(order, ActionType.chineseStockOut),
+            onPressed: (BuildContext context) => _updateOrderStatus(order, ActionType.chineseStockOut),
           ));
           break;
         case AllowAction.importUongBiWarehouse:
@@ -1283,12 +1283,12 @@ class _HomeScreenState extends State<HomeScreen> {
           if (a == AllowAction.importSaiGonWarehouse)
             actionType = ActionType.saigonWarehouse;
 
-          list.add(IconSlideAction(
+          list.add(SlidableAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context)?.input}',
-            color: Colors.green,
+            label: '${Utils.getLocale(context)?.input}',
+            backgroundColor: Colors.green,
             icon: Icons.system_update_alt,
-            onTap: () => _updateOrderStatus(order, actionType),
+            onPressed: (BuildContext context) => _updateOrderStatus(order, actionType),
           ));
           break;
         case AllowAction.outputUongBi:
@@ -1299,21 +1299,21 @@ class _HomeScreenState extends State<HomeScreen> {
           if (a == AllowAction.outputSaiGon)
             actionType = ActionType.outputSaiGon;
 
-          list.add(IconSlideAction(
+          list.add(SlidableAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context)?.output}',
-            color: Colors.green,
+            label: '${Utils.getLocale(context)?.output}',
+            backgroundColor: Colors.green,
             icon: Icons.exit_to_app,
-            onTap: () => _updateOrderStatus(order, actionType),
+            onPressed: (BuildContext context) => _updateOrderStatus(order, actionType),
           ));
           break;
         case AllowAction.delivery:
-          list.add(IconSlideAction(
+          list.add(SlidableAction(
             foregroundColor: Colors.white,
-            caption: Utils.getLocale(context)?.delivery,
-            color: Colors.orange,
+            label: Utils.getLocale(context)?.delivery,
+            backgroundColor: Colors.orange,
             icon: Icons.more_horiz,
-            onTap: () => _updateOrderStatus(
+            onPressed: (BuildContext context) => _updateOrderStatus(
                 order,
                 ActionType
                     .delivery) /*{
@@ -1328,12 +1328,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ));
           break;
         case AllowAction.delivered:
-          list.add(IconSlideAction(
+          list.add(SlidableAction(
             foregroundColor: Colors.white,
-            caption: Utils.getLocale(context)?.delivered,
-            color: Colors.green,
+            label: Utils.getLocale(context)?.delivered,
+            backgroundColor: Colors.green,
             icon: Icons.done,
-            onTap: () {
+            onPressed: (BuildContext context) {
               _updateOrderStatus(order, ActionType.delivered);
               /*Utils.confirm(
                 context,
@@ -1345,12 +1345,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ));
           break;
         case AllowAction.complete:
-          list.add(IconSlideAction(
+          list.add(SlidableAction(
             foregroundColor: Colors.white,
-            caption: Utils.getLocale(context)?.completed,
-            color: Colors.indigo,
+            label: Utils.getLocale(context)?.completed,
+            backgroundColor: Colors.indigo,
             icon: Icons.done_all,
-            onTap: () => _updateOrderStatus(order, ActionType.completed),
+            onPressed: (BuildContext context) => _updateOrderStatus(order, ActionType.completed),
           ));
           break;
       }
@@ -1479,7 +1479,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.of(context).pop(); // close the drawer
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AddressManagementScreen()));
+                        builder: (context) => AddressManagementScreen(forUser: User(),)));
                   },
                   leading: Icon(Icons.location_on),
                   title: Text(

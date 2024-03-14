@@ -197,9 +197,9 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                       ],
                     ),
                   ),
-                  secondaryActions: [
-                    IconSlideAction(
-                      onTap: () {
+                  secondaryActions: <Widget>[
+                    SlidableAction(
+                      onPressed: (BuildContext context) {
                         Utils.confirm(
                           context,
                           title: Utils.getLocale(context)?.confirmation,
@@ -209,9 +209,9 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                         );
                       },
                       icon: Icons.delete,
-                      color: Colors.red,
+                      backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
-                      caption: Utils.getLocale(context)?.delete,
+                      label: Utils.getLocale(context)?.delete,
                     ),
                   ],
                 );

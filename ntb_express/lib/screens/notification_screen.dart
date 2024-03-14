@@ -204,11 +204,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           bloc: bloc,
                         ),
                         secondaryActions: [
-                          IconSlideAction(
-                            caption: Utils.getLocale(context)?.delete,
-                            color: Colors.red,
+                          SlidableAction(
+                            label: Utils.getLocale(context)?.delete,
+                            backgroundColor: Colors.red,
                             icon: Icons.delete,
-                            onTap: () async {
+                            onPressed: (BuildContext context) async {
                               int affected =
                                   await _notificationProvider.delete(o.id!);
                               if (affected > 0) {

@@ -20,7 +20,7 @@ class GalleryPhotoViewWrapper extends StatefulWidget {
   final dynamic maxScale;
   final int initialIndex;
   final PageController pageController;
-  final List<FileHolder> galleryItems;
+  final List<FileHolder?> galleryItems;
   final Axis scrollDirection;
 
   @override
@@ -83,15 +83,24 @@ class _GalleryPhotoViewWrapperState extends State<GalleryPhotoViewWrapper> {
   }
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
-    final item = widget.galleryItems[index];
+    late final item = widget.galleryItems[index];
+    ImageProvider<Object>? imageProvider;
+
+    if (item?.isNetworkImage != null && item!.isNetworkImage!) {
+      imageProvider = NetworkImage(item!.fileUrl!);
+    } else if (item?.file != null) {
+      imageProvider = FileImage(item!.file!);
+    }
+
+    if (imageProvider == null) {
+      imageProvider = AssetImage('path_to_default_image');
+    }
     return PhotoViewGalleryPageOptions(
-      imageProvider: item.isNetworkImage
-          ? NetworkImage(item.fileUrl)
-          : FileImage(item.file),
+      imageProvider: imageProvider,
       initialScale: PhotoViewComputedScale.contained,
       minScale: PhotoViewComputedScale.contained * (0.5 + index / 10),
       maxScale: PhotoViewComputedScale.covered * 1.1,
-      heroAttributes: PhotoViewHeroAttributes(tag: index),
+      heroAttributes: PhotoViewHeroAttributes(tag: index.toString()),
     );
   }
 }

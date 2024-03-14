@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -175,7 +176,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
         .listen((receivedNotification) async {
       if (receivedNotification == null ||
           Utils.isNullOrEmpty(receivedNotification.payload)) return;
-      dynamic message = jsonDecode(receivedNotification.payload);
+      dynamic message = jsonDecode(receivedNotification.payload!);
       _navigateToItemDetail(message);
     });
   }
@@ -198,10 +199,10 @@ class _HandleWrapperState extends State<HandleWrapper> {
       },
     );
     var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     _flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (payload) async {
-      selectNotificationSubject.add(payload);
+        onDidReceiveNotificationResponse: (payload) async {
+      selectNotificationSubject.add(payload as String);
     });
   }
 
@@ -303,7 +304,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
     var platformChannelSpecificsIos =
         IOSNotificationDetails(presentSound: true);
     var platformChannelSpecifics = NotificationDetails(
-        platformChannelSpecificsAndroid, platformChannelSpecificsIos);
+        android: platformChannelSpecificsAndroid, iOS: platformChannelSpecificsIos);
 
     Future.delayed(Duration.zero, () {
       Vibration.vibrate();

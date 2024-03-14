@@ -4,10 +4,10 @@ import 'package:ntbexpress/util/utils.dart';
 class InfoItem extends StatelessWidget {
   final String? firstText;
   final String? secondText;
-  final bool? alignTop;
-  final bool? breakLine;
+  final bool alignTop;
+  final bool breakLine;
   final VoidCallback? onTap;
-  final bool? useWidget;
+  final bool useWidget;
   final Widget? firstChild;
   final Widget? secondChild;
   final Widget? bottomChild;
@@ -37,7 +37,7 @@ class InfoItem extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
               child: Row(
-                crossAxisAlignment: alignTop
+                crossAxisAlignment: alignTop!
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.center,
                 children: [

@@ -36,7 +36,7 @@ class _SettingScreenState extends State<SettingScreen> {
               title: Text('${Utils.getLocale(context)?.common}'),
               tiles: [
                 SettingsTile(
-                  onTap: _changeLanguage,
+                  onPressed: _changeLanguage,
                   title: Text('${Utils.getLocale(context)?.language}'),
                   subtitle: _locale == 'vi'
                       ? Utils.getLocale(context)?.vietnamese
@@ -46,7 +46,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   leading: Icon(Icons.language),
                 ),
                 SettingsTile(
-                  onTap: () async {
+                  onPressed: (BuildContext context) async {
                     AppSettings.openAppSettings();
                   },
                   title: Text('${Utils.getLocale(context)?.notification}'),
@@ -77,7 +77,7 @@ class _SettingScreenState extends State<SettingScreen> {
     HttpUtil.updateLocale(SessionUtil.instance().deviceId, code);
   }
 
-  Future<void> _changeLanguage() async {
+  Future<void> _changeLanguage(BuildContext context) async {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(

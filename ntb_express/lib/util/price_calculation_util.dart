@@ -136,10 +136,10 @@ class PriceCalculationUtil {
     return price;
   }
 
-  static FeeItem? _getFeeItem(int goodsType, int locationGroup) {
+  static FeeItem _getFeeItem(int goodsType, int locationGroup) {
     return feeTable.firstWhere(
         (e) => e.locationGroup == locationGroup && e.goodsType == goodsType,
-        orElse: () => null);
+        orElse: () => null as FeeItem);
   }
 
   static List<FeeItem> _getFeeItems(int locationGroup) {
@@ -153,7 +153,7 @@ class PriceCalculationUtil {
     return provinces
             .firstWhere(
                 (p) => p.name.toLowerCase() == provinceName.toLowerCase(),
-                orElse: () => null)
+                orElse: () => null as ProvinceGroup)
             ?.group ??
         0;
   }

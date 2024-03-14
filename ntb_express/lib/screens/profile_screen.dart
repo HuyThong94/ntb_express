@@ -213,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 firstText: Utils.getLocale(context)?.addressManagement,
                 secondText: '',
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AddressManagementScreen())),
+                    builder: (context) => AddressManagementScreen(forUser: User(),))),
               ),
               InfoItem(
                 firstText: Utils.getLocale(context)?.changePassword,

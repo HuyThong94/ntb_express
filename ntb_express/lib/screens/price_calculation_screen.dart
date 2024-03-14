@@ -224,13 +224,12 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                           ElevatedButton(
                         onPressed: _saveData,
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: _isEnabled ?  Colors.white,
-                          backgroundColor:
-                              Utils.accentColor, // Set button's text color
-                          disabledColor: Colors
-                              .black12, // Set disabled button's background color
-                          disabledTextColor: Colors
-                              .white70, // Set disabled button's text color
+                          backgroundColor: Utils.accentColor,
+                          disabledBackgroundColor: Colors.black12,
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                          )
+                          // disabledTextColor: Colors.white70,
                         ),
                         child: Text(
                           Utils.getLocale(context)!.calculate,
