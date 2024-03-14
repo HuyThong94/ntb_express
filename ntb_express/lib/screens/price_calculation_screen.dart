@@ -61,7 +61,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
               color: Colors.white,
             ),
           ),
-          title: Text(Utils.getLocale(context).priceCalculation),
+          title: Text(Utils.getLocale(context)!.priceCalculation),
         ),
         body: SafeArea(
           child: Container(
@@ -77,7 +77,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(4.0),
                       child: Text(
-                        Utils.getLocale(context).priceCalculationNoteMessage,
+                        Utils.getLocale(context)!.priceCalculationNoteMessage,
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                           color: Theme.of(context).disabledColor,
@@ -86,7 +86,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                     ),
                     Divider(),
                     InfoItem(
-                      firstText: '${Utils.getLocale(context).province} ',
+                      firstText: '${Utils.getLocale(context)?.province} ',
                       secondText: _address.province ?? '',
                       onTap: () async {
                         String selectedCity = await Utils.selectArea(
@@ -94,7 +94,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                           target: AreaTarget.province,
                           currentProvince: _address.province,
                           title:
-                              '${Utils.getLocale(context).select} ${Utils.getLocale(context).province}',
+                              '${Utils.getLocale(context)?.select} ${Utils.getLocale(context)?.province}',
                         );
 
                         if (_address.province != selectedCity) {
@@ -110,7 +110,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                     Divider(),
                     Row(
                       children: [
-                        Text('${Utils.getLocale(context).goodsType}'),
+                        Text('${Utils.getLocale(context)?.goodsType}'),
                         SizedBox(
                           width: 10.0,
                         ),
@@ -142,9 +142,9 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                             },
                             decoration: InputDecoration(
                                 labelText:
-                                    '${Utils.getLocale(context).weight} (kg)',
+                                    '${Utils.getLocale(context)?.weight} (kg)',
                                 hintText:
-                                    '${Utils.getLocale(context).enter} ${Utils.getLocale(context).weight.toLowerCase()} (kg)...',
+                                    '${Utils.getLocale(context)?.enter} ${Utils.getLocale(context)?.weight.toLowerCase()} (kg)...',
                                 counterText: ''),
                             maxLines: 1,
                             validator: (value) {
@@ -156,7 +156,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                                   (Utils.isNullOrEmpty(tmp) ||
                                       tmp == '0' ||
                                       tmp == '0.0'))
-                                return Utils.getLocale(context).required;
+                                return Utils.getLocale(context)?.required;
 
                               return null;
                             },
@@ -179,9 +179,9 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                             },
                             decoration: InputDecoration(
                                 labelText:
-                                    '${Utils.getLocale(context).size} (m³)',
+                                    '${Utils.getLocale(context)?.size} (m³)',
                                 hintText:
-                                    '${Utils.getLocale(context).enter} ${Utils.getLocale(context).size.toLowerCase()} (m³)...',
+                                    '${Utils.getLocale(context)?.enter} ${Utils.getLocale(context)?.size.toLowerCase()} (m³)...',
                                 counterText: ''),
                             maxLines: 1,
                             validator: (value) {
@@ -193,7 +193,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                                   (Utils.isNullOrEmpty(tmp) ||
                                       tmp == '0' ||
                                       tmp == '0.0'))
-                                return Utils.getLocale(context).required;
+                                return Utils.getLocale(context)?.required;
 
                               return null;
                             },
@@ -207,14 +207,33 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                     SizedBox(
                       width: double.infinity,
                       height: 50.0,
-                      child: RaisedButton(
+                      child:
+                          // RaisedButton(
+                          //   onPressed: _saveData,
+                          //   disabledColor: Colors.black12,
+                          //   disabledTextColor: Colors.white70,
+                          //   color: Utils.accentColor,
+                          //   textColor: Colors.white,
+                          //   child: Text(
+                          //     Utils.getLocale(context)?.calculate,
+                          //     style: TextStyle(
+                          //       fontSize: 20.0,
+                          //     ),
+                          //   ),
+                          // ),
+                          ElevatedButton(
                         onPressed: _saveData,
-                        disabledColor: Colors.black12,
-                        disabledTextColor: Colors.white70,
-                        color: Utils.accentColor,
-                        textColor: Colors.white,
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: _isEnabled ?  Colors.white,
+                          backgroundColor:
+                              Utils.accentColor, // Set button's text color
+                          disabledColor: Colors
+                              .black12, // Set disabled button's background color
+                          disabledTextColor: Colors
+                              .white70, // Set disabled button's text color
+                        ),
                         child: Text(
-                          Utils.getLocale(context).calculate,
+                          Utils.getLocale(context)!.calculate,
                           style: TextStyle(
                             fontSize: 20.0,
                           ),
@@ -228,8 +247,13 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                       visible: !Utils.isNullOrEmpty(_totalFee),
                       child: Row(
                         children: [
-                          Text('${Utils.getLocale(context).result}: ', style: TextStyle(fontSize: 20.0),),
-                          Text(_totalFee ?? '', style: TextStyle(fontSize: 20.0, color: Utils.accentColor)),
+                          Text(
+                            '${Utils.getLocale(context)?.result}: ',
+                            style: TextStyle(fontSize: 20.0),
+                          ),
+                          Text(_totalFee ?? '',
+                              style: TextStyle(
+                                  fontSize: 20.0, color: Utils.accentColor)),
                         ],
                       ),
                     ),
@@ -239,7 +263,7 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(4.0),
                         child: Text(
-                          Utils.getLocale(context).priceCalculationNote,
+                          Utils.getLocale(context)!.priceCalculationNote,
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                             color: Theme.of(context).disabledColor,
@@ -285,8 +309,8 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
     if (Utils.isNullOrEmpty(_address.province)) {
       Utils.alert(
         context,
-        title: Utils.getLocale(context).required,
-        message: Utils.getLocale(context).addressIsRequired,
+        title: Utils.getLocale(context)?.required,
+        message: Utils.getLocale(context)?.addressIsRequired,
       );
       return;
     }
@@ -358,8 +382,8 @@ class _PriceCalculationScreenState extends State<PriceCalculationScreen> {
     ];
   }
 
-  void _onGoodsTypeChanged(int value) {
-    setState(() => _goodsType = value);
+  void _onGoodsTypeChanged(int? value) {
+    setState(() => _goodsType = value!);
     //_updateExtFee();
   }
 }

@@ -100,9 +100,9 @@ class UserBloc {
   void _sort() {
     _customers.sort((a, b) => a == null || b == null
         ? 0
-        : b.createdDate.toInt() == null || a.createdDate.toInt() == null
+        : b.createdDate?.toInt() == null || a.createdDate?.toInt() == null
             ? 0
-            : b.createdDate.toInt() - a.createdDate.toInt());
+            : b.createdDate!.toInt() - a.createdDate!.toInt());
   }
 
   void _addAll(List<User> customerList) {

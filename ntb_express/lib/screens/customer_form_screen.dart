@@ -112,13 +112,13 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
   }
 
   void _initValues() {
-    _fullNameController.text = _user.fullName;
-    _phoneNumberController.text = _user.phoneNumber;
+    _fullNameController.text = _user.fullName!;
+    _phoneNumberController.text = _user.phoneNumber!;
     _dobController.text =
         _user.dob == null ? '' : Utils.getDateString(_user.dob!, _datePattern);
-    _emailController.text = _user.email;
-    _refUserController.text = _user.refId;
-    _customerCodeController.text = _user.customerId;
+    _emailController.text = _user.email!;
+    _refUserController.text = _user.refId!;
+    _customerCodeController.text = _user.customerId!;
   }
 
   @override
@@ -137,8 +137,8 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
 
               Utils.confirm(
                 context,
-                title: '${Utils.getLocale(context).saveChanges}?',
-                message: Utils.getLocale(context).saveChangesMessage,
+                title: '${Utils.getLocale(context)?.saveChanges}?',
+                message: Utils.getLocale(context)?.saveChangesMessage,
                 onAccept: () {
                   _saveData(done: (user) => Navigator.of(context).pop(user));
                 },
@@ -148,7 +148,7 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
             icon: Icon(Icons.close),
           ),
           title: Text(
-              '${!widget.isUpdate ? Utils.getLocale(context).add : Utils.getLocale(context).edit} ${Utils.getLocale(context).customer}'),
+              '${!widget.isUpdate ? Utils.getLocale(context)?.add : Utils.getLocale(context)?.edit} ${Utils.getLocale(context)?.customer}'),
           actions: [
             IconButton(
               onPressed: !_hasChanged
@@ -183,14 +183,14 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                             backgroundColor: Theme.of(context).disabledColor,
                             child: CircleAvatar(
                               radius: 40.0,
-                              backgroundImage: _image != null
-                                  ? FileImage(_image)
-                                  : (widget.isUpdate &&
-                                          _user.avatarImgDTO != null)
-                                      ? NetworkImage(
-                                          '${ApiUrls.instance().baseUrl}/${_user.avatarImgDTO.flePath}?t=${DateTime.now().millisecondsSinceEpoch}')
-                                      : AssetImage(
-                                          'assets/images/default-avatar.png'),
+                              // backgroundImage: _image != null
+                              //     ? FileImage(_image)
+                              //     : (widget.isUpdate &&
+                              //             _user.avatarImgDTO != null)
+                              //         ? NetworkImage(
+                              //             '${ApiUrls.instance().baseUrl}/${_user.avatarImgDTO.flePath}?t=${DateTime.now().millisecondsSinceEpoch}')
+                              //         : AssetImage(
+                              //             'assets/images/default-avatar.png'),
                             ),
                           ),
                         ),
@@ -201,9 +201,9 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                       controller: _fullNameController,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        labelText: Utils.getLocale(context).fullName,
+                        labelText: Utils.getLocale(context)?.fullName,
                         hintText:
-                            '${Utils.getLocale(context).enter} ${Utils.getLocale(context).fullName.toLowerCase()}...',
+                            '${Utils.getLocale(context)?.enter} ${Utils.getLocale(context)?.fullName.toLowerCase()}...',
                         counterText: '',
                       ),
                       maxLength: 50,
@@ -213,8 +213,8 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                             .requestFocus(_phoneNumberFocusNode);
                       },
                       validator: (value) {
-                      if (Utils.isNullOrEmpty(value!))
-                          return Utils.getLocale(context).required;
+                        if (Utils.isNullOrEmpty(value!))
+                          return Utils.getLocale(context)?.required;
 
                         return null;
                       },
@@ -230,9 +230,9 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                             keyboardType: TextInputType.phone,
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
-                              labelText: Utils.getLocale(context).phoneNumber,
+                              labelText: Utils.getLocale(context)?.phoneNumber,
                               hintText:
-                                  '${Utils.getLocale(context).enter} ${Utils.getLocale(context).phoneNumber.toLowerCase()}...',
+                                  '${Utils.getLocale(context)?.enter} ${Utils.getLocale(context)?.phoneNumber.toLowerCase()}...',
                               counterText: '',
                             ),
                             maxLength: 12,
@@ -243,9 +243,9 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                             },
                             validator: (value) {
                               if (Utils.isNullOrEmpty(value!))
-                                return Utils.getLocale(context).required;
+                                return Utils.getLocale(context)?.required;
                               if (!Utils.isPhoneNumberValid(value))
-                                return '${Utils.getLocale(context).phoneNumber} ${Utils.getLocale(context).wrongFormat}';
+                                return '${Utils.getLocale(context)?.phoneNumber} ${Utils.getLocale(context)?.wrongFormat}';
 
                               return null;
                             },
@@ -298,18 +298,18 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                       textInputAction: TextInputAction.next,
                       enabled: !widget.isUpdate,
                       decoration: InputDecoration(
-                        labelText: Utils.getLocale(context).customerCode,
+                        labelText: Utils.getLocale(context)?.customerCode,
                         hintText:
-                            '${Utils.getLocale(context).enter} ${Utils.getLocale(context).customerCode.toLowerCase()}...',
+                            '${Utils.getLocale(context)?.enter} ${Utils.getLocale(context)?.customerCode.toLowerCase()}...',
                         counterText: '',
                       ),
                       maxLength: 50,
                       validator: (value) {
                         if (widget.isUpdate) return null;
                         if (Utils.isNullOrEmpty(value!))
-                          return '${Utils.getLocale(context).required}';
+                          return '${Utils.getLocale(context)?.required}';
                         if (RegExp(r'[^a-zA-Z_0-9]+').hasMatch(value))
-                          return '${Utils.getLocale(context).customerCode} ${Utils.getLocale(context).wrongFormat}';
+                          return '${Utils.getLocale(context)?.customerCode} ${Utils.getLocale(context)?.wrongFormat}';
 
                         return null;
                       },
@@ -368,9 +368,9 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
-                              labelText: Utils.getLocale(context).password,
+                              labelText: Utils.getLocale(context)?.password,
                               hintText:
-                                  '${Utils.getLocale(context).enter} ${Utils.getLocale(context).password.toLowerCase()}...',
+                                  '${Utils.getLocale(context)?.enter} ${Utils.getLocale(context)?.password.toLowerCase()}...',
                               counterText: '',
                               suffixIcon: IconButton(
                                 onPressed: () {
@@ -386,9 +386,9 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                               if (widget.isUpdate) return null;
 
                               if (Utils.isNullOrEmpty(value!))
-                                return Utils.getLocale(context).required;
+                                return Utils.getLocale(context)?.required;
                               if (value.length < 8)
-                                return '${Utils.getLocale(context).passwordLengthRequired}';
+                                return '${Utils.getLocale(context)?.passwordLengthRequired}';
 
                               return null;
                             },
@@ -416,7 +416,7 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                     Visibility(
                       visible: widget.isUpdate,
                       child: InfoItem(
-                        firstText: Utils.getLocale(context).addressManagement,
+                        firstText: Utils.getLocale(context)?.addressManagement,
                         secondText: '',
                         onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -445,12 +445,13 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                         },
                         useWidget: true,
                         breakLine: true,
-                        firstChild: Text('${Utils.getLocale(context).address}'),
+                        firstChild:
+                            Text('${Utils.getLocale(context)?.address}'),
                         bottomChild: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: _addressList.isEmpty
                               ? Text(
-                                  '${Utils.getLocale(context).unavailable}',
+                                  '${Utils.getLocale(context)?.unavailable}',
                                   style: TextStyle(color: Colors.black45),
                                 )
                               : _addressWidgetItems(),
@@ -471,7 +472,7 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                             ),
                           ),
                           SizedBox(width: 5.0),
-                          Text('${Utils.getLocale(context).active}')
+                          Text('${Utils.getLocale(context)?.active}')
                         ],
                       ),
                     ),
@@ -499,7 +500,7 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
     }
   }
 
-  void _saveData({ValueChanged<User> done}) {
+  void _saveData({ValueChanged<User?>? done}) {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -522,7 +523,7 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
     _user.managerId = currentUser.username;
     _user.userType = UserType.customer;
     _user.isCreate = widget.isUpdate ? 0 : 1; // 1: create new, other: update
-    if (Utils.isNullOrEmpty(_user.email)) {
+    if (Utils.isNullOrEmpty(_user.email!)) {
       _user.email = ''; // avoid exception from DB for Unique constraint
     }
     if (widget.isUpdate && _image != null) {
@@ -532,8 +533,8 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
 
     if (_addressList == null || _addressList.isEmpty) {
       Utils.alert(context,
-          title: Utils.getLocale(context).required,
-          message: '${Utils.getLocale(context).addressIsRequired}!');
+          title: Utils.getLocale(context)?.required,
+          message: '${Utils.getLocale(context)?.addressIsRequired}!');
       return;
     }
 
@@ -553,9 +554,9 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
             String error = json == null ? '' : json['message'];
             Utils.alert(
               context,
-              title: Utils.getLocale(context).failed,
+              title: Utils.getLocale(context)?.failed,
               message:
-                  '${Utils.getLocale(context).errorOccurred} ${resp?.statusCode}\n$error',
+                  '${Utils.getLocale(context)?.errorOccurred} ${resp?.statusCode}\n$error',
               onAccept: () {
                 // ignored
               },
@@ -568,17 +569,17 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
           if (savedUser != null) {
             // save addresses
             for (var address in _addressList) {
-              address.userName = savedUser.username;
+              address.userName = savedUser.username!;
               await _saveAddress(address);
             }
 
             _popLoading();
             Utils.alert(
               context,
-              title: Utils.getLocale(context).success,
+              title: Utils.getLocale(context)?.success,
               message: widget.isUpdate
-                  ? '${Utils.getLocale(context).updateUserInfoSuccessMessage}'
-                  : '${Utils.getLocale(context).createUserSuccessMessage}',
+                  ? '${Utils.getLocale(context)?.updateUserInfoSuccessMessage}'
+                  : '${Utils.getLocale(context)?.createUserSuccessMessage}',
               onAccept: () {
                 if (done != null) {
                   done(savedUser);
@@ -589,10 +590,10 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
             _popLoading();
             Utils.alert(
               context,
-              title: Utils.getLocale(context).success,
+              title: Utils.getLocale(context)?.success,
               message: widget.isUpdate
-                  ? '${Utils.getLocale(context).updateUserInfoSuccessMessage}'
-                  : '${Utils.getLocale(context).createUserSuccessMessage}',
+                  ? '${Utils.getLocale(context)?.updateUserInfoSuccessMessage}'
+                  : '${Utils.getLocale(context)?.createUserSuccessMessage}',
               onAccept: () {
                 if (done != null) {
                   done(savedUser!);
@@ -635,7 +636,7 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
 
   void _showWaiting() {
     Utils.showLoading(context,
-        textContent: Utils.getLocale(context).waitForLogin);
+        textContent: Utils.getLocale(context)!.waitForLogin);
   }
 
   void _popLoading() {
@@ -654,16 +655,26 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
   void _copyToClipboard() {
     final currentText = _passwordController.text?.trim() ?? '';
     if (Utils.isNullOrEmpty(currentText)) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text('${Utils.getLocale(context).nothingToCopy}'),
-      ));
+      // _scaffoldKey.currentState?.showSnackBar(SnackBar(
+      //   content: Text('${Utils.getLocale(context).nothingToCopy}'),
+      // ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${Utils.getLocale(context)?.nothingToCopy}'),
+        ),
+      );
       return;
     }
 
     Clipboard.setData(ClipboardData(text: currentText)).then((value) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text('${Utils.getLocale(context).passwordCopied}'),
-      ));
+      // _scaffoldKey.currentState.showSnackBar(SnackBar(
+      //   content: Text('${Utils.getLocale(context).passwordCopied}'),
+      // ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${Utils.getLocale(context)?.passwordCopied}'),
+        ),
+      );
     });
   }
 
@@ -694,15 +705,15 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
   void _makeCustomerId() {
     if (widget.isUpdate) return;
 
-    String name = Utils.isNullOrEmpty(_user.fullName)
+    String name = Utils.isNullOrEmpty(_user.fullName!)
         ? ''
-        : _user.fullName.substring(_user.fullName.lastIndexOf(' ') != -1
-            ? _user.fullName.lastIndexOf(' ')
+        : _user.fullName!.substring(_user.fullName?.lastIndexOf(' ') != -1
+            ? _user.fullName!.lastIndexOf(' ')
             : 0);
-    String phone = Utils.isNullOrEmpty(_user.phoneNumber)
+    String phone = Utils.isNullOrEmpty(_user.phoneNumber!)
         ? ''
-        : _user.phoneNumber.substring(
-            _user.phoneNumber.length > 4 ? _user.phoneNumber.length - 4 : 0);
+        : _user.phoneNumber!.substring(
+            _user.phoneNumber!.length > 4 ? _user.phoneNumber!.length - 4 : 0);
     _customerCodeController.text =
         Utils.changeAlias('${name.toLowerCase()}$phone');
     _user.customerId = _customerCodeController.text!.trim();

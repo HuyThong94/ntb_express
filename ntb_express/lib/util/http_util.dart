@@ -15,11 +15,11 @@ import 'package:ntbexpress/util/session_util.dart';
 import 'package:ntbexpress/util/utils.dart';
 
 class HttpUtil {
-  static Future<void> get(String url,
+  static Future<void> get(String? url,
       {Map<String, String>? headers,
       ValueChanged<http.Response>? onResponse,
       VoidCallback? onTimeout}) async {
-    if (Utils.isNullOrEmpty(url) ||
+    if (Utils.isNullOrEmpty(url!) ||
         SessionUtil.instance() == null ||
         Utils.isNullOrEmpty(SessionUtil.instance().authToken)) return;
     Map<String, String> _headers = {
@@ -30,7 +30,7 @@ class HttpUtil {
       _headers.addAll(headers);
     }
 
-    http.Response resp;
+    late http.Response resp;
     try {
       resp = await http
           .get(url as Uri, headers: _headers)
@@ -46,10 +46,10 @@ class HttpUtil {
     }
   }
 
-  static Future<void> getNotAuth(String url,
+  static Future<void> getNotAuth(String? url,
       {Map<String, String>? headers,
-        ValueChanged<http.Response>? onResponse,
-        VoidCallback? onTimeout}) async {
+      ValueChanged<http.Response>? onResponse,
+      VoidCallback? onTimeout}) async {
     if (Utils.isNullOrEmpty(url)) return;
     Map<String, String> _headers = {};
 
@@ -57,7 +57,7 @@ class HttpUtil {
       _headers.addAll(headers);
     }
 
-    http.Response resp;
+    late http.Response resp;
     try {
       resp = await http
           .get(url as Uri, headers: _headers)
@@ -88,7 +88,7 @@ class HttpUtil {
       _headers.addAll(headers);
     }
 
-    http.Response resp;
+    late http.Response resp;
     try {
       resp = await http
           .head(url as Uri, headers: _headers)
@@ -120,7 +120,7 @@ class HttpUtil {
       _headers.addAll(headers);
     }
 
-    http.Response resp;
+    late http.Response resp;
     try {
       resp = await http
           .put(url as Uri, headers: _headers, body: jsonEncode(body))
@@ -138,8 +138,8 @@ class HttpUtil {
 
   static Future<void> delete(String? url,
       {Map<String, String>? headers,
-        ValueChanged<http.Response>? onResponse,
-        VoidCallback? onTimeout}) async {
+      ValueChanged<http.Response>? onResponse,
+      VoidCallback? onTimeout}) async {
     if (Utils.isNullOrEmpty(url) ||
         SessionUtil.instance() == null ||
         Utils.isNullOrEmpty(SessionUtil.instance().authToken)) return;
@@ -151,7 +151,7 @@ class HttpUtil {
       _headers.addAll(headers);
     }
 
-    http.Response resp;
+    late http.Response resp;
     try {
       resp = await http
           .delete(url as Uri, headers: _headers)
@@ -184,7 +184,7 @@ class HttpUtil {
       _headers.addAll(headers);
     }
 
-    http.Response resp;
+    late http.Response resp;
 
     try {
       resp = await http
@@ -205,12 +205,12 @@ class HttpUtil {
     }
   }
 
-  static Future<void> postOrder(String url,
+  static Future<void> postOrder(String? url,
       {Order? order,
       List<FileHolder>? files,
       ValueChanged<http.Response>? onDone,
       VoidCallback? onTimeout}) async {
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+    var request = http.MultipartRequest('POST', Uri.parse(url!));
     request.files.add(http.MultipartFile.fromString(
       'orderDTO',
       jsonEncode(order?.toJson()),
@@ -253,7 +253,7 @@ class HttpUtil {
       bool update = false,
       ValueChanged<http.Response>? onDone,
       VoidCallback? onTimeout}) async {
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+    var request = http.MultipartRequest('POST', Uri.parse(url!));
     request.files.add(http.MultipartFile.fromString(
       'userDTO',
       jsonEncode(user!.toJson()),
@@ -286,11 +286,11 @@ class HttpUtil {
     }
   }
 
-  static Future<void> postRegister(String url,
+  static Future<void> postRegister(String? url,
       {User? user,
-        ValueChanged<http.Response>? onDone,
-        VoidCallback? onTimeout}) async {
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+      ValueChanged<http.Response>? onDone,
+      VoidCallback? onTimeout}) async {
+    var request = http.MultipartRequest('POST', Uri.parse(url!));
     request.files.add(http.MultipartFile.fromString(
       'userDTO',
       jsonEncode(user!.toJson()),
@@ -324,54 +324,49 @@ class HttpUtil {
 
     var data = {'orderId': orderId, 'actionType': status};
     if (confirmStatus != null) {
-      if (confirmStatus.packCount != null && confirmStatus.packCount > 0) {
-        data['packCount'] = confirmStatus.packCount;
+      if (confirmStatus.packCount != null && confirmStatus.packCount! > 0) {
+        data['packCount'] = confirmStatus.packCount!;
       }
       if (!Utils.isNullOrEmpty(confirmStatus.nextWarehouse)) {
-        data['nextWarehouse'] = confirmStatus.nextWarehouse;
+        data['nextWarehouse'] = confirmStatus.nextWarehouse!;
       }
       if (!Utils.isNullOrEmpty(confirmStatus.note)) {
-        data['note'] = confirmStatus.note;
+        data['note'] = confirmStatus.note!;
       }
     }
 
-    post(
-      ApiUrls.instance().getUpdateTrackStatusUrl(),
-      headers: {'Content-Type': 'application/json; charset=utf-8'},
-      body: data,
-      onResponse: (resp) async {
-        // check if need to append files => do it
-        if (confirmStatus != null &&
-            confirmStatus.files != null &&
-            confirmStatus.files.isNotEmpty &&
-            resp != null &&
-            resp.statusCode == 200) {
-          await appendFiles(ApiUrls.instance().getOrderAppendFilesUrl(),
-              orderId, confirmStatus.files);
-          c.complete(resp != null && resp.statusCode == 200);
-        } else {
-          c.complete(resp != null && resp.statusCode == 200);
-        }
-      },
-      onTimeout: () {
-        c.complete(false);
-      },
-      onError: (e) {
-        error?.call(e);
+    post(ApiUrls.instance().getUpdateTrackStatusUrl(),
+        headers: {'Content-Type': 'application/json; charset=utf-8'},
+        body: data, onResponse: (resp) async {
+      // check if need to append files => do it
+      if (confirmStatus != null &&
+          confirmStatus.files != null &&
+          confirmStatus.files!.isNotEmpty &&
+          resp != null &&
+          resp.statusCode == 200) {
+        await appendFiles(ApiUrls.instance().getOrderAppendFilesUrl(), orderId,
+            confirmStatus.files);
+        c.complete(resp != null && resp.statusCode == 200);
+      } else {
+        c.complete(resp != null && resp.statusCode == 200);
       }
-    );
+    }, onTimeout: () {
+      c.complete(false);
+    }, onError: (e) {
+      error?.call(e);
+    });
 
     return c.future;
   }
 
   static Future<void> appendFiles(
-      String url, String orderId, List<File> files) async {
+      String? url, String orderId, List<File>? files) async {
     if (Utils.isNullOrEmpty(url) ||
         Utils.isNullOrEmpty(orderId) ||
         files == null ||
         files.isEmpty) return;
 
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+    var request = http.MultipartRequest('POST', Uri.parse(url!));
     request.fields['orderId'] = orderId;
     files.forEach((f) {
       if (f != null) {
@@ -439,7 +434,7 @@ class HttpUtil {
       response.listen((d) => _downloadData.addAll(d), onDone: () {
         c.complete(MemoryFileSystem()
             .file('${DateTime.now().millisecondsSinceEpoch}$extension')
-              ..writeAsBytesSync(_downloadData));
+          ..writeAsBytesSync(_downloadData));
       });
     }).timeout(Duration(seconds: timeout), onTimeout: () {
       c.complete(null);
@@ -449,8 +444,11 @@ class HttpUtil {
   }
 
   static Future<void> updateLocale(String deviceId, String locale) async {
-    String _locale =
-        locale == 'vi' ? 'vi_VN' : locale == 'en' ? 'en_US' : 'zh_CN';
+    String _locale = locale == 'vi'
+        ? 'vi_VN'
+        : locale == 'en'
+            ? 'en_US'
+            : 'zh_CN';
     post(
       ApiUrls.instance().getUpdateDeviceLocaleUrl(),
       headers: {'Content-Type': 'application/json; charset=utf-8'},

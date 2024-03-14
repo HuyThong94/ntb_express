@@ -25,7 +25,7 @@ class OrderTrackingTimeline extends StatelessWidget {
           isFirst: isFirst,
           isLast: isLast,
           afterLineStyle: LineStyle(
-            width: indicatorLineWidth,
+            // width: indicatorLineWidth,
             color: Colors.black12,
           ),
           indicatorStyle: IndicatorStyle(
@@ -85,7 +85,7 @@ class OrderTrackingTimeline extends StatelessWidget {
                     track.actionDate == null
                         ? SizedBox()
                         : Text(
-                            '${Utils.getDateString(track.actionDate, 'dd-MM-yyyy HH:mm')}',
+                            '${Utils.getDateString(track.actionDate!, 'dd-MM-yyyy HH:mm')}',
                             style: TextStyle(
                                 fontSize: 10.0, color: Colors.black45),
                           )

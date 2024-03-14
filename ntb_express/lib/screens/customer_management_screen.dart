@@ -50,7 +50,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
         _showLoading = true;
       });
       Future.delayed(Duration(seconds: 1), () async {
-        AppProvider.of(context).state.userBloc?.loadMore(done: () {
+        AppProvider.of(context)?.state.userBloc.loadMore(done: () {
           setState(() {
             _showLoading = false;
           });
@@ -61,12 +61,12 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userBloc = AppProvider.of(context).state.userBloc;
+    final userBloc = AppProvider.of(context)?.state.userBloc;
 
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(Utils.getLocale(context).customer),
+        title: Text(Utils.getLocale(context)!.customer),
       ),
       body: Container(
         constraints: const BoxConstraints.expand(),
@@ -74,7 +74,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
         child: RefreshIndicator(
           onRefresh: _onRefresh,
           child: StreamBuilder<List<User>>(
-            stream: userBloc.customers,
+            stream: userBloc?.customers,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Center(
@@ -86,7 +86,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                 if (snapshot.data == null || snapshot.data!.isEmpty) {
                   if (!_loaded) {
                     Future.delayed(const Duration(milliseconds: 500), () async {
-                      userBloc.fetch(
+                      userBloc?.fetch(
                           reset: true,
                           done: () {
                             if (mounted) {
@@ -104,7 +104,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
 
                   return Center(
                     child: Text(
-                      '${Utils.getLocale(context).empty}',
+                      '${Utils.getLocale(context)?.empty}',
                       style: TextStyle(
                         color: Theme.of(context).disabledColor,
                       ),
@@ -131,7 +131,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
           User customer = await Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => CustomerFormScreen()));
           if (customer != null) {
-            userBloc.updateCustomer(customer);
+            userBloc?.updateCustomer(customer);
           }
         },
         child: Icon(Icons.add, size: 35.0),
@@ -140,10 +140,10 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
   }
 
   Future<void> _onRefresh() async {
-    AppProvider.of(context).state.userBloc.fetch(reset: true);
+    AppProvider.of(context)?.state.userBloc.fetch(reset: true);
   }
 
-  Widget _content(List<User> customers) {
+  Widget _content(List<User>? customers) {
     return Scrollbar(
       child: CustomScrollView(
         controller: _scrollController,
@@ -153,9 +153,9 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                final cus = customers[index];
+                final cus = customers?[index];
                 return Slidable(
-                  actionPane: SlidableScrollActionPane(),
+                  startActionPane: SlidableScrollActionPane(),
                   child: ListTile(
                     onTap: () async {
                       User updatedUser = await Navigator.of(context).push(
@@ -165,11 +165,12 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
 
                       if (updatedUser != null) {
                         if (updatedUser.avatarImgDTO != null) {
-                          updatedUser.avatarImgDTO?.flePath =
-                              (updatedUser.avatarImgDTO!.flePath! + '?t=${DateTime.now().millisecondsSinceEpoch}')!;
+                          updatedUser.avatarImgDTO?.flePath = (updatedUser
+                                  .avatarImgDTO!.flePath! +
+                              '?t=${DateTime.now().millisecondsSinceEpoch}')!;
                         }
                         AppProvider.of(context)
-                            .state
+                            ?.state
                             .userBloc
                             .updateCustomer(updatedUser);
                       }
@@ -179,20 +180,20 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                       backgroundColor: Colors.grey[100],
                       child: CircleAvatar(
                         radius: 20.0,
-                        backgroundImage: cus.avatarImgDTO != null
-                            ? NetworkImage(
-                                '${ApiUrls.instance().baseUrl}/${cus.avatarImgDTO.flePath}')
-                            : AssetImage('assets/images/default-avatar.png'),
+                        // backgroundImage: cus.avatarImgDTO != null
+                        //     ? NetworkImage(
+                        //         '${ApiUrls.instance().baseUrl}/${cus.avatarImgDTO.flePath}')
+                        //     : AssetImage('assets/images/default-avatar.png'),
                       ),
                     ),
                     title: Text(
-                      '${cus.fullName}',
+                      '${cus?.fullName}',
                       style: TextStyle(color: Colors.black),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${cus.phoneNumber}'),
+                        Text('${cus?.phoneNumber}'),
                       ],
                     ),
                   ),
@@ -201,21 +202,21 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                       onTap: () {
                         Utils.confirm(
                           context,
-                          title: Utils.getLocale(context).confirmation,
+                          title: Utils.getLocale(context)?.confirmation,
                           message: Utils.getLocale(context)
-                              .confirmDeleteCustomerMessage,
-                          onAccept: () => _deleteUser(cus),
+                              ?.confirmDeleteCustomerMessage,
+                          onAccept: () => _deleteUser(cus!),
                         );
                       },
                       icon: Icons.delete,
                       color: Colors.red,
                       foregroundColor: Colors.white,
-                      caption: Utils.getLocale(context).delete,
+                      caption: Utils.getLocale(context)?.delete,
                     ),
                   ],
                 );
               },
-              childCount: customers.length,
+              childCount: customers?.length,
               addAutomaticKeepAlives: true,
               addRepaintBoundaries: false,
             ),
@@ -245,11 +246,12 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
   }
 
   Future<void> _deleteUser(User user) async {
-    if (user == null || Utils.isNullOrEmpty(user.username)) return;
-    Utils.showLoading(context, textContent: Utils.getLocale(context).waitForLogin);
+    if (user == null || Utils.isNullOrEmpty(user.username!)) return;
+    Utils.showLoading(context,
+        textContent: Utils.getLocale(context)!.waitForLogin);
     Future.delayed(Duration(milliseconds: 500), () {
       HttpUtil.delete(
-        ApiUrls.instance().getDeleteUserUrl(user.username),
+        ApiUrls.instance().getDeleteUserUrl(user.username!),
         onResponse: (resp) {
           Navigator.of(context, rootNavigator: true).pop(); // pop waiting
           if (resp == null || resp.statusCode != 200) {
@@ -259,27 +261,27 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
 
             Utils.alert(
               context,
-              title: Utils.getLocale(context).failed,
+              title: Utils.getLocale(context)?.failed,
               message:
-              '${Utils.getLocale(context).errorOccurred} ${resp.statusCode}\n${json == null ? '' : json['message']}',
+                  '${Utils.getLocale(context)?.errorOccurred} ${resp.statusCode}\n${json == null ? '' : json['message']}',
             );
             return;
           }
 
           Utils.alert(
             context,
-            title: Utils.getLocale(context).success,
-            message: Utils.getLocale(context).deleteCustomerSuccessMessage,
+            title: Utils.getLocale(context)?.success,
+            message: Utils.getLocale(context)?.deleteCustomerSuccessMessage,
             onAccept: () {
-              AppProvider.of(context).state.userBloc.removeCustomer(user);
+              AppProvider.of(context)?.state.userBloc.removeCustomer(user);
             },
           );
         },
         onTimeout: () {
           Navigator.of(context, rootNavigator: true).pop(); // pop waiting
           Utils.alert(context,
-              title: Utils.getLocale(context).failed,
-              message: Utils.getLocale(context).requestTimeout);
+              title: Utils.getLocale(context)?.failed,
+              message: Utils.getLocale(context)?.requestTimeout);
         },
       );
     });

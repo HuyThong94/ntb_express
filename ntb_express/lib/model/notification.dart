@@ -14,14 +14,20 @@ class Notification {
   @JsonKey(name: 'customer_id')
   String? customerId;
   String? title;
-  String?body;
+  String? body;
   int? read;
   @JsonKey(name: 'insert_time')
   String insertTime;
 
-
-  Notification({this.id, this.notificationGroup,  required this.orderId, this.customerId, this.title,
-      this.body, this.read = 0, required this.insertTime});
+  Notification(
+      {this.id,
+      this.notificationGroup,
+      required this.orderId,
+      this.customerId,
+      this.title,
+      this.body,
+      this.read = 0,
+      required this.insertTime});
 
   factory Notification.fromJson(Map<String, dynamic> json) =>
       _$NotificationFromJson(json);

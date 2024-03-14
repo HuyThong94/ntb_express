@@ -55,7 +55,7 @@ class NotificationBloc {
     if (o == null) return;
 
     if (_notifications.isEmpty) {
-      List<notification.Notification> notificationList = await NotificationProvider().getOrderList();
+      List<notification.Notification>? notificationList = await NotificationProvider().getOrderList();
       if (notificationList != null) {
         _notifications.addAll(notificationList);
       }

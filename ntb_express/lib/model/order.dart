@@ -38,10 +38,10 @@ class Order {
   String? note;
   String? nextWarehouse;
   int? promotionId;
-  List<TCCOFile> tccoFileDTOS;
+  List<TCCOFile?>? tccoFileDTOS;
   Address? addressDTO;
   User? customerDTO;
-  List<OrderTrack>? orderTrackDTOS;
+  List<OrderTrack?>? orderTrackDTOS;
   Promotion? promotionDTO;
   double totalFeeOriginal;
   double feeBySizeDealer;
@@ -53,7 +53,7 @@ class Order {
       {this.orderId = '',
       this.addressId = 0,
       this.commission = 0.0,
-      required this.createdDate,
+      this.createdDate = 0,
       this.createdId = '',
       this.customerId = '',
       this.extFee = 0.0,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_settings/app_settings.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
 
 /// home screen => display order list
@@ -92,8 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (hasRequested!) return;
     Utils.alert(
       context,
-      title: Utils.getLocale(context).required,
-      message: Utils.getLocale(context).requestPushPermissionsMessage,
+      title: Utils.getLocale(context)?.required,
+      message: Utils.getLocale(context)?.requestPushPermissionsMessage,
       onAccept: () async {
         await AppSettings.openAppSettings();
         prefs.setBool(PrefsKey.requestPushPermissions, true);
@@ -110,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _showLoading = true;
       });
       Future.delayed(Duration(seconds: 1), () async {
-        AppProvider.of(context).state.orderBloc?.loadMore(done: () {
+        AppProvider.of(context)?.state.orderBloc?.loadMore(done: () {
           setState(() {
             _showLoading = false;
           });
@@ -160,13 +161,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final orderBloc = AppProvider.of(context).state.orderBloc;
-    final _notificationBloc = AppProvider.of(context).state.notificationBloc;
+    final orderBloc = AppProvider.of(context)?.state.orderBloc;
+    final _notificationBloc = AppProvider.of(context)?.state.notificationBloc;
     if (!_initialized) {
       // get notification count
       _notificationProvider
           .getUnreadCount()
-          .then((count) => _notificationBloc.setUnreadCount(count));
+          .then((count) => _notificationBloc?.setUnreadCount(count!));
       _requestPushPermissions();
       _getStatisticList().then((value) {
         setState(() {}); // reset state for statistic list
@@ -186,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
           key: _scaffoldKey,
           drawer: _buildDrawer(),
           body: StreamBuilder<List<Order>>(
-              stream: orderBloc.orders,
+              stream: orderBloc?.orders,
               builder: (context, snapshot) {
                 Widget result = SizedBox();
 
@@ -199,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (!_loaded) {
                       Future.delayed(const Duration(milliseconds: 500),
                           () async {
-                        orderBloc.fetch(
+                        orderBloc?.fetch(
                             reset: true,
                             done: () {
                               if (mounted) {
@@ -216,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else {
                       result = Center(
                         child: Text(
-                          '${Utils.getLocale(context).empty}',
+                          '${Utils.getLocale(context)?.empty}',
                           style: TextStyle(
                             color: Theme.of(context).disabledColor,
                           ),
@@ -244,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         snap: true,
                         flexibleSpace: FlexibleSpaceBar(
                             background: SearchBoxFlexible(
-                          orderBloc,
+                          orderBloc!,
                           onCustomerCodeChange: (customerCode) {
                             final String url = Utils.isNullOrEmpty(customerCode)
                                 ? _statisticUrl
@@ -254,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           },
                         )),
-                        title: Text('${Utils.getLocale(context).order}'),
+                        title: Text('${Utils.getLocale(context)?.order}'),
                         actions: [
                           GestureDetector(
                             onTap: () {
@@ -269,22 +270,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   StreamBuilder<User>(
                                     stream: AppProvider.of(context)
-                                        .state
+                                        ?.state
                                         .userBloc
                                         .currentUser,
                                     builder: (context, snapshot) {
                                       return CircleAvatar(
                                         radius: 18.0,
-                                        backgroundImage: (snapshot.hasData &&
-                                                snapshot.data != null &&
-                                                snapshot.data.avatarImgDTO !=
-                                                    null &&
-                                                !Utils.isNullOrEmpty(snapshot
-                                                    .data.avatarImgDTO.flePath))
-                                            ? NetworkImage(
-                                                '${ApiUrls.instance().baseUrl}/${snapshot.data.avatarImgDTO.flePath}')
-                                            : AssetImage(
-                                                'assets/images/default-avatar.png'),
+                                        // backgroundImage: (snapshot.hasData &&
+                                        //         snapshot.data != null &&
+                                        //         snapshot.data.avatarImgDTO !=
+                                        //             null &&
+                                        //         !Utils.isNullOrEmpty(snapshot
+                                        //             .data.avatarImgDTO.flePath))
+                                        //     ? NetworkImage(
+                                        //         '${ApiUrls.instance().baseUrl}/${snapshot.data.avatarImgDTO.flePath}')
+                                        //     : AssetImage(
+                                        //         'assets/images/default-avatar.png'),
                                       );
                                     },
                                   ),
@@ -303,14 +304,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text(Utils.isNullOrEmpty(
                                           SessionUtil.instance()
                                               .user
-                                              .customerId)
-                                      ? SessionUtil.instance().user.username
-                                      : SessionUtil.instance().user.customerId),
+                                              .customerId!)
+                                      ? SessionUtil.instance().user.username!
+                                      : SessionUtil.instance()
+                                          .user
+                                          .customerId!),
                                 ],
                               ),
                             ),
                           ),
-                          _notificationsBadge(_notificationBloc),
+                          _notificationsBadge(_notificationBloc!),
                         ],
                       ),
                     ];
@@ -326,8 +329,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: FloatingActionButton(
               onPressed: () {
                 Utils.updatePop(1);
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => OrderFormScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => OrderFormScreen(
+                          order: null,
+                        )));
               },
               child: Icon(Icons.add, size: 35.0),
             ),
@@ -338,10 +343,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _onRefresh() async {
-    AppProvider.of(context).state.orderBloc.fetch(reset: true);
+    AppProvider.of(context)?.state.orderBloc.fetch(reset: true);
   }
 
-  Color _getColor(int orderStatus) {
+  Color? _getColor(int orderStatus) {
     if (OrderStatus.pendingWoodenPacking == orderStatus)
       return OrderColor.waitWoodenConfirm;
     if (OrderStatus.aborted == orderStatus) return OrderColor.cancelled;
@@ -459,7 +464,7 @@ class _HomeScreenState extends State<HomeScreen> {
             slivers: [
               SliverToBoxAdapter(
                 child: ExpansionTile(
-                  title: Text(Utils.getLocale(context).statistics),
+                  title: Text(Utils.getLocale(context)!.statistics),
                   maintainState: true,
                   children: [
                     _statisticList.isEmpty
@@ -516,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Row(
                                             children: [
                                               Text(
-                                                Utils.getLocale(context)
+                                                Utils.getLocale(context)!
                                                     .totalCount,
                                                 style: _statisticStyle(
                                                     orderStatus),
@@ -541,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Row(
                                             children: [
                                               Text(
-                                                Utils.getLocale(context)
+                                                Utils.getLocale(context)!
                                                     .totalSize,
                                                 style: _statisticStyle(
                                                     orderStatus),
@@ -570,7 +575,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Row(
                                             children: [
                                               Text(
-                                                Utils.getLocale(context)
+                                                Utils.getLocale(context)!
                                                     .totalWeight,
                                                 style: _statisticStyle(
                                                     orderStatus),
@@ -596,7 +601,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Row(
                                             children: [
                                               Text(
-                                                Utils.getLocale(context)
+                                                Utils.getLocale(context)!
                                                     .totalFee,
                                                 style: _statisticStyle(
                                                     orderStatus),
@@ -672,12 +677,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           hideOn: (ord.customerDTO == null ||
                                                   Utils.isNullOrEmpty(ord
                                                       .customerDTO!
-                                                      .customerId)) ||
+                                                      .customerId!)) ||
                                               isCustomer,
                                           child: Row(
                                             children: [
                                               Text(
-                                                '${Utils.getLocale(context).customerCode} ',
+                                                '${Utils.getLocale(context)?.customerCode} ',
                                                 style: _small(),
                                               ),
                                               Expanded(
@@ -699,7 +704,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                '${Utils.getLocale(context).chineseWaybillCode} ',
+                                                '${Utils.getLocale(context)?.chineseWaybillCode} ',
                                                 style: _small(),
                                               ),
                                               Expanded(
@@ -753,7 +758,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                '${Utils.getLocale(context).description} ',
+                                                '${Utils.getLocale(context)?.description} ',
                                                 style: _small(),
                                               ),
                                               Expanded(
@@ -784,7 +789,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                '${Utils.getLocale(context).licensePlates} ',
+                                                '${Utils.getLocale(context)?.licensePlates} ',
                                                 style: _small(),
                                               ),
                                               Expanded(
@@ -815,7 +820,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             children: [
                                               _buildStatusTag(ord.orderStatus),
                                               Text(
-                                                  '${ord.packCount != null ? ' - ' : ''}${ord.packCount} ${Utils.getLocale(context).packs}',
+                                                  '${ord.packCount != null ? ' - ' : ''}${ord.packCount} ${Utils.getLocale(context)?.packs}',
                                                   style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -869,7 +874,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: RichText(
                                                     text: TextSpan(
                                                         text:
-                                                            '${Utils.getLocale(context).intoMoney}: ',
+                                                            '${Utils.getLocale(context)?.intoMoney}: ',
                                                         style: TextStyle(
                                                           color: Theme.of(
                                                                   context)
@@ -880,8 +885,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             text: ord.promotionDTO ==
                                                                     null
                                                                 ? ''
-                                                                : (ord.totalFeeOriginal ==
-                                                                            null ||
+                                                                : (ord.totalFeeOriginal == null ||
                                                                         ord.totalFeeOriginal <=
                                                                             0 ||
                                                                         ord.totalFee >=
@@ -993,7 +997,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showWaiting() {
     Utils.showLoading(context,
-        textContent: Utils.getLocale(context).waitForLogin);
+        textContent: Utils.getLocale(context)!.waitForLogin);
   }
 
   void _popLoading() {
@@ -1007,14 +1011,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _makeCopyContext(Order ord) {
-    final RenderObject? overlay = Overlay.of(context).context.findRenderObject();
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
     showMenu(
         context: context,
         position: RelativeRect.fromRect(
-            _tapPosition & Size(40, 40),
-            // smaller rect, the touch area
-            Offset.zero & overlay?.size // Bigger rect, the entire screen
-            ),
+          _tapPosition & Size(40, 40),
+          // smaller rect, the touch area
+          Offset.zero &
+              (overlay.size ?? Size.zero), // Bigger rect, the entire screen
+        ),
         items: <PopupMenuEntry>[
           PopupMenuItem(
             value: 'copy',
@@ -1027,7 +1033,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).disabledColor,
                   ),
                   SizedBox(width: 5.0),
-                  Text('${Utils.getLocale(context).copy}'),
+                  Text('${Utils.getLocale(context)?.copy}'),
                 ],
               ),
             ),
@@ -1040,14 +1046,14 @@ class _HomeScreenState extends State<HomeScreen> {
     Utils.updatePop(1);
     Order order = Order.clone(ord);
     // reset some properties
-    order.orderId = null;
+    order.orderId;
     order.orderStatus = OrderStatus.newlyCreated;
     order.orderTrackDTOS?.clear();
     order.tccoFileDTOS?.clear();
     order.promotionId = null;
     order.promotionDTO = null;
-    order.createdDate = null;
-    order.intTrackNo = null;
+    order.createdDate;
+    order.intTrackNo;
     order.totalFee = 0;
     order.totalFeeOriginal = 0;
     Navigator.of(context).push(
@@ -1055,8 +1061,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStatusTag(int orderStatus) {
-    Color background;
-    Color textColor;
+    late Color background;
+    late Color textColor;
     switch (orderStatus) {
       case OrderStatus.newlyCreated:
         background = Color(Utils.hexColor('#CAE5FF'));
@@ -1127,7 +1133,7 @@ class _HomeScreenState extends State<HomeScreen> {
           break;
         case AllowAction.edit:
           list.add(IconSlideAction(
-            caption: '${Utils.getLocale(context).edit}',
+            caption: '${Utils.getLocale(context)?.edit}',
             foregroundColor: Colors.white,
             color: Colors.orangeAccent,
             icon: Icons.edit,
@@ -1140,15 +1146,15 @@ class _HomeScreenState extends State<HomeScreen> {
           break;
         case AllowAction.cancel:
           list.add(IconSlideAction(
-            caption: '${Utils.getLocale(context).cancelOrder}',
+            caption: '${Utils.getLocale(context)?.cancelOrder}',
             color: Colors.black12,
             icon: Icons.close,
             onTap: () async {
               Utils.confirm(
                 context,
-                title: '${Utils.getLocale(context).confirmation}',
+                title: '${Utils.getLocale(context)?.confirmation}',
                 message:
-                    '${Utils.getLocale(context).confirmCancelOrderMessage}',
+                    '${Utils.getLocale(context)?.confirmCancelOrderMessage}',
                 onAccept: () async {
                   _showWaiting();
                   _delay(() async {
@@ -1161,24 +1167,36 @@ class _HomeScreenState extends State<HomeScreen> {
                           await HttpUtil.getOrder(order.orderId);
                       if (orderUpdated != null) {
                         AppProvider.of(context)
-                            .state
+                            ?.state
                             .orderBloc
                             .updateOrder(orderUpdated);
 
                         // remove order from block if needed
                         Utils.removeOrderFromBloc(context, orderUpdated);
                       }
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text(
-                          '${Utils.getLocale(context).cancelOrderSuccessMessage}',
+                      // _scaffoldKey.currentState.showSnackBar(SnackBar(
+                      //   content: Text(
+                      //     '${Utils.getLocale(context).cancelOrderSuccessMessage}',
+                      //   ),
+                      // ));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              '${Utils.getLocale(context)?.cancelOrderSuccessMessage}'),
                         ),
-                      ));
+                      );
                     } else {
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text(
-                          '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
+                      // _scaffoldKey.currentState.showSnackBar(SnackBar(
+                      //   content: Text(
+                      //     '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
+                      //   ),
+                      // ));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              '${Utils.getLocale(context)?.updateOrderStatusFailedMessage}'),
                         ),
-                      ));
+                      );
                     }
                   });
                 },
@@ -1189,7 +1207,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case AllowAction.confirmWoodenPacking:
           list.add(IconSlideAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context).agreeToBoxWooden}',
+            caption: '${Utils.getLocale(context)?.agreeToBoxWooden}',
             color: Colors.green,
             icon: Icons.done,
             onTap: () async {
@@ -1203,24 +1221,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   Order orderUpdated = await HttpUtil.getOrder(order.orderId);
                   if (orderUpdated != null) {
                     AppProvider.of(context)
-                        .state
+                        ?.state
                         .orderBloc
                         .updateOrder(orderUpdated);
 
                     // remove order from block if needed
                     Utils.removeOrderFromBloc(context, orderUpdated);
                   }
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text(
-                      '${Utils.getLocale(context).agreeToBoxWoodedSuccessMessage}',
+                  // _scaffoldKey.currentState.showSnackBar(SnackBar(
+                  //   content: Text(
+                  //     '${Utils.getLocale(context).agreeToBoxWoodedSuccessMessage}',
+                  //   ),
+                  // ));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          '${Utils.getLocale(context)?.agreeToBoxWoodedSuccessMessage}'),
                     ),
-                  ));
+                  );
                 } else {
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text(
-                      '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
+                  // _scaffoldKey.currentState.showSnackBar(SnackBar(
+                  //   content: Text(
+                  //     '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
+                  //   ),
+                  // ));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          '${Utils.getLocale(context)?.updateOrderStatusFailedMessage}'),
                     ),
-                  ));
+                  );
                 }
               });
             },
@@ -1229,7 +1259,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case AllowAction.importChineseWarehouse:
           list.add(IconSlideAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context).input}',
+            caption: '${Utils.getLocale(context)?.input}',
             color: Colors.green,
             icon: Icons.system_update_alt,
             onTap: () => _updateOrderStatus(order, ActionType.chineseWarehouse),
@@ -1238,7 +1268,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case AllowAction.exportChineseWarehouse:
           list.add(IconSlideAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context).output}',
+            caption: '${Utils.getLocale(context)?.output}',
             color: Colors.green,
             icon: Icons.exit_to_app,
             onTap: () => _updateOrderStatus(order, ActionType.chineseStockOut),
@@ -1255,7 +1285,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           list.add(IconSlideAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context).input}',
+            caption: '${Utils.getLocale(context)?.input}',
             color: Colors.green,
             icon: Icons.system_update_alt,
             onTap: () => _updateOrderStatus(order, actionType),
@@ -1271,7 +1301,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           list.add(IconSlideAction(
             foregroundColor: Colors.white,
-            caption: '${Utils.getLocale(context).output}',
+            caption: '${Utils.getLocale(context)?.output}',
             color: Colors.green,
             icon: Icons.exit_to_app,
             onTap: () => _updateOrderStatus(order, actionType),
@@ -1280,7 +1310,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case AllowAction.delivery:
           list.add(IconSlideAction(
             foregroundColor: Colors.white,
-            caption: Utils.getLocale(context).delivery,
+            caption: Utils.getLocale(context)?.delivery,
             color: Colors.orange,
             icon: Icons.more_horiz,
             onTap: () => _updateOrderStatus(
@@ -1300,7 +1330,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case AllowAction.delivered:
           list.add(IconSlideAction(
             foregroundColor: Colors.white,
-            caption: Utils.getLocale(context).delivered,
+            caption: Utils.getLocale(context)?.delivered,
             color: Colors.green,
             icon: Icons.done,
             onTap: () {
@@ -1317,7 +1347,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case AllowAction.complete:
           list.add(IconSlideAction(
             foregroundColor: Colors.white,
-            caption: Utils.getLocale(context).completed,
+            caption: Utils.getLocale(context)?.completed,
             color: Colors.indigo,
             icon: Icons.done_all,
             onTap: () => _updateOrderStatus(order, ActionType.completed),
@@ -1337,7 +1367,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ActionType.outputHaNoi
     ].contains(actionType)) output = true;
 
-    late ConfirmationStatus status;
+    late ConfirmationStatus? status;
     bool isOutput = false;
     if ([
       ActionType.chineseWarehouse,
@@ -1391,22 +1421,33 @@ class _HomeScreenState extends State<HomeScreen> {
       if (success) {
         Order orderUpdated = await HttpUtil.getOrder(order.orderId);
         if (orderUpdated != null) {
-          AppProvider.of(context).state.orderBloc.updateOrder(orderUpdated);
+          AppProvider.of(context)?.state.orderBloc.updateOrder(orderUpdated);
 
           // remove order from block if needed
           Utils.removeOrderFromBloc(context, orderUpdated);
         }
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-            '${Utils.getLocale(context).inputSuccessMessage}',
+        // _scaffoldKey.currentState.showSnackBar(SnackBar(
+        //   content: Text(
+        //     '${Utils.getLocale(context).inputSuccessMessage}',
+        //   ),
+        // ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${Utils.getLocale(context)?.inputSuccessMessage}'),
           ),
-        ));
+        );
       } else {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-            '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
+        // _scaffoldKey.currentState.showSnackBar(SnackBar(
+        //   content: Text(
+        //     '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
+        //   ),
+        // ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                '${Utils.getLocale(context)?.updateOrderStatusFailedMessage}'),
           ),
-        ));
+        );
       }
     });
   }
@@ -1428,7 +1469,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 leading: Icon(Icons.account_circle),
                 title: Text(
-                  Utils.getLocale(context).profile,
+                  Utils.getLocale(context)!.profile,
                   style: _drawerTextStyle(),
                 ),
               ),
@@ -1442,7 +1483,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   leading: Icon(Icons.location_on),
                   title: Text(
-                    Utils.getLocale(context).address,
+                    Utils.getLocale(context)!.address,
                     style: _drawerTextStyle(),
                   ),
                 ),
@@ -1457,7 +1498,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   leading: Icon(Icons.group),
                   title: Text(
-                    Utils.getLocale(context).customer,
+                    Utils.getLocale(context)!.customer,
                     style: _drawerTextStyle(),
                   ),
                 ),
@@ -1485,7 +1526,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 leading: Icon(Icons.help),
                 title: Text(
-                  '${Utils.getLocale(context).help}',
+                  '${Utils.getLocale(context)?.help}',
                   style: _drawerTextStyle(),
                 ),
               ),
@@ -1497,7 +1538,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 leading: Icon(Icons.settings),
                 title: Text(
-                  '${Utils.getLocale(context).setting}',
+                  '${Utils.getLocale(context)?.setting}',
                   style: _drawerTextStyle(),
                 ),
               ),
@@ -1511,7 +1552,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 leading: Icon(Icons.vpn_key),
                 title: Text(
-                  '${Utils.getLocale(context).changePassword}',
+                  '${Utils.getLocale(context)?.changePassword}',
                   style: _drawerTextStyle(),
                 ),
               ),
@@ -1527,7 +1568,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   /*Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) => LoginScreen()));*/
                   Utils.showLoading(context,
-                      textContent: Utils.getLocale(context).waitForLogin);
+                      textContent: Utils.getLocale(context)!.waitForLogin);
                   Future.delayed(Duration(milliseconds: 1000), () {
                     Navigator.of(context, rootNavigator: true).pop();
                     Navigator.of(context).pushReplacementNamed(AppRouter.login);
@@ -1535,7 +1576,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 leading: Icon(Icons.exit_to_app),
                 title: Text(
-                  Utils.getLocale(context).logout,
+                  Utils.getLocale(context)!.logout,
                   style: _drawerTextStyle(),
                 ),
               ),
@@ -1564,12 +1605,16 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => NotificationScreen()));
             },
-            child: Badge(
+            child: badges.Badge(
               position: BadgePosition.topEnd(top: 6, end: 6),
-              animationDuration: Duration(milliseconds: 300),
-              animationType: BadgeAnimationType.slide,
+              badgeStyle: BadgeStyle(
+                badgeColor: Colors.blue,
+              ),
+              badgeAnimation: BadgeAnimation.slide(
+                animationDuration: Duration(milliseconds: 300),
+                // animationType: BadgeAnimationType.slide,
+              ),
               showBadge: count > 0,
-              badgeColor: Colors.blue,
               badgeContent: Text(
                 count < 10 ? count.toString() : '9+',
                 style: TextStyle(
@@ -1636,7 +1681,7 @@ class SearchBoxFlexible extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(
-                          Utils.getLocale(context).status,
+                          Utils.getLocale(context)!.status,
                           style: TextStyle(color: Colors.white),
                         ),
                         const SizedBox(width: 10.0),
@@ -1678,7 +1723,7 @@ class SearchBoxFlexible extends StatelessWidget {
 
   String _getStatusText(BuildContext context, List<int> statusList) {
     if (statusList.length == OrderStatus.values.length)
-      return '${Utils.getLocale(context).all}';
+      return '${Utils.getLocale(context)?.all}';
     List<String> statusStrings =
         statusList.map((o) => Utils.getOrderStatusString(context, o)).toList();
     return statusStrings.join(', ');

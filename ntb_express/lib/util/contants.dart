@@ -6,9 +6,7 @@ const timeout = 30;
 const commonDateFormat = 'HH:mm dd-MM-yyyy';
 final List<FeeItem> feeTable = [];
 
-enum PriceType {
-  normal, fixed
-}
+enum PriceType { normal, fixed }
 
 class NextWarehouse {
   static const String uongbi = 'UB';
@@ -83,7 +81,7 @@ class ApiUrls {
     return '$_baseUrl/orders/$orderId';
   }
 
-  String? getAddressListByUserUrl(String username) {
+  String? getAddressListByUserUrl(String? username) {
     if (Utils.isNullOrEmpty(_baseUrl) || Utils.isNullOrEmpty(username))
       return null;
     return '$_baseUrl/addresses/username/$username';
@@ -104,7 +102,7 @@ class ApiUrls {
     return '$_baseUrl/app/deviceRegister';
   }
 
-  String ?getUpdateTrackStatusUrl() {
+  String? getUpdateTrackStatusUrl() {
     if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/orders/action-type';
   }
@@ -126,20 +124,17 @@ class ApiUrls {
   }
 
   String? getChangePasswordUrl() {
-    if (Utils.isNullOrEmpty(_baseUrl))
-      return null;
+    if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/users/password/change';
   }
 
   String? getOrderAppendFilesUrl() {
-    if (Utils.isNullOrEmpty(_baseUrl))
-      return null;
+    if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/orders/uploadFiles';
   }
 
   String? getUpdateDeviceLocaleUrl() {
-    if (Utils.isNullOrEmpty(_baseUrl))
-      return null;
+    if (Utils.isNullOrEmpty(_baseUrl)) return null;
     return '$_baseUrl/app/updateLocale';
   }
 

@@ -47,7 +47,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       });
 
       Future.delayed(Duration(milliseconds: 500), () async {
-        final bloc = AppProvider.of(context).state.notificationBloc;
+        final bloc = AppProvider.of(context)!.state.notificationBloc;
         _notificationProvider
             .getOrderList(start: bloc.start, limit: _limit)
             .then((list) {
@@ -73,11 +73,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _notificationBloc = AppProvider.of(context).state.notificationBloc;
+    final _notificationBloc = AppProvider.of(context)!.state.notificationBloc;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(Utils.getLocale(context).notification),
+        title: Text(Utils.getLocale(context)!.notification),
       ),
       body: RefreshIndicator(
         onRefresh: _onRefresh,
@@ -99,7 +99,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       _notificationProvider
                           .getOrderList(start: 0, limit: _limit)
                           .then((list) {
-                        _notificationBloc.setNotifications(list);
+                        _notificationBloc.setNotifications(list!);
                         setState(() => _loaded = true);
                       });
                     });
@@ -111,7 +111,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
                   return Center(
                     child: Text(
-                      Utils.getLocale(context).empty,
+                      Utils.getLocale(context)!.empty,
                       style: TextStyle(color: Theme.of(context).disabledColor),
                     ),
                   );
@@ -155,7 +155,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           child: Row(
             children: [
               Expanded(
-                child: Text(Utils.getLocale(context).updateOrder),
+                child: Text(Utils.getLocale(context)!.updateOrder),
               ),
               StreamBuilder<int>(
                   stream: bloc.unreadCount,
@@ -167,13 +167,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           ? null
                           : () async {
                               await _notificationProvider.markedAllAsRead();
-                              int unreadCount =
+                              int? unreadCount =
                                   await _notificationProvider.getUnreadCount();
-                              bloc.setUnreadCount(unreadCount);
+                              bloc.setUnreadCount(unreadCount!);
                               bloc.markedAs(read: true);
                             },
                       child: Text(
-                        Utils.getLocale(context).readAll,
+                        Utils.getLocale(context)!.readAll,
                         style: TextStyle(
                           color: count == 0
                               ? Theme.of(context).disabledColor
@@ -205,17 +205,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         ),
                         secondaryActions: [
                           IconSlideAction(
-                            caption: Utils.getLocale(context).delete,
+                            caption: Utils.getLocale(context)?.delete,
                             color: Colors.red,
                             icon: Icons.delete,
                             onTap: () async {
                               int affected =
-                                  await _notificationProvider.delete(o.id);
+                                  await _notificationProvider.delete(o.id!);
                               if (affected > 0) {
                                 bloc.removeNotification(o);
-                                int unreadCount = await _notificationProvider
+                                int? unreadCount = await _notificationProvider
                                     .getUnreadCount();
-                                bloc.setUnreadCount(unreadCount);
+                                bloc.setUnreadCount(unreadCount!);
                               }
                             },
                           ),
@@ -256,7 +256,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Future<void> _onRefresh() async {
     _notificationProvider.getOrderList().then((list) {
-      AppProvider.of(context).state.notificationBloc.setNotifications(list);
+      AppProvider.of(context)?.state.notificationBloc.setNotifications(list!);
     });
   }
 }
@@ -292,8 +292,8 @@ class _NotificationItemState extends State<NotificationItem>
                   .markedAsReadByOrderId(widget.notification.orderId);
               widget.bloc
                   .markedAsBy(orderId: widget.notification.orderId, read: true);
-              int unreadCount = await widget.provider.getUnreadCount();
-              widget.bloc.setUnreadCount(unreadCount);
+              int? unreadCount = await widget.provider.getUnreadCount();
+              widget.bloc.setUnreadCount(unreadCount!);
 
               HttpUtil.get(
                 ApiUrls.instance().getOrderUrl(widget.notification.orderId),
@@ -337,7 +337,7 @@ class _NotificationItemState extends State<NotificationItem>
                       if (a.insertTime == null) a.insertTime = '';
                       if (b.insertTime == null) b.insertTime = '';
 
-                      return b.insertTime.compareTo(a.insertTime);
+                      return b.insertTime!.compareTo(a.insertTime!);
                     });
                     setState(() => _details
                       ..clear()
@@ -366,7 +366,7 @@ class _NotificationItemState extends State<NotificationItem>
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.notification.body),
+                Text(widget.notification.body!),
                 const SizedBox(height: 5.0),
                 Text(
                   Utils.getDateString2(
@@ -378,7 +378,7 @@ class _NotificationItemState extends State<NotificationItem>
           ),
         ),
         AnimatedSize(
-          vsync: this,
+          // vsync: this,
           duration: const Duration(milliseconds: 200),
           child: Container(
             color: Utils.grey,
@@ -392,11 +392,11 @@ class _NotificationItemState extends State<NotificationItem>
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(o.body),
+                                  Text(o.body!),
                                   const SizedBox(height: 5.0),
                                   Text(
-                                    Utils.getDateString2(
-                                            o.insertTime, 'dd.MM.yyyy HH:mm') ??
+                                    Utils.getDateString2(o.insertTime!,
+                                            'dd.MM.yyyy HH:mm') ??
                                         '',
                                     style: _small(),
                                   )

@@ -28,7 +28,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             onPressed: () => Navigator.of(context).pop(),
             icon: Icon(Icons.close, color: Colors.white),
           ),
-          title: Text('${Utils.getLocale(context).forgotPassword}'),
+          title: Text('${Utils.getLocale(context)?.forgotPassword}'),
         ),
         body: Container(
           //color: Utils.primaryColor,
@@ -58,7 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     controller: _usernameController,
                     focusNode: _usernameFocusNode,
                     decoration: _decoration(
-                      hintText: Utils.getLocale(context).username,
+                      hintText: Utils.getLocale(context)?.username,
                       prefixIcon: Icons.account_circle,
                     ),
                     style: _white(),
@@ -68,7 +68,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     textInputAction: TextInputAction.done,
                     validator: (value) {
                       if (Utils.isNullOrEmpty(value!))
-                        return Utils.getLocale(context).required;
+                        return Utils.getLocale(context)?.required;
 
                       return null;
                     },
@@ -79,12 +79,26 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   SizedBox(
                     width: double.infinity,
                     height: 50.0,
-                    child: RaisedButton(
+                    // child: RaisedButton(
+                    //   onPressed: _btnPasswordRetrievalClicked,
+                    //   color: Utils.accentColor,
+                    //   textColor: Colors.white,
+                    //   child: Text(
+                    //     '${Utils.getLocale(context).passwordRetrieval}',
+                    //     style: TextStyle(
+                    //       fontSize: 18.0,
+                    //     ),
+                    //   ),
+                    // ),
+                    child: ElevatedButton(
                       onPressed: _btnPasswordRetrievalClicked,
-                      color: Utils.accentColor,
-                      textColor: Colors.white,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor:
+                            Utils.accentColor, // Set button's text color
+                      ),
                       child: Text(
-                        '${Utils.getLocale(context).passwordRetrieval}',
+                        '${Utils.getLocale(context)?.passwordRetrieval}',
                         style: TextStyle(
                           fontSize: 18.0,
                         ),
@@ -145,18 +159,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     Future.delayed(Duration(milliseconds: 500), () async {
       final username = _usernameController.text?.trim();
 
-      http.Response resp;
+      late http.Response resp;
       try {
-        resp = await http.get(ApiUrls.instance().getForgotPasswordUrl(username!) as Uri,
+        resp = await http.get(
+            ApiUrls.instance().getForgotPasswordUrl(username!) as Uri,
             headers: {
               'Content-Type': 'application/json; charset=utf-8'
-            }).timeout(const Duration(seconds: timeout), onTimeout: () {
+            }).timeout(const Duration(seconds: timeout), onTimeout: () async {
           _popLoading();
           setState(() {
             _hasError = false;
-            _message = Utils.getLocale(context).requestTimeout;
+            _message = Utils.getLocale(context)!.requestTimeout;
           });
-          return null;
+          throw Exception('Request timed out');
+          // return null;
         });
 
         dynamic json = resp == null
@@ -170,7 +186,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           _popLoading();
           setState(() {
             _hasError = true;
-            _message = '${Utils.getLocale(context).errorOccurred} ${resp?.statusCode}\n$message';
+            _message =
+                '${Utils.getLocale(context)?.errorOccurred} ${resp?.statusCode}\n$message';
           });
           return;
         }
@@ -178,14 +195,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         _popLoading();
         setState(() {
           _hasError = false;
-          _message = Utils.getLocale(context).sendForgotPasswordSuccessMessage.replaceAll('%username%', username);
+          _message = Utils.getLocale(context)!
+              .sendForgotPasswordSuccessMessage
+              .replaceAll('%username%', username);
         });
       } catch (e) {
         // ignored
         _popLoading();
         setState(() {
           _hasError = true;
-          _message = '${Utils.getLocale(context).errorOccurred} ${resp?.statusCode}\n$e';
+          _message =
+              '${Utils.getLocale(context)?.errorOccurred} ${resp.statusCode}\n$e';
         });
       }
     });
@@ -193,7 +213,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   void _showWaiting() {
     Utils.showLoading(context,
-        textContent: Utils.getLocale(context).waitForLogin);
+        textContent: Utils.getLocale(context)!.waitForLogin);
   }
 
   void _popLoading() {

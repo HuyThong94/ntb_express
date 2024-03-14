@@ -113,7 +113,8 @@ class HandleWrapper extends StatefulWidget {
 class _HandleWrapperState extends State<HandleWrapper> {
   static final _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  final _firebaseMessaging = FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  // final _firebaseMessaging = FirebaseMessaging();
   static final _notificationProvider = NotificationProvider();
   static late NotificationBloc _notificationBloc;
   static late OrderBloc _orderBloc;
@@ -190,7 +191,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
   void _initLocalNotifications() {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/launcher_icon');
-    var initializationSettingsIOS = IOSInitializationSettings(
+    var initializationSettingsIOS = DarwinInitializationSettings(
       onDidReceiveLocalNotification: (id, title, body, payload) async {
         didReceiveLocalNotificationSubject.add(ReceivedNotification(
             id: id, title: title, body: body, payload: payload));
@@ -204,21 +205,21 @@ class _HandleWrapperState extends State<HandleWrapper> {
     });
   }
 
-  void _initFirebaseMessaging({BuildContext context}) {
+  void _initFirebaseMessaging({BuildContext? context}) {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         if (Platform.isIOS) {
           if (!_isDoubleMessage) {
             print("onMessage: $message");
             _showNotificationOnForeground(
-                jsonDecode(jsonEncode(message)), context);
+                jsonDecode(jsonEncode(message)), context!);
             _saveNotification(jsonDecode(jsonEncode(message)));
           }
           _isDoubleMessage = !_isDoubleMessage;
         } else {
           print("onMessage: $message");
           _showNotificationOnForeground(
-              jsonDecode(jsonEncode(message)), context);
+              jsonDecode(jsonEncode(message)), context!);
           _saveNotification(jsonDecode(jsonEncode(message)));
         }
       },
@@ -279,7 +280,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
     String orderId = data['order_id'];
     String status = data['body'];
     String locale = data['title'] ?? 'en';
-    Map<String, String> msg = await _parsePushMessage(orderId, status, locale);
+    Map<String, String>? msg = await _parsePushMessage(orderId, status, locale);
     if (msg == null) return;
 
     pushTitle = msg['title'];
@@ -327,7 +328,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
     String orderId = data['order_id'];
     String status = data['body'];
     String locale = data['title'] ?? 'en';
-    Map<String, String> msg = await _parsePushMessage(orderId, status, locale);
+    Map<String, String>? msg = await _parsePushMessage(orderId, status, locale);
     if (msg != null) {
       data['title'] = msg['title'];
       data['body'] = msg['body'];
@@ -363,7 +364,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
 
         if (order != null && order.createdId == currentUser?.username) {
           // update read status
-          _notificationProvider.markedAsReadById(result.id);
+          _notificationProvider.markedAsReadById(result.id!);
         }
       }
     }
@@ -378,7 +379,7 @@ class _HandleWrapperState extends State<HandleWrapper> {
     String orderId = data['order_id'];
     String status = data['body'];
     String locale = data['title'] ?? 'en';
-    Map<String, String> msg = await _parsePushMessage(orderId, status, locale);
+    Map<String, String>? msg = await _parsePushMessage(orderId, status, locale);
     if (msg == null) return;
 
     Future.delayed(Duration(seconds: 2), () async {
@@ -471,7 +472,11 @@ class _HandleWrapperState extends State<HandleWrapper> {
     final bool isZh = locale.contains('zh');
     final String ordId = Utils.isNullOrEmpty(orderId) ? '' : ' $orderId';
 
-    rs['title'] = isVi ? 'Cập nhật đơn hàng' : isZh ? '更新訂單' : 'Update orders';
+    rs['title'] = isVi
+        ? 'Cập nhật đơn hàng'
+        : isZh
+            ? '更新訂單'
+            : 'Update orders';
     if (status == 'import_to_vn') {
       rs['body'] = isVi
           ? 'Đơn hàng$ordId đã nhập tổng kho tại Việt Nam.'
@@ -495,7 +500,9 @@ class _HandleWrapperState extends State<HandleWrapper> {
         case OrderStatus.newlyCreated:
           rs['body'] = isVi
               ? 'Đơn hàng$ordId đã được tạo.'
-              : isZh ? '$ordId訂單已創建。' : 'The$ordId order has been created.';
+              : isZh
+                  ? '$ordId訂單已創建。'
+                  : 'The$ordId order has been created.';
           break;
         case OrderStatus.chineseWarehoused:
           rs['body'] = isVi
@@ -521,7 +528,9 @@ class _HandleWrapperState extends State<HandleWrapper> {
         case OrderStatus.delivery:
           rs['body'] = isVi
               ? 'Đơn hàng$ordId đang được giao.'
-              : isZh ? '$ordId訂單已交貨。' : 'The$ordId order is on delivery.';
+              : isZh
+                  ? '$ordId訂單已交貨。'
+                  : 'The$ordId order is on delivery.';
           break;
       }
     }

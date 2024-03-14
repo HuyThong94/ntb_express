@@ -65,8 +65,8 @@ class _EditScreenState extends State<EditScreen> {
 
               Utils.confirm(
                 context,
-                title: '${Utils.getLocale(context).saveChanges}',
-                message: Utils.getLocale(context).saveChangesMessage,
+                title: '${Utils.getLocale(context)?.saveChanges}',
+                message: Utils.getLocale(context)?.saveChangesMessage,
                 onAccept: () {
                   if (widget.onValidate != null) {
                     if (widget.onValidate!(_txtController.text)) {
@@ -85,15 +85,17 @@ class _EditScreenState extends State<EditScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: !_isDataChanged ? null : () {
-                if (widget.onValidate != null) {
-                  if (widget.onValidate!(_txtController.text)) {
-                    Navigator.of(context).pop(_txtController.text);
-                  }
-                } else {
-                  Navigator.of(context).pop(_txtController.text);
-                }
-              },
+              onPressed: !_isDataChanged
+                  ? null
+                  : () {
+                      if (widget.onValidate != null) {
+                        if (widget.onValidate!(_txtController.text)) {
+                          Navigator.of(context).pop(_txtController.text);
+                        }
+                      } else {
+                        Navigator.of(context).pop(_txtController.text);
+                      }
+                    },
               icon: Icon(Icons.done),
             )
           ],
@@ -121,7 +123,8 @@ class _EditScreenState extends State<EditScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text('${widget.length ?? 100} ${Utils.getLocale(context).charactersOnly}'),
+                child: Text(
+                    '${widget.length ?? 100} ${Utils.getLocale(context)?.charactersOnly}'),
               ),
             ],
           ),

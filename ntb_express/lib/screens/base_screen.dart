@@ -6,6 +6,8 @@ import 'package:ntbexpress/screens/register_screen.dart';
 import 'package:ntbexpress/util/contants.dart';
 import 'package:ntbexpress/util/utils.dart';
 
+import '../model/user.dart';
+
 class BaseScreen extends StatefulWidget {
   @override
   _BaseScreenState createState() => _BaseScreenState();
@@ -55,38 +57,87 @@ class _BaseScreenState extends State<BaseScreen> {
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRouter.login);
                 },
-                disabledColor: Colors.black12,
-                disabledTextColor: Colors.white70,
-                color: Utils.accentColor,
-                textColor: Colors.white,
-                child: Text(
-                  Utils.getLocale(context).login,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.black12;
+                    }
+                    return Utils.accentColor;
+                  }),
+                  foregroundColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.white70;
+                    }
+                    return Colors.white;
+                  }),
                 ),
+                child: Text(
+                  Utils.getLocale(context)!.login,
+                  style: TextStyle(fontSize: 20.0),
+                ),
+                // disabledColor: Colors.black12,
+                // disabledTextColor: Colors.white70,
+                // color: Utils.accentColor,
+                // textColor: Colors.white,
+                // child: Text(
+                //   Utils.getLocale(context).login,
+                //   style: TextStyle(
+                //     fontSize: 20.0,
+                //   ),
+                // ),
               ),
+              // raisedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) => RegisterScreen()));
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     disabledBackgroundColor: Colors.black12,
+              //     textStyle: TextStyle(color: Colors.white70),
+              //   ),
+              //
+              //   disabledColor: Colors.black12,
+              //   disabledTextColor: Colors.white70,
+              //   color: Utils.accentColor,
+              //   textColor: Colors.white,
+              //   child: Text(
+              //     Utils.getLocale(context).register,
+              //     style: TextStyle(
+              //       fontSize: 20.0,
+              //     ),
+              //   ),
+              // ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => RegisterScreen()));
+                      builder: (context) => RegisterScreen(
+                            currentUser: User(),
+                          )));
                 },
-                style: ElevatedButton.styleFrom(
-                  disabledBackgroundColor: Colors.black12,
-                  textStyle: TextStyle(color: Colors.white70),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.black12;
+                    }
+                    return Utils.accentColor;
+                  }),
+                  foregroundColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.disabled)) {
+                      return Colors.white70;
+                    }
+                    return Colors.white;
+                  }),
+                  textStyle:
+                      MaterialStateProperty.resolveWith<TextStyle>((states) {
+                    return TextStyle(fontSize: 20.0);
+                  }),
                 ),
-
-                disabledColor: Colors.black12,
-                disabledTextColor: Colors.white70,
-                color: Utils.accentColor,
-                textColor: Colors.white,
-                child: Text(
-                  Utils.getLocale(context).register,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                ),
-              ),
+                child: Text(Utils.getLocale(context)!.register),
+              )
             ],
           ),
         ),

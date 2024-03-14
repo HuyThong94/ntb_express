@@ -12,7 +12,7 @@ class PriceCalculationUtil {
     //print('calculatePrice: repackFee=$repackFee, payOnBehalf=$payOnBehalf, intFee=$intFee, extFee=$extFee, promotion=$promotion');
     double price = 0;
     price = repackFee + payOnBehalf + intFee + extFee;
-        //_getDiscountPrice(repackFee + payOnBehalf + intFee + extFee, promotion);
+    //_getDiscountPrice(repackFee + payOnBehalf + intFee + extFee, promotion);
     return price;
   }
 
@@ -37,7 +37,7 @@ class PriceCalculationUtil {
     if (locationGroup == 0) return 0;
 
     if (goodsType != GoodsType.normal) {
-      FeeItem fee = _getFeeItem(goodsType!, locationGroup);
+      FeeItem? fee = _getFeeItem(goodsType!, locationGroup);
       if (fee == null) return 0;
 
       double price = weight * fee.feeByWeight! + size * fee.feeBySize!;
@@ -67,15 +67,12 @@ class PriceCalculationUtil {
 
   static Map<String, double> getAgentFee(
       {Address? address,
-        int? goodsType,
-        double weight = 0,
-        double size = 0,
-        double feeByWeight = 0,
-        double feeBySize = 0}) {
-    Map<String, double> result = {
-      "weight": 0,
-      "size": 0
-    };
+      int? goodsType,
+      double weight = 0,
+      double size = 0,
+      double feeByWeight = 0,
+      double feeBySize = 0}) {
+    Map<String, double> result = {"weight": 0, "size": 0};
 
     if (address == null) return result;
     if (weight == 0 && size == 0) return result;
@@ -91,7 +88,7 @@ class PriceCalculationUtil {
     if (locationGroup == 0) return result;
 
     if (goodsType != GoodsType.normal) {
-      FeeItem fee = _getFeeItem(goodsType!, locationGroup);
+      FeeItem? fee = _getFeeItem(goodsType!, locationGroup);
       if (fee == null) return result;
       result["weight"] = fee.feeByWeight!;
       result["size"] = fee.feeBySize!;
@@ -139,7 +136,7 @@ class PriceCalculationUtil {
     return price;
   }
 
-  static FeeItem _getFeeItem(int goodsType, int locationGroup) {
+  static FeeItem? _getFeeItem(int goodsType, int locationGroup) {
     return feeTable.firstWhere(
         (e) => e.locationGroup == locationGroup && e.goodsType == goodsType,
         orElse: () => null);

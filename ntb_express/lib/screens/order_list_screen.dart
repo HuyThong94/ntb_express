@@ -121,42 +121,44 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
                             children: [
                               Expanded(
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          cursorWidth: 1,
-                                          cursorColor: Colors.white,
-                                          controller: _goodsDescrController,
-                                          decoration: _decoration(
-                                            hintText: Utils.getLocale(context).description,
-                                          ),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8.0),
-                                      Expanded(
-                                        child: TextField(
-                                          cursorWidth: 1,
-                                          cursorColor: Colors.white,
-                                          controller: _licensePlatesController,
-                                          decoration: _decoration(
-                                            hintText: Utils.getLocale(context).licensePlates,
-                                          ),
-                                          style: TextStyle(
-                                            color: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextField(
+                                            cursorWidth: 1,
+                                            cursorColor: Colors.white,
+                                            controller: _goodsDescrController,
+                                            decoration: _decoration(
+                                              hintText: Utils.getLocale(context)
+                                                  ?.description,
+                                            ),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                ),
-                                  // Uncomment to allow input waybill code China - Vietnam displayed
-                                  /*child: TextField(
+                                        const SizedBox(width: 8.0),
+                                        Expanded(
+                                          child: TextField(
+                                            cursorWidth: 1,
+                                            cursorColor: Colors.white,
+                                            controller:
+                                                _licensePlatesController,
+                                            decoration: _decoration(
+                                              hintText: Utils.getLocale(context)
+                                                  ?.licensePlates,
+                                            ),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                // Uncomment to allow input waybill code China - Vietnam displayed
+                                /*child: TextField(
                                     cursorWidth: 1,
                                     cursorColor: Colors.white,
                                     controller: _internalTrackNoController,
@@ -228,7 +230,7 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
                       cursorColor: Colors.white,
                       controller: _customerIdController,
                       decoration: _decoration(
-                          hintText: Utils.getLocale(context).customerCode),
+                          hintText: Utils.getLocale(context)?.customerCode),
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -245,7 +247,8 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
                       controller: _packCountController,
                       keyboardType: TextInputType.number,
                       decoration: _decoration(
-                          hintText: '${Utils.getLocale(context).packs[0].toUpperCase()}${Utils.getLocale(context).packs.substring(1)}'),
+                          hintText:
+                              '${Utils.getLocale(context)?.packs[0].toUpperCase()}${Utils.getLocale(context)?.packs.substring(1)}'),
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -484,24 +487,23 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
           _showWaiting();
           Future.delayed(Duration(milliseconds: 500), () async {
             _getStatistics();
-            AppProvider.of(context).state.orderBloc.updateFilter(
+            AppProvider.of(context)?.state.orderBloc.updateFilter(
               OrderFilter(
-                statusList: _statusList,
-                customerId: _customerIdController.text!.trim(),
-                externalTrackNo: SessionUtil.instance().user.userType !=
-                        UserType.chineseWarehouseStaff
-                    ? _internalTrackNoController.text!.trim()
-                    : '',
-                internalTrackNo: SessionUtil.instance().user.userType ==
-                        UserType.chineseWarehouseStaff
-                    ? _internalTrackNoController.text!.trim()
-                    : '',
-                fromDate: _fromDateController.text!.trim(),
-                toDate: _toDateController.text!.trim(),
-                packCount: _packCountController.text!.trim().parseInt(),
-                goodsDescr: _goodsDescrController.text!.trim() ?? '',
-                licensePlates: _licensePlatesController.text!.trim() ?? ''
-              ),
+                  statusList: _statusList,
+                  customerId: _customerIdController.text!.trim(),
+                  externalTrackNo: SessionUtil.instance().user.userType !=
+                          UserType.chineseWarehouseStaff
+                      ? _internalTrackNoController.text!.trim()
+                      : '',
+                  internalTrackNo: SessionUtil.instance().user.userType ==
+                          UserType.chineseWarehouseStaff
+                      ? _internalTrackNoController.text!.trim()
+                      : '',
+                  fromDate: _fromDateController.text!.trim(),
+                  toDate: _toDateController.text!.trim(),
+                  packCount: _packCountController.text!.trim().parseInt(),
+                  goodsDescr: _goodsDescrController.text!.trim() ?? '',
+                  licensePlates: _licensePlatesController.text!.trim() ?? ''),
               done: () {
                 _popLoading();
               },
@@ -540,7 +542,7 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
 
   void _showWaiting() {
     Utils.showLoading(context,
-        textContent: Utils.getLocale(context).waitForLogin);
+        textContent: Utils.getLocale(context)!.waitForLogin);
   }
 
   void _popLoading() {
@@ -548,8 +550,8 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
   }
 
   bool _validateSearchForm() {
-    DateTime fromDate;
-    DateTime toDate;
+    late DateTime fromDate;
+    late DateTime toDate;
 
     if (!Utils.isNullOrEmpty(_fromDateController.text!.trim())) {
       try {
@@ -569,8 +571,8 @@ class _OrderFilterWidgetState extends State<OrderFilterWidget> {
 
     if (fromDate != null && toDate != null && fromDate.isAfter(toDate)) {
       Utils.alert(context,
-          title: Utils.getLocale(context).errorOccurred,
-          message: '${Utils.getLocale(context).wrongDateRangeMessage}');
+          title: Utils.getLocale(context)?.errorOccurred,
+          message: '${Utils.getLocale(context)?.wrongDateRangeMessage}');
       return false;
     }
 

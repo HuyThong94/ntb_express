@@ -38,7 +38,7 @@ class Utils {
   static final Color? backgroundColor = Colors.grey[50];
 
   /// Check the input text is null or empty
-  static bool isNullOrEmpty(String str) {
+  static bool isNullOrEmpty(String? str) {
     return str == null || str.trim().isEmpty;
   }
 
@@ -63,7 +63,7 @@ class Utils {
 
     try {
       var date = DateTime.fromMillisecondsSinceEpoch(
-          sourceDate); // DateTime.parse(sourceDate);
+          sourceDate.toInt()); // DateTime.parse(sourceDate);
       if (date != null) {
         return DateFormat(pattern).format(date);
       }
@@ -139,7 +139,7 @@ class Utils {
                     onDecline?.call();
                   },
                   child: Text(
-                    Utils.getLocale(context).cancel,
+                    Utils.getLocale(context)!.cancel,
                     style: TextStyle(
                       color: Colors.red,
                     ),
@@ -209,7 +209,7 @@ class Utils {
     img.Image resized = img.copyResize(image!, width: 120);
     return MemoryFileSystem()
         .file('${DateTime.now().millisecondsSinceEpoch}.jpg')
-          ..writeAsBytesSync(img.encodeJpg(resized));
+      ..writeAsBytesSync(img.encodeJpg(resized));
   }
 
   static Future<File?> resizeImage(File originImage) async {
@@ -225,7 +225,7 @@ class Utils {
     final encoded = img.encodeJpg(resized);
     return MemoryFileSystem()
         .file('${DateTime.now().millisecondsSinceEpoch}.jpg')
-          ..writeAsBytesSync(encoded);
+      ..writeAsBytesSync(encoded);
   }
 
   static bool isEmailValid(String email) {
@@ -842,7 +842,7 @@ class ConfirmationStatus {
   int? packCount;
   String? note;
   String? nextWarehouse;
-  List<File>? files;
+  List<File?>? files;
 
   ConfirmationStatus(
       {this.packCount, this.note, this.nextWarehouse, this.files});

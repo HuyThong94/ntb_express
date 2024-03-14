@@ -26,30 +26,30 @@ class _SettingScreenState extends State<SettingScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${Utils.getLocale(context).setting}'),
+        title: Text('${Utils.getLocale(context)?.setting}'),
       ),
       body: Container(
         color: Utils.backgroundColor,
         child: SettingsList(
           sections: [
             SettingsSection(
-              title: Text('${Utils.getLocale(context).common}'),
+              title: Text('${Utils.getLocale(context)?.common}'),
               tiles: [
                 SettingsTile(
                   onTap: _changeLanguage,
-                  title: Text('${Utils.getLocale(context).language}'),
+                  title: Text('${Utils.getLocale(context)?.language}'),
                   subtitle: _locale == 'vi'
-                      ? Utils.getLocale(context).vietnamese
+                      ? Utils.getLocale(context)?.vietnamese
                       : _locale == 'en'
-                          ? Utils.getLocale(context).english
-                          : Utils.getLocale(context).chinese,
+                          ? Utils.getLocale(context)?.english
+                          : Utils.getLocale(context)?.chinese,
                   leading: Icon(Icons.language),
                 ),
                 SettingsTile(
                   onTap: () async {
                     AppSettings.openAppSettings();
                   },
-                  title: Text('${Utils.getLocale(context).notification}'),
+                  title: Text('${Utils.getLocale(context)?.notification}'),
                   leading: Icon(Icons.notifications),
                 ),
               ],
@@ -62,7 +62,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Future<void> _getPreferencesData() async {
     _locale =
-        AppProvider.of(context).state.localeBloc.currentLocale.languageCode ??
+        AppProvider.of(context)?.state.localeBloc.currentLocale.languageCode ??
             'vi';
     setState(() {});
   }
@@ -70,7 +70,7 @@ class _SettingScreenState extends State<SettingScreen> {
   void _localeChanged(String code) {
     setState(() {
       _locale = code;
-      AppProvider.of(context).state.localeBloc.setLocale(Locale(code));
+      AppProvider.of(context)?.state.localeBloc.setLocale(Locale(code));
       SharedPreferences.getInstance()
           .then((prefs) => prefs.setString(PrefsKey.languageCode, _locale));
     });
@@ -85,7 +85,7 @@ class _SettingScreenState extends State<SettingScreen> {
           children: [
             Icon(Icons.language),
             SizedBox(width: 10.0),
-            Text('${Utils.getLocale(context).language}'),
+            Text('${Utils.getLocale(context)?.language}'),
           ],
         ),
         content: SingleChildScrollView(
@@ -97,7 +97,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   _localeChanged('vi');
                   Navigator.of(context).pop();
                 },
-                title: Text('${Utils.getLocale(context).vietnamese}'),
+                title: Text('${Utils.getLocale(context)?.vietnamese}'),
                 trailing: _locale != 'vi'
                     ? null
                     : Icon(Icons.done, color: Utils.accentColor),
@@ -107,7 +107,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   _localeChanged('en');
                   Navigator.of(context).pop();
                 },
-                title: Text('${Utils.getLocale(context).english}'),
+                title: Text('${Utils.getLocale(context)?.english}'),
                 trailing: _locale != 'en'
                     ? null
                     : Icon(Icons.done, color: Utils.accentColor),
@@ -117,7 +117,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   _localeChanged('zh');
                   Navigator.of(context).pop();
                 },
-                title: Text('${Utils.getLocale(context).chinese}'),
+                title: Text('${Utils.getLocale(context)?.chinese}'),
                 trailing: _locale != 'zh'
                     ? null
                     : Icon(Icons.done, color: Utils.accentColor),

@@ -80,11 +80,11 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
   }
 
   Widget _province() {
-    return _location(Utils.getProvinceList());
+    return _location(Utils.getProvinceList() as Future<List<Location>>);
   }
 
-  Future<Future<List<District>>?> _getDistrictList() async {
-    List<Province> provinceList = await Utils.getProvinceList();
+  Future<Future<List<District>?>?> _getDistrictList() async {
+    List<Province>? provinceList = await Utils.getProvinceList();
     if (provinceList != null && provinceList.isNotEmpty) {
       int provinceId = provinceList
               .firstWhere((province) =>
@@ -105,7 +105,7 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
     return _location(_getDistrictList() as Future<List<Location>>);
   }
 
-  Future<Future<List<Wards>>?> _getWardsList() async {
+  Future<Future<List<Wards>?>?> _getWardsList() async {
     List<District> districtList = (await _getDistrictList()) as List<District>;
     if (districtList != null && districtList.isNotEmpty) {
       int districtId = districtList
@@ -147,7 +147,7 @@ class _SelectAreaScreenState extends State<SelectAreaScreen> {
           if (snapshot.data == null || snapshot.data!.isEmpty) {
             return Center(
                 child: Text(
-              '${Utils.getLocale(context).empty}',
+              '${Utils.getLocale(context)?.empty}',
               style: TextStyle(color: Theme.of(context).disabledColor),
             ));
           }

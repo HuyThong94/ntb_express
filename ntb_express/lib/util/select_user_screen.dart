@@ -74,7 +74,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
             onPressed: () => Navigator.of(context).pop(),
             icon: Icon(Icons.close),
           ),
-          title: Text('${Utils.getLocale(context).select}'),
+          title: Text('${Utils.getLocale(context)?.select}'),
         ),
         body: Container(
           child: Column(
@@ -98,13 +98,13 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                   } else {
                     List<User> filteredList = _userList
                         .where((element) =>
-                            (Utils.changeAlias(element.fullName)
+                            (Utils.changeAlias(element.fullName!)
                                 .toLowerCase()
                                 .contains(value.toLowerCase())) ||
                             (!Utils.isNullOrEmpty(element.phoneNumber) &&
-                                element.phoneNumber.contains(value)) ||
+                                element.phoneNumber!.contains(value)) ||
                             (!Utils.isNullOrEmpty(element.customerId) &&
-                                element.customerId
+                                element.customerId!
                                     .toLowerCase()
                                     .contains(value.toLowerCase())))
                         .toList();
@@ -115,7 +115,7 @@ class _SelectUserScreenState extends State<SelectUserScreen> {
                   }
                 },
                 decoration: InputDecoration(
-                    hintText: '${Utils.getLocale(context).search}...',
+                    hintText: '${Utils.getLocale(context)?.search}...',
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 10.0)),
               ),

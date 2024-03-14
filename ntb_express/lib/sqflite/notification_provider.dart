@@ -8,8 +8,10 @@ import 'package:sqflite/sqflite.dart';
 class NotificationProvider {
   final dbHelper = DatabaseHelper.instance;
 
-  final _notificationColumnList = 'id, customer_id, notification_group, order_id, title, body, read, datetime(insert_time, "localtime") as insert_time';
-  final _notificationDetailColumnList = 'id, order_id, title, body, datetime(insert_time, "localtime") as insert_time';
+  final _notificationColumnList =
+      'id, customer_id, notification_group, order_id, title, body, read, datetime(insert_time, "localtime") as insert_time';
+  final _notificationDetailColumnList =
+      'id, order_id, title, body, datetime(insert_time, "localtime") as insert_time';
 
   Future<own.Notification?> insert(Map<String, dynamic> row) async {
     final group = row['notification_group']?.toString();
@@ -42,29 +44,35 @@ class NotificationProvider {
     }
   }
 
-  Future<own.Notification?> _getNotificationByOrderId(String orderId, {String? customerId}) async {
+  Future<own.Notification?> _getNotificationByOrderId(String orderId,
+      {String? customerId}) async {
     final db = await dbHelper.database;
     if (Utils.isNullOrEmpty(customerId!) && SessionUtil.instance().isLoggedIn())
       customerId = SessionUtil.instance()!.user!.username;
-    List<Map<String, dynamic>> list = await db.rawQuery('SELECT $_notificationColumnList FROM ${TableName.notification} WHERE order_id = "$orderId" ${!Utils.isNullOrEmpty(customerId) ? 'AND customer_id = "$customerId"' : ''}');
+    List<Map<String, dynamic>> list = await db.rawQuery(
+        'SELECT $_notificationColumnList FROM ${TableName.notification} WHERE order_id = "$orderId" ${!Utils.isNullOrEmpty(customerId!) ? 'AND customer_id = "$customerId"' : ''}');
     if (list == null || list.isEmpty) return null;
 
     return own.Notification.fromJson(list.first);
   }
 
-  Future<List<own.Notification>?> getOrderList({int start = 0, int limit = 20, String? customerId}) async {
+  Future<List<own.Notification>?> getOrderList(
+      {int start = 0, int limit = 20, String? customerId}) async {
     final db = await dbHelper.database;
     if (Utils.isNullOrEmpty(customerId!) && SessionUtil.instance().isLoggedIn())
       customerId = SessionUtil.instance()!.user!.username;
-    List<Map<String, dynamic>> list = await db.rawQuery('SELECT $_notificationColumnList FROM ${TableName.notification} ${!Utils.isNullOrEmpty(customerId) ? 'WHERE customer_id = "$customerId"' : ''} ORDER BY order_id DESC, insert_time DESC LIMIT $start, $limit');
+    List<Map<String, dynamic>> list = await db.rawQuery(
+        'SELECT $_notificationColumnList FROM ${TableName.notification} ${!Utils.isNullOrEmpty(customerId) ? 'WHERE customer_id = "$customerId"' : ''} ORDER BY order_id DESC, insert_time DESC LIMIT $start, $limit');
     if (list == null || list.isEmpty) return null;
 
     return list.map((e) => own.Notification.fromJson(e)).toList();
   }
 
-  Future<List<NotificationDetail>?> getOrderDetailList({String? orderId}) async {
+  Future<List<NotificationDetail>?> getOrderDetailList(
+      {String? orderId}) async {
     final db = await dbHelper.database;
-    List<Map<String, dynamic>> list = await db.rawQuery('SELECT $_notificationDetailColumnList FROM ${TableName.notificationDetail} WHERE order_id = "$orderId" ORDER BY insert_time DESC');
+    List<Map<String, dynamic>> list = await db.rawQuery(
+        'SELECT $_notificationDetailColumnList FROM ${TableName.notificationDetail} WHERE order_id = "$orderId" ORDER BY insert_time DESC');
     if (list == null || list.isEmpty) return null;
 
     return list.map((e) => NotificationDetail.fromJson(e)).toList();
@@ -74,35 +82,42 @@ class NotificationProvider {
     final db = await dbHelper.database;
     if (Utils.isNullOrEmpty(customerId!) && SessionUtil.instance().isLoggedIn())
       customerId = SessionUtil.instance()?.user?.username;
-    return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM ${TableName.notification} WHERE read = 0 ${!Utils.isNullOrEmpty(customerId!) ? 'AND customer_id = "$customerId"' : ''}'));
+    return Sqflite.firstIntValue(await db.rawQuery(
+        'SELECT COUNT(*) FROM ${TableName.notification} WHERE read = 0 ${!Utils.isNullOrEmpty(customerId!) ? 'AND customer_id = "$customerId"' : ''}'));
   }
 
   Future<void> markedAllAsRead({String? customerId}) async {
     final db = await dbHelper.database;
     if (Utils.isNullOrEmpty(customerId!) && SessionUtil.instance().isLoggedIn())
       customerId = SessionUtil.instance()?.user?.username;
-    await db.execute('UPDATE ${TableName.notification} SET read = 1 WHERE customer_id = "$customerId" ${!Utils.isNullOrEmpty(customerId!) ? 'AND customer_id = "$customerId"' : ''}');
+    await db.execute(
+        'UPDATE ${TableName.notification} SET read = 1 WHERE customer_id = "$customerId" ${!Utils.isNullOrEmpty(customerId!) ? 'AND customer_id = "$customerId"' : ''}');
   }
 
   Future<void> markedAllAsUnread({String? customerId}) async {
     final db = await dbHelper.database;
     if (Utils.isNullOrEmpty(customerId!) && SessionUtil.instance().isLoggedIn())
       customerId = SessionUtil.instance()!.user!.username;
-    await db.execute('UPDATE ${TableName.notification} SET read = 0 AND customer_id = "$customerId" ${!Utils.isNullOrEmpty(customerId) ? 'AND customer_id = "$customerId"' : ''}');
+    await db.execute(
+        'UPDATE ${TableName.notification} SET read = 0 AND customer_id = "$customerId" ${!Utils.isNullOrEmpty(customerId) ? 'AND customer_id = "$customerId"' : ''}');
   }
 
-  Future<void> markedAsReadById(int notificationId, {String? customerId}) async {
+  Future<void> markedAsReadById(int notificationId,
+      {String? customerId}) async {
     final db = await dbHelper.database;
     if (Utils.isNullOrEmpty(customerId!) && SessionUtil.instance().isLoggedIn())
       customerId = SessionUtil.instance()?.user?.username;
-    await db.execute('UPDATE ${TableName.notification} SET read = 1 WHERE id = $notificationId ${!Utils.isNullOrEmpty(customerId!) ? 'AND customer_id = "$customerId"' : ''}');
+    await db.execute(
+        'UPDATE ${TableName.notification} SET read = 1 WHERE id = $notificationId ${!Utils.isNullOrEmpty(customerId!) ? 'AND customer_id = "$customerId"' : ''}');
   }
 
-  Future<void> markedAsReadByOrderId(String orderId, {String? customerId}) async {
+  Future<void> markedAsReadByOrderId(String orderId,
+      {String? customerId}) async {
     final db = await dbHelper.database;
     if (Utils.isNullOrEmpty(customerId!) && SessionUtil.instance().isLoggedIn())
       customerId = SessionUtil.instance()!.user!.username;
-    await db.execute('UPDATE ${TableName.notification} SET read = 1 WHERE order_id = "$orderId" ${!Utils.isNullOrEmpty(customerId) ? 'AND customer_id = "$customerId"' : ''}');
+    await db.execute(
+        'UPDATE ${TableName.notification} SET read = 1 WHERE order_id = "$orderId" ${!Utils.isNullOrEmpty(customerId) ? 'AND customer_id = "$customerId"' : ''}');
   }
 
   Future<int> delete(int id) async {

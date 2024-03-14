@@ -36,7 +36,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
           onPressed: () => Navigator.of(context).pop(_current),
           icon: Icon(Icons.close),
         ),
-        title: Text('${Utils.getLocale(context).selectAnAddress}'),
+        title: Text('${Utils.getLocale(context)?.selectAnAddress}'),
       ),
       body: Container(
         child: FutureBuilder<List<Address>>(
@@ -49,13 +49,13 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
             if (snapshot.hasError) {
               return Center(
                 child: Text(
-                    '${Utils.getLocale(context).errorOccurred}: ${snapshot.error.toString()}'),
+                    '${Utils.getLocale(context)?.errorOccurred}: ${snapshot.error.toString()}'),
               );
             }
 
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
-                child: Text('${Utils.getLocale(context).empty}'),
+                child: Text('${Utils.getLocale(context)?.empty}'),
               );
             }
 
@@ -115,7 +115,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
   Future<List<Address>> _getAddressList() async {
     final Completer<List<Address>> c = Completer();
     final url =
-        ApiUrls.instance().getAddressListByUserUrl(widget.customer!.username);
+        ApiUrls.instance().getAddressListByUserUrl(widget.customer?.username);
 
     HttpUtil.get(
       url!,
@@ -123,8 +123,9 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
       onResponse: (resp) {
         if (resp == null || resp.statusCode != 200) {
           Utils.alert(context,
-              title: Utils.getLocale(context).failed,
-              message: '${Utils.getLocale(context).errorOccurred}: ${resp?.statusCode}');
+              title: Utils.getLocale(context)?.failed,
+              message:
+                  '${Utils.getLocale(context)?.errorOccurred}: ${resp?.statusCode}');
 
           if (!c.isCompleted) {
             c.complete([]);
@@ -146,8 +147,8 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
       },
       onTimeout: () {
         Utils.alert(context,
-            title: Utils.getLocale(context).errorOccurred,
-            message: Utils.getLocale(context).requestTimeout);
+            title: Utils.getLocale(context)?.errorOccurred,
+            message: Utils.getLocale(context)?.requestTimeout);
 
         if (!c.isCompleted) {
           c.complete([]);

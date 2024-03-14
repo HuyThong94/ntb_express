@@ -3,7 +3,7 @@ import 'package:ntbexpress/util/contants.dart';
 import 'package:ntbexpress/util/utils.dart';
 
 class SelectOrderStatusScreen extends StatefulWidget {
-  final List<int> statusList;
+  late final List<int> statusList;
 
   SelectOrderStatusScreen(this.statusList);
 
@@ -15,7 +15,7 @@ class SelectOrderStatusScreen extends StatefulWidget {
 class _SelectOrderStatusScreenState extends State<SelectOrderStatusScreen> {
   bool _all = true;
   final int _maxLength = OrderStatus.values.length;
-  final List<int> _statusList = []..addAll(OrderStatus.values);
+  late final List<int> _statusList = []..addAll(OrderStatus.values);
 
   @override
   void initState() {
@@ -35,10 +35,11 @@ class _SelectOrderStatusScreenState extends State<SelectOrderStatusScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            if (_statusList.length != widget.statusList?.length ?? 0) {
+            if (_statusList!.length != widget.statusList!.length ?? 0) {
               Utils.confirm(context,
-                  title: Utils.getLocale(context).confirmation,
-                  message: '${Utils.getLocale(context).confirmChangeSelectOrderStatusMessage}',
+                  title: Utils.getLocale(context)?.confirmation,
+                  message:
+                      '${Utils.getLocale(context)?.confirmChangeSelectOrderStatusMessage}',
                   onAccept: () {
                 _statusList.sort();
                 Navigator.of(context).pop(_statusList);
@@ -53,7 +54,7 @@ class _SelectOrderStatusScreenState extends State<SelectOrderStatusScreen> {
           },
           icon: Icon(Icons.arrow_back),
         ),
-        title: Text('${Utils.getLocale(context).select}'),
+        title: Text('${Utils.getLocale(context)?.select}'),
         actions: [
           IconButton(
             onPressed: () {
@@ -81,31 +82,34 @@ class _SelectOrderStatusScreenState extends State<SelectOrderStatusScreen> {
                       value: _all,
                       activeColor: Utils.accentColor,
                     ),
-                    Text('${Utils.getLocale(context).all}'),
+                    Text('${Utils.getLocale(context)?.all}'),
                   ],
                 ),
                 Divider(),
                 Column(
-                  children: OrderStatus.values.map((e) => Row(
-                      children: [
-                        Checkbox(
-                          onChanged: (checked) {
-                            setState(() {
-                              if (checked!) {
-                                if (!_statusList.contains(e))
-                                  _statusList.add(e);
-                              } else {
-                                _statusList.removeWhere((element) => element == e);
-                              }
-                              _updateAll();
-                            });
-                          },
-                          value: _statusList.contains(e),
-                          activeColor: Utils.accentColor,
-                        ),
-                        Text('${Utils.getOrderStatusString(context, e)}'),
-                      ],
-                  )).toList(),
+                  children: OrderStatus.values
+                      .map((e) => Row(
+                            children: [
+                              Checkbox(
+                                onChanged: (checked) {
+                                  setState(() {
+                                    if (checked!) {
+                                      if (!_statusList.contains(e))
+                                        _statusList.add(e);
+                                    } else {
+                                      _statusList.removeWhere(
+                                          (element) => element == e);
+                                    }
+                                    _updateAll();
+                                  });
+                                },
+                                value: _statusList.contains(e),
+                                activeColor: Utils.accentColor,
+                              ),
+                              Text('${Utils.getOrderStatusString(context, e)}'),
+                            ],
+                          ))
+                      .toList(),
                 ),
               ],
             ),
@@ -115,11 +119,13 @@ class _SelectOrderStatusScreenState extends State<SelectOrderStatusScreen> {
     );
   }
 
-  void _handleAll(bool checked) {
+  void _handleAll(bool? checked) {
     setState(() {
-      _all = checked;
+      _all = checked!;
       if (checked) {
-        _statusList..clear()..addAll(OrderStatus.values);
+        _statusList
+          ..clear()
+          ..addAll(OrderStatus.values);
       } else {
         _statusList.clear();
       }

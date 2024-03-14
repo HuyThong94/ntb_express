@@ -59,7 +59,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     _sortOrderTracks();
 
     if (_order.tccoFileDTOS != null) {
-      for (var f in _order.tccoFileDTOS) {
+      for (var f in _order.tccoFileDTOS!) {
         if (f == null) continue;
         final url = '${ApiUrls.instance().baseUrl}/${f.flePath}';
         if (!(await Utils.isUrlValid(url))) continue;
@@ -76,8 +76,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   }
 
   void _sortOrderTracks() {
-    if (_order.orderTrackDTOS != null) {
-      _order.orderTrackDTOS.sort((a, b) => b.actionDate - a.actionDate);
+    final orderTrackDTOS = _order.orderTrackDTOS;
+    if (orderTrackDTOS != null) {
+      orderTrackDTOS.sort((a, b) => b!.actionDate! - a!.actionDate!);
     }
   }
 
@@ -99,7 +100,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             Navigator.of(context).pop();
           },
         ),
-        title: Text('${Utils.getLocale(context).orderInformation}'),
+        title: Text('${Utils.getLocale(context)?.orderInformation}'),
         actions: [
           !canEdit
               ? SizedBox()
@@ -140,7 +141,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                         padding: const EdgeInsets.all(8.0),
                         child: Center(
                           child: Text(
-                            '${Utils.getLocale(context).edit}',
+                            '${Utils.getLocale(context)?.edit}',
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),
@@ -160,7 +161,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: isChineseStaff,
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).customerName}',
+                    firstText: '${Utils.getLocale(context)?.customerName}',
                     secondText: '${_order.customerDTO?.fullName}',
                   ),
                 ),
@@ -169,7 +170,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                   hideOn:
                       Utils.isNullOrEmpty(_order.customerId) || isChineseStaff,
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).customerCode}',
+                    firstText: '${Utils.getLocale(context)?.customerCode}',
                     secondText: _order.customerId,
                   ),
                 ),
@@ -179,7 +180,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                   child: InfoItem(
                     useWidget: true,
                     breakLine: true,
-                    firstChild: Text('${Utils.getLocale(context).address}'),
+                    firstChild: Text('${Utils.getLocale(context)?.address}'),
                     bottomChild: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Column(
@@ -207,7 +208,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: Utils.isNullOrEmpty(_order.intTrackNo),
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).chineseWaybillCode}',
+                    firstText:
+                        '${Utils.getLocale(context)?.chineseWaybillCode}',
                     secondText: _order.intTrackNo,
                   ),
                 ),
@@ -217,7 +219,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                   child: InfoItem(
                     useWidget: true,
                     firstChild: Text(
-                        '${Utils.getLocale(context).internationalWaybillCode}'),
+                        '${Utils.getLocale(context)?.internationalWaybillCode}'),
                     secondChild: Text(
                       Utils.getDisplayOrderId(_order.orderId),
                       style: TextStyle(
@@ -229,7 +231,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: _order.packCount == null || _order.packCount == 0,
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).packageQuantity}',
+                    firstText: '${Utils.getLocale(context)?.packageQuantity}',
                     secondText: '${_order.packCount}',
                   ),
                 ),
@@ -238,7 +240,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                   hideOn: _order.orderStatus == null,
                   child: InfoItem(
                     useWidget: true,
-                    firstChild: Text('${Utils.getLocale(context).status}'),
+                    firstChild: Text('${Utils.getLocale(context)?.status}'),
                     secondChild: Material(
                       child: InkWell(
                         onTap: () {
@@ -255,7 +257,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                       ),
                     ),
                     bottomChild: AnimatedSize(
-                      vsync: this,
+                      // vsync: this,
                       duration: const Duration(milliseconds: 200),
                       child: !_statusTapped
                           ? null
@@ -269,7 +271,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: _order.createdDate == null,
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).timeCreated}',
+                    firstText: '${Utils.getLocale(context)?.timeCreated}',
                     //secondText: _order.createdDate,
                     secondText: Utils.getDateString(
                         _order.createdDate, commonDateFormat),
@@ -279,7 +281,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: _order.goodsType == null || _order.goodsType == 0,
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).type}',
+                    firstText: '${Utils.getLocale(context)?.type}',
                     secondText:
                         Utils.getGoodsTypeString(context, _order.goodsType),
                   ),
@@ -288,7 +290,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: Utils.isNullOrEmpty(_order.goodsDescr),
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).description}',
+                    firstText: '${Utils.getLocale(context)?.description}',
                     secondText: _order.goodsDescr,
                   ),
                 ),
@@ -296,7 +298,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: _order.weight == null || _order.weight == 0.0,
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).weight}',
+                    firstText: '${Utils.getLocale(context)?.weight}',
                     secondText: '${_order.weight} (kg)',
                   ),
                 ),
@@ -304,7 +306,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: _order.size == null || _order.size == 0.0,
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).size}',
+                    firstText: '${Utils.getLocale(context)?.size}',
                     secondText: '${_order.size} (m³)',
                   ),
                 ),
@@ -312,7 +314,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: Utils.isNullOrEmpty(_order.note!),
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).note}',
+                    firstText: '${Utils.getLocale(context)?.note}',
                     secondText: '${_order.note}',
                   ),
                 ),
@@ -320,7 +322,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: Utils.isNullOrEmpty(_order.licensePlates),
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).licensePlates}',
+                    firstText: '${Utils.getLocale(context)?.licensePlates}',
                     secondText: '${_order.licensePlates}',
                   ),
                 ),
@@ -329,7 +331,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                   hideOn: _order.intFee == null || _order.intFee == 0.0,
                   child: InfoItem(
                     firstText:
-                        '${Utils.getLocale(context).domesticShippingFee}',
+                        '${Utils.getLocale(context)?.domesticShippingFee}',
                     secondText: '${Utils.getMoneyString(_order.intFee)}',
                   ),
                 ),
@@ -340,7 +342,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                   child: InfoItem(
                       useWidget: true,
                       firstChild: Text(
-                          '${Utils.getLocale(context).internationalShippingFee}'),
+                          '${Utils.getLocale(context)?.internationalShippingFee}'),
                       secondChild: RichText(
                         textAlign: TextAlign.right,
                         text: TextSpan(text: '', children: [
@@ -401,9 +403,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                 HideOnCondition(
                   hideOn: _order.needRepack == null || _order.needRepack == 0,
                   child: InfoItem(
-                    firstText: '${Utils.getLocale(context).packedByWoodenBox}',
+                    firstText: '${Utils.getLocale(context)?.packedByWoodenBox}',
                     secondText:
-                        '${_order?.needRepack != null && _order.needRepack > 0 ? '${Utils.getLocale(context).yes}${!isChineseStaff ? ' (${Utils.getMoneyString(_order.repackFee)})' : ''}' : '${Utils.getLocale(context).no}'}',
+                        '${_order?.needRepack != null && _order.needRepack > 0 ? '${Utils.getLocale(context)?.yes}${!isChineseStaff ? ' (${Utils.getMoneyString(_order.repackFee)})' : ''}' : '${Utils.getLocale(context)?.no}'}',
                   ),
                 ),
                 _divider(),
@@ -414,10 +416,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${Utils.getLocale(context).photosAttached}'),
+                      Text('${Utils.getLocale(context)?.photosAttached}'),
                       _files.isEmpty
                           ? Text(
-                              '${Utils.getLocale(context).empty}',
+                              '${Utils.getLocale(context)?.empty}',
                               style: TextStyle(
                                   color: Theme.of(context).disabledColor),
                             )
@@ -457,7 +459,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                     child: GridTile(
                                       child: fileHolder == null
                                           ? Text(
-                                              '${Utils.getLocale(context).empty}')
+                                              '${Utils.getLocale(context)?.empty}')
                                           : Stack(
                                               fit: StackFit.expand,
                                               children: [
@@ -515,13 +517,74 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
+              // child: RaisedButton(
+              //   onPressed: () {
+              //     Utils.confirm(
+              //       context,
+              //       title: '${Utils.getLocale(context)?.confirmation}',
+              //       message:
+              //           '${Utils.getLocale(context)?.confirmCancelOrderMessage}',
+              //       onAccept: () async {
+              //         _showWaiting();
+              //         _delay(() async {
+              //           bool success = await HttpUtil.updateOrderTrackingStatus(
+              //               _order.orderId, ActionType.cancelOrder);
+              //           // pop loading
+              //           _popLoading();
+              //           if (success) {
+              //             Order orderUpdated =
+              //                 await HttpUtil.getOrder(_order.orderId);
+              //             if (orderUpdated != null) {
+              //               AppProvider.of(context)
+              //                   ?.state
+              //                   .orderBloc
+              //                   .updateOrder(orderUpdated);
+              //               setState(() {
+              //                 _order = orderUpdated;
+              //                 _sortOrderTracks();
+              //               });
+              //
+              //               // remove order from block if needed
+              //               Utils.removeOrderFromBloc(context, orderUpdated);
+              //             }
+              //
+              //             Utils.alert(context,
+              //                 title: Utils.getLocale(context)?.success,
+              //                 message: Utils.getLocale(context)
+              //                     .cancelOrderSuccessMessage,
+              //                 onAccept: () => Utils.popToFirstScreen(context));
+              //             /*_scaffoldKey.currentState.showSnackBar(SnackBar(
+              //               content: Text(
+              //                 '${Utils.getLocale(context).cancelOrderSuccessMessage}',
+              //               ),
+              //             ));*/
+              //           } else {
+              //             Utils.alert(context,
+              //                 title: Utils.getLocale(context).failed,
+              //                 message: Utils.getLocale(context)
+              //                     .updateOrderStatusFailedMessage);
+              //             /*_scaffoldKey.currentState.showSnackBar(SnackBar(
+              //               content: Text(
+              //                 '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
+              //               ),
+              //             ));*/
+              //           }
+              //         });
+              //       },
+              //     );
+              //   },
+              //   child: Text(
+              //     '${Utils.getLocale(context).cancelOrder}',
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              // ),
+              child: ElevatedButton(
                 onPressed: () {
                   Utils.confirm(
                     context,
-                    title: '${Utils.getLocale(context).confirmation}',
+                    title: '${Utils.getLocale(context)?.confirmation}',
                     message:
-                        '${Utils.getLocale(context).confirmCancelOrderMessage}',
+                        '${Utils.getLocale(context)?.confirmCancelOrderMessage}',
                     onAccept: () async {
                       _showWaiting();
                       _delay(() async {
@@ -534,7 +597,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                               await HttpUtil.getOrder(_order.orderId);
                           if (orderUpdated != null) {
                             AppProvider.of(context)
-                                .state
+                                ?.state
                                 .orderBloc
                                 .updateOrder(orderUpdated);
                             setState(() {
@@ -547,32 +610,32 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                           }
 
                           Utils.alert(context,
-                              title: Utils.getLocale(context).success,
+                              title: Utils.getLocale(context)?.success,
                               message: Utils.getLocale(context)
-                                  .cancelOrderSuccessMessage,
+                                  ?.cancelOrderSuccessMessage,
                               onAccept: () => Utils.popToFirstScreen(context));
                           /*_scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Text(
-                              '${Utils.getLocale(context).cancelOrderSuccessMessage}',
-                            ),
-                          ));*/
+              content: Text(
+                '${Utils.getLocale(context).cancelOrderSuccessMessage}',
+              ),
+            ));*/
                         } else {
                           Utils.alert(context,
-                              title: Utils.getLocale(context).failed,
+                              title: Utils.getLocale(context)?.failed,
                               message: Utils.getLocale(context)
-                                  .updateOrderStatusFailedMessage);
+                                  ?.updateOrderStatusFailedMessage);
                           /*_scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Text(
-                              '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
-                            ),
-                          ));*/
+              content: Text(
+                '${Utils.getLocale(context).updateOrderStatusFailedMessage}!',
+              ),
+            ));*/
                         }
                       });
                     },
                   );
                 },
                 child: Text(
-                  '${Utils.getLocale(context).cancelOrder}',
+                  '${Utils.getLocale(context)?.cancelOrder}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -584,7 +647,62 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
+              child:
+                  // RaisedButton(
+                  //   onPressed: () async {
+                  //     _showWaiting();
+                  //     _delay(() async {
+                  //       bool success = await HttpUtil.updateOrderTrackingStatus(
+                  //           _order.orderId, ActionType.confirmWoodenPacking);
+                  //       // pop loading
+                  //       _popLoading();
+                  //       if (success) {
+                  //         Order orderUpdated =
+                  //             await HttpUtil.getOrder(_order.orderId);
+                  //         if (orderUpdated != null) {
+                  //           AppProvider.of(context)
+                  //               .state
+                  //               .orderBloc
+                  //               .updateOrder(orderUpdated);
+                  //           setState(() {
+                  //             _order = orderUpdated;
+                  //             _sortOrderTracks();
+                  //           });
+                  //
+                  //           // remove order from block if needed
+                  //           Utils.removeOrderFromBloc(context, orderUpdated);
+                  //         }
+                  //
+                  //         Utils.alert(context,
+                  //             title: Utils.getLocale(context).success,
+                  //             message: Utils.getLocale(context)
+                  //                 .agreeToBoxWoodedSuccessMessage,
+                  //             onAccept: () => Utils.popToFirstScreen(context));
+                  //         /*_scaffoldKey.currentState.showSnackBar(SnackBar(
+                  //           content: Text(
+                  //             '${Utils.getLocale(context).agreeToBoxWoodedSuccessMessage}',
+                  //           ),
+                  //         ));*/
+                  //       } else {
+                  //         Utils.alert(context,
+                  //             title: Utils.getLocale(context).failed,
+                  //             message: Utils.getLocale(context)
+                  //                 .updateOrderStatusFailedMessage);
+                  //         /*_scaffoldKey.currentState.showSnackBar(SnackBar(
+                  //           content: Text(
+                  //             '${Utils.getLocale(context).failed}!',
+                  //           ),
+                  //         ));*/
+                  //       }
+                  //     });
+                  //   },
+                  //   color: Colors.green,
+                  //   child: Text(
+                  //     '${Utils.getLocale(context).agreeToBoxWooden}',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  ElevatedButton(
                 onPressed: () async {
                   _showWaiting();
                   _delay(() async {
@@ -597,7 +715,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                           await HttpUtil.getOrder(_order.orderId);
                       if (orderUpdated != null) {
                         AppProvider.of(context)
-                            .state
+                            ?.state
                             .orderBloc
                             .updateOrder(orderUpdated);
                         setState(() {
@@ -610,31 +728,34 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                       }
 
                       Utils.alert(context,
-                          title: Utils.getLocale(context).success,
+                          title: Utils.getLocale(context)?.success,
                           message: Utils.getLocale(context)
-                              .agreeToBoxWoodedSuccessMessage,
+                              ?.agreeToBoxWoodedSuccessMessage,
                           onAccept: () => Utils.popToFirstScreen(context));
                       /*_scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text(
-                          '${Utils.getLocale(context).agreeToBoxWoodedSuccessMessage}',
-                        ),
-                      ));*/
+          content: Text(
+            '${Utils.getLocale(context).agreeToBoxWoodedSuccessMessage}',
+          ),
+        ));*/
                     } else {
                       Utils.alert(context,
-                          title: Utils.getLocale(context).failed,
+                          title: Utils.getLocale(context)?.failed,
                           message: Utils.getLocale(context)
-                              .updateOrderStatusFailedMessage);
+                              ?.updateOrderStatusFailedMessage);
                       /*_scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text(
-                          '${Utils.getLocale(context).failed}!',
-                        ),
-                      ));*/
+          content: Text(
+            '${Utils.getLocale(context).failed}!',
+          ),
+        ));*/
                     }
                   });
                 },
-                color: Colors.green,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set button's background color
+                ),
                 child: Text(
-                  '${Utils.getLocale(context).agreeToBoxWooden}',
+                  '${Utils.getLocale(context)?.agreeToBoxWooden}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -646,12 +767,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
+              child:
+                  // RaisedButton(
+                  //   onPressed: () =>
+                  //       _updateOrderStatus(ActionType.chineseWarehouse),
+                  //   color: Colors.green,
+                  //   child: Text(
+                  //     '${Utils.getLocale(context).input}',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  ElevatedButton(
                 onPressed: () =>
                     _updateOrderStatus(ActionType.chineseWarehouse),
-                color: Colors.green,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set button's background color
+                ),
                 child: Text(
-                  '${Utils.getLocale(context).input}',
+                  '${Utils.getLocale(context)?.input}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -663,11 +797,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
+              child:
+                  // RaisedButton(
+                  //   onPressed: () => _updateOrderStatus(ActionType.chineseStockOut),
+                  //   color: Colors.green,
+                  //   child: Text(
+                  //     '${Utils.getLocale(context).output}',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  ElevatedButton(
                 onPressed: () => _updateOrderStatus(ActionType.chineseStockOut),
-                color: Colors.green,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set button's background color
+                ),
                 child: Text(
-                  '${Utils.getLocale(context).output}',
+                  '${Utils.getLocale(context)?.output}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -687,11 +833,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
+              child:
+                  // RaisedButton(
+                  //   onPressed: () => _updateOrderStatus(actionType),
+                  //   color: Colors.green,
+                  //   child: Text(
+                  //     '${Utils.getLocale(context).input}',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  ElevatedButton(
                 onPressed: () => _updateOrderStatus(actionType),
-                color: Colors.green,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set button's background color
+                ),
                 child: Text(
-                  '${Utils.getLocale(context).input}',
+                  '${Utils.getLocale(context)?.input}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -710,11 +868,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
+              child:
+                  // RaisedButton(
+                  //   onPressed: () => _updateOrderStatus(actionType),
+                  //   color: Colors.green,
+                  //   child: Text(
+                  //     '${Utils.getLocale(context).output}',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  ElevatedButton(
                 onPressed: () => _updateOrderStatus(actionType),
-                color: Colors.green,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set button's background color
+                ),
                 child: Text(
-                  '${Utils.getLocale(context).output}',
+                  '${Utils.getLocale(context)?.output}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -726,20 +896,32 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
-                onPressed: () => _updateOrderStatus(ActionType
-                    .delivery) /*{
-                  Utils.confirm(
-                    context,
-                    title: Utils.getLocale(context).confirmation,
-                    message: '${Utils.getLocale(context).orderDeliveryMessage}',
-                    onAccept: () => _updateOrderStatus(ActionType.delivery),
-                  );
-                }*/
-                ,
-                color: Colors.orange,
+              child:
+                  // RaisedButton(
+                  //   onPressed: () => _updateOrderStatus(ActionType
+                  //       .delivery) /*{
+                  //     Utils.confirm(
+                  //       context,
+                  //       title: Utils.getLocale(context).confirmation,
+                  //       message: '${Utils.getLocale(context).orderDeliveryMessage}',
+                  //       onAccept: () => _updateOrderStatus(ActionType.delivery),
+                  //     );
+                  //   }*/
+                  //   ,
+                  //   color: Colors.orange,
+                  //   child: Text(
+                  //     '${Utils.getLocale(context).delivery}',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  ElevatedButton(
+                onPressed: () => _updateOrderStatus(ActionType.delivery),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.orange, // Set button's background color
+                ),
                 child: Text(
-                  '${Utils.getLocale(context).delivery}',
+                  '${Utils.getLocale(context)?.delivery}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -751,7 +933,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
+              child:
+                  // RaisedButton(
+                  //   onPressed: () {
+                  //     _updateOrderStatus(ActionType.delivered);
+                  //     /*Utils.confirm(
+                  //       context,
+                  //       title: Utils.getLocale(context).confirmation,
+                  //       message:
+                  //           '${Utils.getLocale(context).orderDeliveredMessage}',
+                  //       onAccept: () => _updateOrderStatus(ActionType.delivered),
+                  //     );*/
+                  //   },
+                  //   color: Colors.green,
+                  //   child: Text(
+                  //     '${Utils.getLocale(context).delivered}',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  ElevatedButton(
                 onPressed: () {
                   _updateOrderStatus(ActionType.delivered);
                   /*Utils.confirm(
@@ -762,9 +962,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                     onAccept: () => _updateOrderStatus(ActionType.delivered),
                   );*/
                 },
-                color: Colors.green,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.green, // Set button's background color
+                ),
                 child: Text(
-                  '${Utils.getLocale(context).delivered}',
+                  '${Utils.getLocale(context)?.delivered}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -776,11 +979,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             child: SizedBox(
               width: double.infinity,
               height: 40.0,
-              child: RaisedButton(
+              child:
+                  // RaisedButton(
+                  //   onPressed: () => _updateOrderStatus(ActionType.completed),
+                  //   color: Colors.indigo,
+                  //   child: Text(
+                  //     '${Utils.getLocale(context).completed}',
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
+                  ElevatedButton(
                 onPressed: () => _updateOrderStatus(ActionType.completed),
-                color: Colors.indigo,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Colors.indigo, // Set button's background color
+                ),
                 child: Text(
-                  '${Utils.getLocale(context).completed}',
+                  '${Utils.getLocale(context)?.completed}',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -803,7 +1018,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       ActionType.outputHaNoi
     ].contains(actionType)) output = true;
 
-    ConfirmationStatus status;
+    ConfirmationStatus? status;
     bool isOutput = false;
     if ([
       ActionType.chineseWarehouse,
@@ -840,7 +1055,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       if (success) {
         Order orderUpdated = await HttpUtil.getOrder(_order.orderId);
         if (orderUpdated != null) {
-          AppProvider.of(context).state.orderBloc.updateOrder(orderUpdated);
+          AppProvider.of(context)?.state.orderBloc.updateOrder(orderUpdated);
 
           setState(() {
             _order = orderUpdated;
@@ -852,8 +1067,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         }
 
         Utils.alert(context,
-            title: Utils.getLocale(context).success,
-            message: Utils.getLocale(context).orderStatusUpdatedMessage,
+            title: Utils.getLocale(context)?.success,
+            message: Utils.getLocale(context)?.orderStatusUpdatedMessage,
             onAccept: () => Utils.popToFirstScreen(context));
         /*_scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(
@@ -862,8 +1077,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         ));*/
       } else {
         Utils.alert(context,
-            title: Utils.getLocale(context).failed,
-            message: Utils.getLocale(context).updateOrderStatusFailedMessage);
+            title: Utils.getLocale(context)?.failed,
+            message: Utils.getLocale(context)?.updateOrderStatusFailedMessage);
         /*_scaffoldKey.currentState.showSnackBar(SnackBar(
           content: Text(
             '${Utils.getLocale(context).updateOrderStatusFailedMessage}',
@@ -881,7 +1096,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
   void _showWaiting() {
     Utils.showLoading(context,
-        textContent: Utils.getLocale(context).waitForLogin);
+        textContent: Utils.getLocale(context)!.waitForLogin);
   }
 
   void _popLoading() {
