@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 33
 
     lintOptions {
         disable 'InvalidPackage'
@@ -64,9 +64,10 @@ android {
             // signingConfig signingConfigs.debug
             signingConfig signingConfigs.release
             minifyEnabled true
-            useProguard true
+//            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             shrinkResources true
+
         }
     }
 }

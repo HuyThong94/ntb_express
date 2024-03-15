@@ -213,7 +213,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 firstText: Utils.getLocale(context)?.addressManagement,
                 secondText: '',
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AddressManagementScreen(forUser: User(),))),
+                    builder: (context) => AddressManagementScreen(
+                          forUser: User(),
+                        ))),
               ),
               InfoItem(
                 firstText: Utils.getLocale(context)?.changePassword,
@@ -429,7 +431,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   if (user == null) return;
                   if (user.avatarImgDTO != null &&
                       !Utils.isNullOrEmpty(user.avatarImgDTO!.flePath!)) {
-                    user.avatarImgDTO!.flePath +=
+                    user.avatarImgDTO!.flePath! +
                         '?t=${DateTime.now().millisecondsSinceEpoch}';
                   }
                   SessionUtil.instance().user = user;

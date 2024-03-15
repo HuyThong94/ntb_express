@@ -89,31 +89,32 @@ class Utils {
 
     return '';
   }
-  static void alert(BuildContext context, {String? title, String? message, VoidCallback? onAccept}) {
+
+  static void alert(BuildContext context,
+      {String? title, String? message, VoidCallback? onAccept}) {
     showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return PopScope(
-          onPop: () {
-            return Future.value(false);
-          },
-          child: AlertDialog(
-            title: Text(title ?? ''),
-            content: Text(message!),
-            actions: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  onAccept?.call();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    );
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return WillPopScope(
+            onWillPop: () {
+              return Future.value(false);
+            },
+            child: AlertDialog(
+              title: Text(title ?? ''),
+              content: Text(message!),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onAccept?.call();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   static void confirm(BuildContext context,
@@ -133,7 +134,7 @@ class Utils {
               title: Text(title ?? ''),
               content: Text(message!),
               actions: [
-                FlatButton(
+                TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     onDecline?.call();
@@ -145,7 +146,7 @@ class Utils {
                     ),
                   ),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     onAccept?.call();

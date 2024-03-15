@@ -143,6 +143,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
+  Widget emptyWidget = SizedBox(width: 0, height: 0);
   Widget _content(List<own.Notification> notifications, NotificationBloc bloc) {
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -197,29 +198,37 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     (context, index) {
                       final o = notifications[index];
                       return Slidable(
-                        actionPane: SlidableScrollActionPane(),
-                        child: NotificationItem(
-                          o,
-                          provider: _notificationProvider,
-                          bloc: bloc,
+                        startActionPane: ActionPane(
+                          motion: ScrollMotion(),
+                          children: [
+                            NotificationItem(
+                              o,
+                              provider: _notificationProvider,
+                              bloc: bloc,
+                            ),
+                          ],
                         ),
-                        secondaryActions: [
-                          SlidableAction(
-                            label: Utils.getLocale(context)?.delete,
-                            backgroundColor: Colors.red,
-                            icon: Icons.delete,
-                            onPressed: (BuildContext context) async {
-                              int affected =
-                                  await _notificationProvider.delete(o.id!);
-                              if (affected > 0) {
-                                bloc.removeNotification(o);
-                                int? unreadCount = await _notificationProvider
-                                    .getUnreadCount();
-                                bloc.setUnreadCount(unreadCount!);
-                              }
-                            },
-                          ),
-                        ],
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              label: Utils.getLocale(context)?.delete,
+                              backgroundColor: Colors.red,
+                              icon: Icons.delete,
+                              onPressed: (BuildContext context) async {
+                                int affected =
+                                    await _notificationProvider.delete(o.id!);
+                                if (affected > 0) {
+                                  bloc.removeNotification(o);
+                                  int? unreadCount = await _notificationProvider
+                                      .getUnreadCount();
+                                  bloc.setUnreadCount(unreadCount!);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        child: emptyWidget,
                       );
                     },
                     childCount: notifications.length,

@@ -546,8 +546,8 @@ class _LoginScreenState extends State<LoginScreen> {
               if (SessionUtil.instance().user?.avatarImgDTO != null &&
                   !Utils.isNullOrEmpty(
                       SessionUtil.instance().user.avatarImgDTO!.flePath)) {
-                SessionUtil.instance().user.avatarImgDTO?.flePath +=
-                '?t=${DateTime.now().millisecondsSinceEpoch}';
+                SessionUtil.instance().user.avatarImgDTO!.flePath! +
+                    '?t=${DateTime.now().millisecondsSinceEpoch}';
               }
               AppProvider.of(context)!
                   .state

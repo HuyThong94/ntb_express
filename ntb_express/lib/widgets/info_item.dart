@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ntbexpress/util/utils.dart';
 
@@ -41,14 +42,16 @@ class InfoItem extends StatelessWidget {
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.center,
                 children: [
-                  useWidget ? firstChild : Text(firstText ?? ''),
+                  useWidget ? firstChild ?? Container() : Text(firstText ?? ''),
                   breakLine
                       ? const SizedBox()
                       : Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              useWidget ? secondChild : Text(secondText ?? ''),
+                              useWidget
+                                  ? secondChild ?? Container()
+                                  : Text(firstText ?? '')
                             ],
                           ),
                         ),

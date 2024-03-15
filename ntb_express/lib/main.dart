@@ -206,54 +206,74 @@ class _HandleWrapperState extends State<HandleWrapper> {
   }
 
   void _initFirebaseMessaging({BuildContext? context}) {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        if (Platform.isIOS) {
-          if (!_isDoubleMessage) {
-            print("onMessage: $message");
-            _showNotificationOnForeground(
-                jsonDecode(jsonEncode(message)), context!);
-            _saveNotification(jsonDecode(jsonEncode(message)));
-          }
-          _isDoubleMessage = !_isDoubleMessage;
-        } else {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (Platform.isIOS) {
+        if (!_isDoubleMessage) {
           print("onMessage: $message");
           _showNotificationOnForeground(
               jsonDecode(jsonEncode(message)), context!);
           _saveNotification(jsonDecode(jsonEncode(message)));
         }
-      },
-      onBackgroundMessage: Platform.isIOS ? null : _myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        if (Platform.isIOS) {
-          await _saveNotification(jsonDecode(jsonEncode(message)));
-        }
-        _navigateToItemDetail(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        if (Platform.isIOS) {
-          if (!_isDoubleResume) {
-            print("onResume: $message");
-            await _saveNotification(jsonDecode(jsonEncode(message)));
-            _navigateToItemDetail(message);
-          }
-          _isDoubleResume = !_isDoubleResume;
-        } else {
-          print("onResume: $message");
-          await _saveNotification(jsonDecode(jsonEncode(message)));
-          _navigateToItemDetail(message);
-        }
-      },
-    );
+        _isDoubleMessage = !_isDoubleMessage;
+      } else {
+        print("onMessage: $message");
+        _showNotificationOnForeground(
+            jsonDecode(jsonEncode(message)), context!);
+        _saveNotification(jsonDecode(jsonEncode(message)));
+      }
+    });
+    onBackgroundMessage:
+    Platform.isIOS ? null : _myBackgroundMessageHandler;
+
+    // FirebaseMessaging.
+    // _firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     if (Platform.isIOS) {
+    //       if (!_isDoubleMessage) {
+    //         print("onMessage: $message");
+    //         _showNotificationOnForeground(
+    //             jsonDecode(jsonEncode(message)), context!);
+    //         _saveNotification(jsonDecode(jsonEncode(message)));
+    //       }
+    //       _isDoubleMessage = !_isDoubleMessage;
+    //     } else {
+    //       print("onMessage: $message");
+    //       _showNotificationOnForeground(
+    //           jsonDecode(jsonEncode(message)), context!);
+    //       _saveNotification(jsonDecode(jsonEncode(message)));
+    //     }
+    //   },
+    //   onBackgroundMessage: Platform.isIOS ? null : _myBackgroundMessageHandler,
+    //   onLaunch: (Map<String, dynamic> message) async {
+    //     print("onLaunch: $message");
+    //     if (Platform.isIOS) {
+    //       await _saveNotification(jsonDecode(jsonEncode(message)));
+    //     }
+    //     _navigateToItemDetail(message);
+    //   },
+    //   onResume: (Map<String, dynamic> message) async {
+    //     if (Platform.isIOS) {
+    //       if (!_isDoubleResume) {
+    //         print("onResume: $message");
+    //         await _saveNotification(jsonDecode(jsonEncode(message)));
+    //         _navigateToItemDetail(message);
+    //       }
+    //       _isDoubleResume = !_isDoubleResume;
+    //     } else {
+    //       print("onResume: $message");
+    //       await _saveNotification(jsonDecode(jsonEncode(message)));
+    //       _navigateToItemDetail(message);
+    //     }
+    //   },
+    // );
     // _firebaseMessaging.requestNotificationPermissions(
     //     const IosNotificationSettings(
     //         sound: true, badge: true, alert: true, provisional: false));
     _firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((DarwinNotificationDetails settings) {
-      print("Settings registered: $settings");
-    });
+    // _firebaseMessaging.onIosSettingsRegistered
+    //     .listen((DarwinNotificationDetails settings) {
+    //   print("Settings registered: $settings");
+    // });
     _firebaseMessaging.onTokenRefresh.listen((token) {
       if (Utils.isNullOrEmpty(token)) return;
       // TODO: check if logged in => update fcmToken for user

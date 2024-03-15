@@ -368,7 +368,7 @@ class _ConfirmOrderStatusWidgetState extends State<ConfirmOrderStatusWidget> {
           ),
         ),
         actions: [
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -379,7 +379,7 @@ class _ConfirmOrderStatusWidgetState extends State<ConfirmOrderStatusWidget> {
               ),
             ),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
                 return;
@@ -393,8 +393,10 @@ class _ConfirmOrderStatusWidgetState extends State<ConfirmOrderStatusWidget> {
                 return;
               }
 
-              List<File>? files =
-                  _filesController.files.map((fh) => fh.file).cast<File>().toList();
+              List<File>? files = _filesController.files
+                  .map((fh) => fh.file)
+                  .cast<File>()
+                  .toList();
               if (files != null) files.removeWhere((f) => f == null);
               // check if does not attach files & is chinese staff
               if (isChineseStaff &&

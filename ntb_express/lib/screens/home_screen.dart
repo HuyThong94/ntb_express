@@ -453,6 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return result;
   }
 
+  Widget emptyWidget = SizedBox(width: 0, height: 0);
   Widget _content(List<Order> orders) {
     return Builder(
       builder: (context) {
@@ -642,85 +643,86 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Container(
                       margin: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Slidable(
-                        actionPane: SlidableScrollActionPane(),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: _getColor(ord.orderStatus),
-                          ),
-                          child: InkWell(
-                            onTapDown: _storePosition,
-                            onTap: () {
-                              Utils.updatePop(1);
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      OrderDetailScreen(ord)));
-                            },
-                            onLongPress: isWarehouseStaff
-                                ? null
-                                : () => _makeCopyContext(ord),
-                            child: Stack(
-                              children: [
-                                ListTile(
-                                  title: Text(
-                                    '${isCustomer ? Utils.getDisplayOrderId(ord.orderId) : ord.customerDTO?.fullName}',
-                                    style: TextStyle(
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: Padding(
-                                    padding: const EdgeInsets.only(top: 5.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        HideOnCondition(
-                                          hideOn: (ord.customerDTO == null ||
-                                                  Utils.isNullOrEmpty(ord
-                                                      .customerDTO!
-                                                      .customerId!)) ||
-                                              isCustomer,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                '${Utils.getLocale(context)?.customerCode} ',
-                                                style: _small(),
-                                              ),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Text(
-                                                    '${ord?.customerDTO?.customerId}',
-                                                    style: _small(),
+                        startActionPane:
+                            ActionPane(motion: const ScrollMotion(), children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: _getColor(ord.orderStatus),
+                            ),
+                            child: InkWell(
+                              onTapDown: _storePosition,
+                              onTap: () {
+                                Utils.updatePop(1);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        OrderDetailScreen(ord)));
+                              },
+                              onLongPress: isWarehouseStaff
+                                  ? null
+                                  : () => _makeCopyContext(ord),
+                              child: Stack(
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                      '${isCustomer ? Utils.getDisplayOrderId(ord.orderId) : ord.customerDTO?.fullName}',
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Padding(
+                                      padding: const EdgeInsets.only(top: 5.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          HideOnCondition(
+                                            hideOn: (ord.customerDTO == null ||
+                                                    Utils.isNullOrEmpty(ord
+                                                        .customerDTO!
+                                                        .customerId!)) ||
+                                                isCustomer,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '${Utils.getLocale(context)?.customerCode} ',
+                                                  style: _small(),
+                                                ),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Text(
+                                                      '${ord?.customerDTO?.customerId}',
+                                                      style: _small(),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        HideOnCondition(
-                                          hideOn: Utils.isNullOrEmpty(
-                                              ord.intTrackNo),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                '${Utils.getLocale(context)?.chineseWaybillCode} ',
-                                                style: _small(),
-                                              ),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Text(
-                                                    '${ord.intTrackNo}',
-                                                    style: _small(),
+                                          HideOnCondition(
+                                            hideOn: Utils.isNullOrEmpty(
+                                                ord.intTrackNo),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '${Utils.getLocale(context)?.chineseWaybillCode} ',
+                                                  style: _small(),
+                                                ),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Text(
+                                                      '${ord.intTrackNo}',
+                                                      style: _small(),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        /*HideOnCondition(
+                                          /*HideOnCondition(
                                           hideOn: Utils.isNullOrEmpty(
                                                   ord.orderId) ||
                                               isCustomer,
@@ -752,211 +754,215 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ],
                                           ),
                                         ),*/
-                                        HideOnCondition(
-                                          hideOn: Utils.isNullOrEmpty(
-                                              ord.goodsDescr),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                '${Utils.getLocale(context)?.description} ',
-                                                style: _small(),
-                                              ),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: RichText(
-                                                    text: TextSpan(
-                                                      text:
-                                                          '${ord.goodsDescr ?? ""}',
-                                                      style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.orange)
-                                                          .merge(_small()),
-                                                    ),
-                                                  ),
+                                          HideOnCondition(
+                                            hideOn: Utils.isNullOrEmpty(
+                                                ord.goodsDescr),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '${Utils.getLocale(context)?.description} ',
+                                                  style: _small(),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        HideOnCondition(
-                                          hideOn: Utils.isNullOrEmpty(
-                                              ord.licensePlates),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                '${Utils.getLocale(context)?.licensePlates} ',
-                                                style: _small(),
-                                              ),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: RichText(
-                                                    text: TextSpan(
-                                                      text:
-                                                          '${ord.licensePlates ?? ""}',
-                                                      style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors
-                                                                  .black87)
-                                                          .merge(_small()),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        HideOnCondition(
-                                          hideOn: ord.orderStatus == null,
-                                          child: Wrap(
-                                            children: [
-                                              _buildStatusTag(ord.orderStatus),
-                                              Text(
-                                                  '${ord.packCount != null ? ' - ' : ''}${ord.packCount} ${Utils.getLocale(context)?.packs}',
-                                                  style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .disabledColor)
-                                                      .merge(_small())),
-                                            ],
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: _isVisibleWeightSize(ord),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(height: 3.0),
-                                              Text(
-                                                  '${ord.size != null && ord.size > 0 ? '${ord.size}m³' : ''}${(ord.size != null && ord.weight != null && ord.size > 0 && ord.weight > 0) ? ' - ' : ''}${ord.weight != null && ord.weight > 0 ? '${ord.weight}kg' : ''}'),
-                                            ],
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: !isChineseWarehouseStaff,
-                                          child: Divider(),
-                                        ),
-                                        Row(
-                                          children: [
-                                            HideOnCondition(
-                                              hideOn: ord.createdDate == null,
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: isChineseWarehouseStaff
-                                                        ? 2.0
-                                                        : 0),
-                                                child: Text(
-                                                  '${Utils.getDateString(ord.createdDate, commonDateFormat)}',
-                                                  style: TextStyle(
-                                                    fontSize: 10.0,
-                                                    color: Theme.of(context)
-                                                        .disabledColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Visibility(
-                                                visible:
-                                                    !isChineseWarehouseStaff,
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: RichText(
-                                                    text: TextSpan(
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: RichText(
+                                                      text: TextSpan(
                                                         text:
-                                                            '${Utils.getLocale(context)?.intoMoney}: ',
+                                                            '${ord.goodsDescr ?? ""}',
                                                         style: TextStyle(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .disabledColor,
-                                                        ).merge(_small()),
-                                                        children: [
-                                                          TextSpan(
-                                                            text: ord.promotionDTO ==
-                                                                    null
-                                                                ? ''
-                                                                : (ord.totalFeeOriginal == null ||
-                                                                        ord.totalFeeOriginal <=
-                                                                            0 ||
-                                                                        ord.totalFee >=
-                                                                            ord
-                                                                                .totalFeeOriginal)
-                                                                    ? ''
-                                                                    : NumberFormat.currency(
-                                                                            locale:
-                                                                                'vi_VN',
-                                                                            symbol:
-                                                                                'đ')
-                                                                        .format(
-                                                                            ord.totalFeeOriginal),
-                                                            style: TextStyle(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .disabledColor,
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .lineThrough,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                              text: (ord.promotionDTO != null &&
-                                                                          ord.totalFeeOriginal !=
-                                                                              null &&
-                                                                          ord.totalFeeOriginal >
-                                                                              0 &&
-                                                                          ord.totalFee <
-                                                                              ord.totalFeeOriginal
-                                                                      ? ' '
-                                                                      : '') +
-                                                                  '${_getTotalFeeText(ord.totalFee ?? 0)}',
-                                                              style: TextStyle(
-                                                                color:
-                                                                    Colors.red,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
-                                                              )),
-                                                        ]),
+                                                                color: Colors
+                                                                    .orange)
+                                                            .merge(_small()),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          HideOnCondition(
+                                            hideOn: Utils.isNullOrEmpty(
+                                                ord.licensePlates),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '${Utils.getLocale(context)?.licensePlates} ',
+                                                  style: _small(),
+                                                ),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                        text:
+                                                            '${ord.licensePlates ?? ""}',
+                                                        style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black87)
+                                                            .merge(_small()),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          HideOnCondition(
+                                            hideOn: ord.orderStatus == null,
+                                            child: Wrap(
+                                              children: [
+                                                _buildStatusTag(
+                                                    ord.orderStatus),
+                                                Text(
+                                                    '${ord.packCount != null ? ' - ' : ''}${ord.packCount} ${Utils.getLocale(context)?.packs}',
+                                                    style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .disabledColor)
+                                                        .merge(_small())),
+                                              ],
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: _isVisibleWeightSize(ord),
+                                            child: Column(
+                                              children: [
+                                                SizedBox(height: 3.0),
+                                                Text(
+                                                    '${ord.size != null && ord.size > 0 ? '${ord.size}m³' : ''}${(ord.size != null && ord.weight != null && ord.size > 0 && ord.weight > 0) ? ' - ' : ''}${ord.weight != null && ord.weight > 0 ? '${ord.weight}kg' : ''}'),
+                                              ],
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: !isChineseWarehouseStaff,
+                                            child: Divider(),
+                                          ),
+                                          Row(
+                                            children: [
+                                              HideOnCondition(
+                                                hideOn: ord.createdDate == null,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top:
+                                                          isChineseWarehouseStaff
+                                                              ? 2.0
+                                                              : 0),
+                                                  child: Text(
+                                                    '${Utils.getDateString(ord.createdDate, commonDateFormat)}',
+                                                    style: TextStyle(
+                                                      fontSize: 10.0,
+                                                      color: Theme.of(context)
+                                                          .disabledColor,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                              Expanded(
+                                                child: Visibility(
+                                                  visible:
+                                                      !isChineseWarehouseStaff,
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: RichText(
+                                                      text: TextSpan(
+                                                          text:
+                                                              '${Utils.getLocale(context)?.intoMoney}: ',
+                                                          style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .disabledColor,
+                                                          ).merge(_small()),
+                                                          children: [
+                                                            TextSpan(
+                                                              text: ord.promotionDTO ==
+                                                                      null
+                                                                  ? ''
+                                                                  : (ord.totalFeeOriginal == null ||
+                                                                          ord.totalFeeOriginal <=
+                                                                              0 ||
+                                                                          ord.totalFee >=
+                                                                              ord
+                                                                                  .totalFeeOriginal)
+                                                                      ? ''
+                                                                      : NumberFormat.currency(
+                                                                              locale: 'vi_VN',
+                                                                              symbol: 'đ')
+                                                                          .format(ord.totalFeeOriginal),
+                                                              style: TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .disabledColor,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .lineThrough,
+                                                              ),
+                                                            ),
+                                                            TextSpan(
+                                                                text: (ord.promotionDTO != null &&
+                                                                            ord.totalFeeOriginal !=
+                                                                                null &&
+                                                                            ord.totalFeeOriginal >
+                                                                                0 &&
+                                                                            ord.totalFee <
+                                                                                ord.totalFeeOriginal
+                                                                        ? ' '
+                                                                        : '') +
+                                                                    '${_getTotalFeeText(ord.totalFee ?? 0)}',
+                                                                style: TextStyle(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                )),
+                                                          ]),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Visibility(
-                                  visible: ![
-                                        UserType.customer,
-                                        UserType.saleStaff
-                                      ].contains(currentUser?.userType) &&
-                                      currentUser?.username == ord.saleId,
-                                  child: Positioned(
-                                    top: 4.0,
-                                    right: 4.0,
-                                    child: Icon(
-                                      Icons.shopping_cart,
-                                      color: Colors.red,
+                                  Visibility(
+                                    visible: ![
+                                          UserType.customer,
+                                          UserType.saleStaff
+                                        ].contains(currentUser?.userType) &&
+                                        currentUser?.username == ord.saleId,
+                                    child: Positioned(
+                                      top: 4.0,
+                                      right: 4.0,
+                                      child: Icon(
+                                        Icons.shopping_cart,
+                                        color: Colors.red,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
+                        ]),
+                        endActionPane: ActionPane(
+                          motion: const ScrollMotion(),
+                          children: _buildActions(ord),
                         ),
-                        secondaryActions: _buildActions(ord),
+                        child: emptyWidget,
                       ),
                     );
                   },

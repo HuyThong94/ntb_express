@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:ntbexpress/model/file_holder.dart';
 import 'package:ntbexpress/util/utils.dart';
 import 'package:ntbexpress/widgets/image_gallery.dart';
@@ -88,8 +88,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
     if (files == null) return;
     files.removeWhere((a) => a == null); // cleanup
-    // _files.addAll(files.map((e) => null).toList());
-    _files.addAll(files.map((File e) => FileHolder(file: e)).toList());
+    _files.addAll(files.map((e) => null).toList());
     setState(() {});
 
     for (Asset a in files) {

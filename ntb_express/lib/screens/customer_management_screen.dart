@@ -143,6 +143,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
     AppProvider.of(context)?.state.userBloc.fetch(reset: true);
   }
 
+  Widget emptyWidget = SizedBox(width: 0, height: 0);
   Widget _content(List<User>? customers) {
     return Scrollbar(
       child: CustomScrollView(
@@ -155,49 +156,54 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
               (context, index) {
                 final cus = customers?[index];
                 return Slidable(
-                  actionPane: SlidableScrollActionPane(),
-                  child: ListTile(
-                    onTap: () async {
-                      User updatedUser = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (_) => CustomerFormScreen(
-                                  isUpdate: true, currentUser: cus)));
+                  startActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    children: [
+                      ListTile(
+                        onTap: () async {
+                          User updatedUser = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => CustomerFormScreen(
+                                      isUpdate: true, currentUser: cus)));
 
-                      if (updatedUser != null) {
-                        if (updatedUser.avatarImgDTO != null) {
-                          updatedUser.avatarImgDTO?.flePath = (updatedUser
-                                  .avatarImgDTO!.flePath! +
-                              '?t=${DateTime.now().millisecondsSinceEpoch}')!;
-                        }
-                        AppProvider.of(context)
-                            ?.state
-                            .userBloc
-                            .updateCustomer(updatedUser);
-                      }
-                    },
-                    leading: CircleAvatar(
-                      radius: 21.0,
-                      backgroundColor: Colors.grey[100],
-                      child: CircleAvatar(
-                        radius: 20.0,
-                        // backgroundImage: cus.avatarImgDTO != null
-                        //     ? NetworkImage(
-                        //         '${ApiUrls.instance().baseUrl}/${cus.avatarImgDTO.flePath}')
-                        //     : AssetImage('assets/images/default-avatar.png'),
+                          if (updatedUser != null) {
+                            if (updatedUser.avatarImgDTO != null) {
+                              updatedUser.avatarImgDTO?.flePath = (updatedUser
+                                      .avatarImgDTO!.flePath! +
+                                  '?t=${DateTime.now().millisecondsSinceEpoch}')!;
+                            }
+                            AppProvider.of(context)
+                                ?.state
+                                .userBloc
+                                .updateCustomer(updatedUser);
+                          }
+                        },
+                        leading: CircleAvatar(
+                          radius: 21.0,
+                          backgroundColor: Colors.grey[100],
+                          child: CircleAvatar(
+                            radius: 20.0,
+                            // backgroundImage: cus.avatarImgDTO != null
+                            //     ? NetworkImage(
+                            //         '${ApiUrls.instance().baseUrl}/${cus.avatarImgDTO.flePath}')
+                            //     : AssetImage('assets/images/default-avatar.png'),
+                          ),
+                        ),
+                        title: Text(
+                          '${cus?.fullName}',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${cus?.phoneNumber}'),
+                          ],
+                        ),
                       ),
-                    ),
-                    title: Text(
-                      '${cus?.fullName}',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${cus?.phoneNumber}'),
-                      ],
-                    ),
+                    ],
                   ),
-                  secondaryActions: [
+                  endActionPane:
+                      ActionPane(motion: const ScrollMotion(), children: [
                     SlidableAction(
                       onPressed: (BuildContext context) {
                         Utils.confirm(
@@ -213,7 +219,8 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                       foregroundColor: Colors.white,
                       label: Utils.getLocale(context)?.delete,
                     ),
-                  ],
+                  ]),
+                  child: emptyWidget,
                 );
               },
               childCount: customers?.length,
