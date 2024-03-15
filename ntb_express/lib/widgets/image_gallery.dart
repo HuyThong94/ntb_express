@@ -5,7 +5,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 class GalleryPhotoViewWrapper extends StatefulWidget {
   GalleryPhotoViewWrapper({
-    required this.loadingBuilder,
+    this.loadingBuilder,
     required this.backgroundDecoration,
     this.minScale,
     this.maxScale,
@@ -14,8 +14,8 @@ class GalleryPhotoViewWrapper extends StatefulWidget {
     this.scrollDirection = Axis.horizontal,
   }) : pageController = PageController(initialPage: initialIndex);
 
-  late final LoadingBuilder loadingBuilder;
-  final Decoration backgroundDecoration;
+  late final LoadingBuilder? loadingBuilder;
+  final BoxDecoration? backgroundDecoration;
   final dynamic minScale;
   final dynamic maxScale;
   final int initialIndex;

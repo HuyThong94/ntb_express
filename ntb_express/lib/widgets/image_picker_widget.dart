@@ -89,7 +89,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     if (files == null) return;
     files.removeWhere((a) => a == null); // cleanup
     // _files.addAll(files.map((e) => null).toList());
-    _files.addAll(files.map((e) => FileHolder(file: e)).toList());
+    _files.addAll(files.map((File e) => FileHolder(file: e)).toList());
     setState(() {});
 
     for (Asset a in files) {

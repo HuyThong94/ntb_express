@@ -1019,7 +1019,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _tapPosition & Size(40, 40),
           // smaller rect, the touch area
           Offset.zero &
-              (overlay.size ?? Size.zero), // Bigger rect, the entire screen
+              (context?.size ?? Size.zero), // Bigger rect, the entire screen
         ),
         items: <PopupMenuEntry>[
           PopupMenuItem(
@@ -1262,7 +1262,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '${Utils.getLocale(context)?.input}',
             backgroundColor: Colors.green,
             icon: Icons.system_update_alt,
-            onPressed: (BuildContext context) => _updateOrderStatus(order, ActionType.chineseWarehouse),
+            onPressed: (BuildContext context) =>
+                _updateOrderStatus(order, ActionType.chineseWarehouse),
           ));
           break;
         case AllowAction.exportChineseWarehouse:
@@ -1271,7 +1272,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '${Utils.getLocale(context)?.output}',
             backgroundColor: Colors.green,
             icon: Icons.exit_to_app,
-            onPressed: (BuildContext context) => _updateOrderStatus(order, ActionType.chineseStockOut),
+            onPressed: (BuildContext context) =>
+                _updateOrderStatus(order, ActionType.chineseStockOut),
           ));
           break;
         case AllowAction.importUongBiWarehouse:
@@ -1288,7 +1290,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '${Utils.getLocale(context)?.input}',
             backgroundColor: Colors.green,
             icon: Icons.system_update_alt,
-            onPressed: (BuildContext context) => _updateOrderStatus(order, actionType),
+            onPressed: (BuildContext context) =>
+                _updateOrderStatus(order, actionType),
           ));
           break;
         case AllowAction.outputUongBi:
@@ -1304,7 +1307,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: '${Utils.getLocale(context)?.output}',
             backgroundColor: Colors.green,
             icon: Icons.exit_to_app,
-            onPressed: (BuildContext context) => _updateOrderStatus(order, actionType),
+            onPressed: (BuildContext context) =>
+                _updateOrderStatus(order, actionType),
           ));
           break;
         case AllowAction.delivery:
@@ -1350,7 +1354,8 @@ class _HomeScreenState extends State<HomeScreen> {
             label: Utils.getLocale(context)?.completed,
             backgroundColor: Colors.indigo,
             icon: Icons.done_all,
-            onPressed: (BuildContext context) => _updateOrderStatus(order, ActionType.completed),
+            onPressed: (BuildContext context) =>
+                _updateOrderStatus(order, ActionType.completed),
           ));
           break;
       }
@@ -1479,7 +1484,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     Navigator.of(context).pop(); // close the drawer
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AddressManagementScreen(forUser: User(),)));
+                        builder: (context) => AddressManagementScreen(
+                              forUser: User(),
+                            )));
                   },
                   leading: Icon(Icons.location_on),
                   title: Text(

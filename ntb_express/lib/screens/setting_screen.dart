@@ -38,11 +38,11 @@ class _SettingScreenState extends State<SettingScreen> {
                 SettingsTile(
                   onPressed: _changeLanguage,
                   title: Text('${Utils.getLocale(context)?.language}'),
-                  subtitle: _locale == 'vi'
-                      ? Utils.getLocale(context)?.vietnamese
+                  tileType: (_locale == 'vi'
+                      ? Text('${Utils.getLocale(context)?.vietnamese}')
                       : _locale == 'en'
-                          ? Utils.getLocale(context)?.english
-                          : Utils.getLocale(context)?.chinese,
+                          ? Text('${Utils.getLocale(context)?.english}')
+                          : Text('${Utils.getLocale(context)?.chinese}')),
                   leading: Icon(Icons.language),
                 ),
                 SettingsTile(

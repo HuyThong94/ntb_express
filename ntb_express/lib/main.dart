@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -247,11 +246,12 @@ class _HandleWrapperState extends State<HandleWrapper> {
         }
       },
     );
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: false));
+    // _firebaseMessaging.requestNotificationPermissions(
+    //     const IosNotificationSettings(
+    //         sound: true, badge: true, alert: true, provisional: false));
+    _firebaseMessaging.requestPermission(sound: true, badge: true, alert: true);
     _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
+        .listen((DarwinNotificationDetails settings) {
       print("Settings registered: $settings");
     });
     _firebaseMessaging.onTokenRefresh.listen((token) {
@@ -291,24 +291,27 @@ class _HandleWrapperState extends State<HandleWrapper> {
     _saveNotification(message);
 
     // @formatter:off
-    var platformChannelSpecificsAndroid = new AndroidNotificationDetails(
-        'ntb_express', 'DL Express', 'DL Express notification channel',
-        channelShowBadge: true,
-        playSound: true,
-        enableVibration: true,
-        enableLights: true,
-        importance: Importance.max,
-        priority: Priority.high,
-        visibility: NotificationVisibility.public);
+    var platformChannelSpecificsAndroid =
+        new AndroidNotificationDetails('ntb_express', 'DL Express',
+            // 'DL Express notification channel',
+            channelShowBadge: true,
+            playSound: true,
+            enableVibration: true,
+            enableLights: true,
+            importance: Importance.max,
+            priority: Priority.high,
+            visibility: NotificationVisibility.public);
     // @formatter:on
     var platformChannelSpecificsIos =
-        IOSNotificationDetails(presentSound: true);
+        DarwinNotificationDetails(presentSound: true);
     var platformChannelSpecifics = NotificationDetails(
-        android: platformChannelSpecificsAndroid, iOS: platformChannelSpecificsIos);
+        android: platformChannelSpecificsAndroid,
+        iOS: platformChannelSpecificsIos);
 
     Future.delayed(Duration.zero, () {
       Vibration.vibrate();
-      FlutterRingtonePlayer.playNotification();
+      FlutterRingtonePlayer player = FlutterRingtonePlayer();
+      player.playNotification();
       _flutterLocalNotificationsPlugin.show(
         Random().nextInt(100),
         pushTitle,
@@ -392,7 +395,8 @@ class _HandleWrapperState extends State<HandleWrapper> {
       }
       if (SessionUtil.instance()?.user?.userType == UserType.customer) {
         Vibration.vibrate();
-        FlutterRingtonePlayer.playNotification();
+        FlutterRingtonePlayer player = FlutterRingtonePlayer();
+        player.playNotification();
         Utils.alert(context,
             title: '${msg['title'] ?? 'Thông báo'}', message: '${msg['body']}');
       }

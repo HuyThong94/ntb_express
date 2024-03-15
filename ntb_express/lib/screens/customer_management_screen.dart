@@ -155,7 +155,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
               (context, index) {
                 final cus = customers?[index];
                 return Slidable(
-                  startActionPane: SlidableScrollActionPane(),
+                  actionPane: SlidableScrollActionPane(),
                   child: ListTile(
                     onTap: () async {
                       User updatedUser = await Navigator.of(context).push(
@@ -197,7 +197,7 @@ class _CustomerManagementScreenState extends State<CustomerManagementScreen> {
                       ],
                     ),
                   ),
-                  secondaryActions: <Widget>[
+                  secondaryActions: [
                     SlidableAction(
                       onPressed: (BuildContext context) {
                         Utils.confirm(
